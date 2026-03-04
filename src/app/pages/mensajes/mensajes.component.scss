@@ -1,0 +1,28 @@
+.mensajes-filtros {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se acomoden en una fila cuando sea necesario */
+    gap: 20px; /* Espacio entre los elementos */
+  }
+  
+  .filtros {
+    flex: 1;
+    min-width: 300px; /* Ancho mínimo para la columna de filtros */
+  }
+  
+  .mensajes {
+    flex: 2; /* Más espacio para el componente de lista de mensajes */
+    min-width: 300px; /* Ancho mínimo para la lista de mensajes */
+  }
+  
+  /* Para pantallas pequeñas, los elementos se apilan verticalmente */
+  @media screen and (max-width: 768px) {
+    .mensajes-filtros {
+      flex-direction: column; /* Los elementos se apilan en una columna */
+    }
+  
+    .filtros, .mensajes {
+      width: 100%; /* Ambos componentes ocupan el 100% del ancho disponible */
+      flex: none; /* Asegura que no se intente repartir el espacio */
+    }
+  }
+  

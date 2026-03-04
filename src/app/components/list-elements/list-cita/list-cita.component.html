@@ -1,0 +1,23 @@
+<div class="combined-container">
+  <h2>Citas</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Info</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cita of citas">
+        <td>
+          <app-list-element-cita [cita]="cita"></app-list-element-cita>
+        </td>
+        <td>
+          <div class="semaforo-container">
+            <app-semaforo ></app-semaforo>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

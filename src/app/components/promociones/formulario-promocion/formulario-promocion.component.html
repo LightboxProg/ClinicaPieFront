@@ -1,0 +1,161 @@
+<div class="form-container">
+    <h2>{{ editando ? 'Editar Promoción' : 'Nueva Promoción' }}</h2>
+
+    <form [formGroup]="promocionForm" (ngSubmit)="guardar()">
+        <!-- Nombre -->
+        <div class="form-group">
+            <label>Nombre *</label>
+            <input type="text" formControlName="nombre" class="form-control"
+                [class.is-invalid]="campoInvalido('nombre')">
+            <div class="invalid-feedback" *ngIf="campoInvalido('nombre')">El nombre es obligatorio</div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+            <label>Primer mensaje</label>
+            <textarea formControlName="descripcion" rows="3" class="form-control"></textarea>
+        </div>
+
+        <!-- Palabras clave (tags) -->
+        <div class="form-group">
+            <label>Palabras clave (separadas por comas)</label>
+            <input type="text" formControlName="palabrasClaveInput" class="form-control"
+                placeholder="Ej: verano, descuento, láser, promoción especial">
+            <small class="text-muted">Ingresa palabras o frases separadas por comas. Ayudarán en búsquedas.</small>
+        </div>
+
+        <!-- Tipo de Anclaje -->
+        <div class="form-group">
+            <label>Tipo de anclaje *</label>
+            <select formControlName="tipoAnclaje" class="form-control" (change)="onTipoAnclajeChange()">
+                <option value="global">Global (aplica a todo)</option>
+                <option value="categoria">Categoría específica</option>
+                <option value="servicio">Servicio específico</option>
+            </select>
+        </div>
+
+        <!-- Selección de categoría (si aplica) -->
+        <div class="form-group" *ngIf="promocionForm.get('tipoAnclaje')?.value === 'categoria'">
+            <label>Categoría *</label>
+            <select formControlName="categoria" class="form-control">
+                <option value="">Seleccione una categoría</option>
+                <option *ngFor="let c of categorias" [value]="c._id">{{ c.nombre }}</option>
+            </select>
+        </div>
+
+        <!-- Selección de servicio (si aplica) -->
+        <div class="form-group" *ngIf="promocionForm.get('tipoAnclaje')?.value === 'servicio'">
+            <label>Servicio *</label>
+            <select formControlName="servicio" class="form-control">
+                <option value="">Seleccione un servicio</option>
+                <option *ngFor="let s of servicios" [value]="s._id">{{ s.nombre }}</option>
+            </select>
+        </div>
+
+        <!-- Sucursales -->
+        <div class="form-group">
+            <label>Sucursales (dejar vacío para todas)</label>
+            <select multiple formControlName="sucursales" class="form-control">
+                <option *ngFor="let s of sucursales" [value]="s._id">{{ s.nombre }}</option>
+            </select>
+            <small class="text-muted">Mantén presionado Ctrl para seleccionar múltiples</small>
+        </div>
+
+        <!-- Fechas -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Fecha Inicio *</label>
+                    <input type="date" formControlName="fechaInicio" class="form-control"
+                        [class.is-invalid]="campoInvalido('fechaInicio')">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Fecha Fin *</label>
+                    <input type="date" formControlName="fechaFin" class="form-control"
+                        [class.is-invalid]="campoInvalido('fechaFin')">
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de imagen -->
+        <div class="form-group">
+            <label>Imagen de la promoción</label>
+            <div class="image-upload-container">
+                <input type="file" #fileInput accept="image/*" style="display:none" (change)="onFileSelected($event)">
+                <button type="button" class="btn-upload" (click)="triggerFileInput()" [disabled]="subiendoImagen">
+                    <i class="fas fa-cloud-upload-alt"></i> {{ imagenSeleccionada ? 'Cambiar imagen' :
+                    'Seleccionar imagen' }}
+                </button>
+                <span *ngIf="imagenSeleccionada" class="file-name">{{ imagenSeleccionada.name }}</span>
+            </div>
+
+            <!-- Vista previa -->
+            <div *ngIf="imagenPreview || promocionForm.get('imagenUrl')?.value" class="image-preview">
+                <img [src]="imagenPreview || promocionForm.get('imagenUrl')?.value" alt="Vista previa">
+                <button type="button" class="btn-remove-image" (click)="eliminarImagen()" *ngIf="!subiendoImagen">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tipo de descuento -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Tipo descuento *</label>
+                    <select formControlName="tipoDescuento" class="form-control">
+                        <option value="porcentaje">Porcentaje (%)</option>
+                        <option value="fijo">Monto fijo ($)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Valor descuento *</label>
+                    <input type="number" formControlName="valorDescuento" class="form-control" step="0.01" min="0">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Monto mínimo compra (opcional)</label>
+                    <input type="number" formControlName="montoMinimoCompra" class="form-control" step="0.01" min="0">
+                </div>
+            </div>
+        </div>
+
+        <!-- Código promocional y límites -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Código promocional (opcional)</label>
+                    <input type="text" formControlName="codigoPromocional" class="form-control"
+                        placeholder="Ej: VERANO2025">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Usos máximos (opcional)</label>
+                    <input type="number" formControlName="usoMaximo" class="form-control" min="1">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select formControlName="activa" class="form-control">
+                        <option [value]="true">Activa</option>
+                        <option [value]="false">Inactiva</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="cancelar()">Cancelar</button>
+            <button type="submit" class="btn-primary" [disabled]="promocionForm.invalid">
+                {{ editando ? 'Actualizar' : 'Guardar' }}
+            </button>
+        </div>
+    </form>
+</div>

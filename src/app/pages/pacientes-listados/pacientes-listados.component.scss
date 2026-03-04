@@ -1,0 +1,27 @@
+.flex {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos se acomoden en columnas cuando sea necesario */
+  gap: 20px; /* Agrega un espacio entre los elementos */
+}
+
+.filtros {
+  flex: 1;
+  min-width: 300px; /* Establece un ancho mínimo para la columna de filtros */
+}
+
+.mensajes {
+  flex: 2; /* Asigna más espacio al componente de lista de pacientes */
+  min-width: 300px; /* Establece un ancho mínimo para la lista de pacientes */
+}
+
+/* Para pantallas pequeñas, apilamos los componentes */
+@media screen and (max-width: 768px) {
+  .flex {
+    flex-direction: column; /* Los elementos se apilan en una columna */
+  }
+
+  .filtros, .mensajes {
+    width: 100%; /* Asegura que ambos componentes ocupen el 100% del ancho disponible */
+    flex: none; /* Anula el flex para que no intenten repartir el espacio */
+  }
+}

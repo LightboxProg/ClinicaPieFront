@@ -1,0 +1,391 @@
+/* --- Variables de Diseño (Paleta ProPigment) --- */
+$primary: #ff5a5f;       // Rojo coral (igual que navbar)
+$primary-hover: #e04a4f; // Rojo más oscuro para hover
+$primary-light: #fff0f0; // Fondo rojo muy claro
+$accent: #ff7e5f;        // Naranja-coral (gradiente)
+$bg-app: #F3F4F6;        // Fondo gris claro
+$card-bg: #FFFFFF;
+$text-main: #111827;
+$text-secondary: #6B7280;
+$danger: #EF4444;        // Rojo para eliminar/inactivo
+$success: #10B981;       // Verde para activo
+$warning: #F59E0B;       // Naranja para editar
+
+/* --- Contenedor Principal --- */
+.list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: $bg-app;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* --- Cabecera (Título + Botón Crear) --- */
+.header-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  
+  .titles {
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: $text-main;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      color: $text-secondary;
+      font-size: 1rem;
+    }
+  }
+
+  /* Botón "Nueva Sucursal" */
+  .btn-create {
+    background: linear-gradient(135deg, $primary, $accent);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba($primary, 0.3);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i { font-size: 0.9rem; }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba($primary, 0.4);
+    }
+    &:active { transform: translateY(0); }
+  }
+}
+
+/* --- Barra de Filtros --- */
+.filtros-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: white;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 220px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 8px 14px;
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba($primary, 0.1);
+  }
+
+  i { color: #aaa; font-size: 0.9rem; }
+
+  input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.9rem;
+    color: $text-main;
+    &::placeholder { color: #bbb; }
+  }
+
+  .clear-btn {
+    background: none;
+    border: none;
+    color: #bbb;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0;
+    &:hover { color: $primary; }
+  }
+}
+
+/* Tabs de Estado */
+.estado-tabs {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1.5px solid #e5e7eb;
+    background: transparent;
+    color: $text-secondary;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+
+    &:hover { border-color: $primary; color: $primary; }
+
+    &.active {
+      background: rgba($primary, 0.08);
+      border-color: $primary;
+      color: $primary;
+      font-weight: 700;
+    }
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &.verde { background: $success; }
+    &.gris  { background: #bbb; }
+  }
+}
+
+
+
+/* --- Estados de Carga y Vacío --- */
+.loading-state, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+  text-align: center;
+  color: $text-secondary;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba($primary, 0.1);
+  border-left-color: $primary;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.empty-state {
+  i {
+    font-size: 4rem;
+    color: #D1D5DB; // Gris muy claro
+    margin-bottom: 1rem;
+  }
+  h3 {
+    font-size: 1.2rem;
+    color: $text-main;
+    margin-bottom: 1rem;
+  }
+  button {
+    background: transparent;
+    border: 2px dashed $primary;
+    color: $primary;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    &:hover { background: rgba($primary, 0.05); }
+  }
+}
+
+/* --- Grid de Tarjetas --- */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+/* --- Tarjeta Individual --- */
+.branch-card {
+  background: $card-bg;
+  border-radius: 16px;
+  padding: 1.5rem;
+  position: relative;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: rgba($primary, 0.1);
+  }
+
+  // Tarjeta inactiva — apagada visualmente
+  &.inactiva {
+    opacity: 0.7;
+    background: #f9f9f9;
+    border-color: #e5e7eb;
+    &:hover { transform: none; }
+  }
+
+  /* Badge de Estado (Top Right) */
+  .status-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba($success, 0.1);
+    color: $success;
+    border: 1px solid rgba($success, 0.2);
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: $success;
+    }
+
+    &.inactive {
+      background: rgba($text-secondary, 0.1);
+      color: $text-secondary;
+      border-color: rgba($text-secondary, 0.2);
+      .badge-dot { background: #bbb; }
+    }
+  }
+}
+
+/* Contenido de la Tarjeta */
+.card-content {
+  margin-bottom: 1.5rem;
+  flex: 1;
+
+  .branch-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-main;
+    margin-bottom: 1rem;
+    padding-right: 80px; // Espacio para que el texto no choque con el badge
+    line-height: 1.4;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+    color: $text-secondary;
+
+    i {
+      color: $primary;
+      margin-top: 3px; // Alinear icono con la primera línea de texto
+      width: 16px;
+      text-align: center;
+    }
+
+    span, a {
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    &.map-link a {
+      color: $primary;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px dotted transparent;
+      transition: border 0.2s;
+      
+      &:hover { border-bottom-color: $primary; }
+    }
+  }
+}
+
+/* Acciones de la Tarjeta (Footer) */
+.card-actions {
+  border-top: 1px solid #F3F4F6;
+  padding-top: 1rem;
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+
+  .btn-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 1rem;
+
+    /* Editar */
+    &.edit {
+      color: $text-secondary;
+      &:hover { background: $primary-light; color: $primary; }
+    }
+
+    /* Desactivar */
+    &.deactivate {
+      color: $warning;
+      &:hover { background: rgba($warning, 0.1); }
+    }
+
+    /* Activar */
+    &.activate {
+      color: $success;
+      &:hover { background: rgba($success, 0.1); }
+    }
+
+    /* Eliminar permanentemente */
+    &.delete {
+      color: $text-secondary;
+      &:hover { background: #FEF2F2; color: $danger; }
+    }
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  .header-action {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    text-align: center;
+    
+    .btn-create { justify-content: center; }
+  }
+  
+  .grid-cards {
+    grid-template-columns: 1fr; // Una sola columna en móvil
+  }
+}

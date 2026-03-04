@@ -1,0 +1,116 @@
+<div class="container">
+    <h2>Gestión de Categorías</h2>
+
+    <!-- Panel de estadísticas y filtros -->
+    <div class="dashboard-panel">
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-number">{{ totalCategorias }}</span>
+                <span class="stat-label">Total Categorías</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ categoriasActivas }}</span>
+                <span class="stat-label">Activas</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ categoriasInactivas }}</span>
+                <span class="stat-label">Inactivas</span>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="filtroEstado">Filtrar por estado:</label>
+                <select id="filtroEstado" [(ngModel)]="filtroEstado" (change)="onFiltroEstadoChange()">
+                    <option value="todas">Todas las categorías</option>
+                    <option value="activas">Solo activas</option>
+                    <option value="inactivas">Solo inactivas</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="buscarTexto">Buscar:</label>
+                <input type="text" id="buscarTexto" 
+                       [(ngModel)]="buscarTexto" 
+                       (input)="onBuscarChange()"
+                       placeholder="Buscar por nombre o descripción...">
+            </div>
+
+            <button (click)="limpiarFiltros()" class="btn-secondary">
+                <i class="fas fa-times"></i> Limpiar filtros
+            </button>
+        </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="actions">
+        <button (click)="abrirModal()" class="btn-primary">
+            <i class="fas fa-plus"></i> Nueva Categoría
+        </button>
+        <button (click)="inicializarCategorias()" class="btn-secondary">
+            <i class="fas fa-download"></i> Inicializar Categorías
+        </button>
+    </div>
+
+    <!-- Tabla de categorías -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Orden</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let categoria of categoriasFiltradas" 
+                    [class.inactive-row]="!categoria.activa">
+                    <td>{{ categoria.nombre }}</td>
+                    <td>{{ categoria.descripcion || 'N/A' }}</td>
+                    <td>{{ categoria.orden }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="categoria.activa ? 'badge-success' : 'badge-danger'">
+                            {{ categoria.activa ? 'Activa' : 'Inactiva' }}
+                        </span>
+                    </td>
+                    <td class="actions-cell">
+                        <button (click)="editarCategoria(categoria)" class="btn-edit">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        
+                        <!-- Mostrar botón de eliminar o reactivar según estado -->
+                        <button *ngIf="categoria.activa" 
+                                (click)="eliminarCategoria(categoria._id, categoria.nombre)" 
+                                class="btn-delete">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                        
+                        <button *ngIf="!categoria.activa" 
+                                (click)="reactivarCategoria(categoria._id)" 
+                                class="btn-success">
+                            <i class="fas fa-check"></i> Reactivar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div *ngIf="categoriasFiltradas.length === 0" class="empty-table">
+            <p>No se encontraron categorías con los filtros aplicados.</p>
+        </div>
+    </div>
+
+    <!-- Mostrar contador de resultados filtrados -->
+    <div class="results-count">
+        Mostrando {{ categoriasFiltradas.length }} de {{ totalCategorias }} categorías
+    </div>
+</div>
+
+<app-modal [isVisible]="isModalVisible" [title]="esEdicion ? 'Editar Categoría' : 'Nueva Categoría'"
+    (close)="cerrarModal()">
+    <app-form-categoria [categoria]="categoriaSeleccionada" (guardar)="onGuardarCategoria($event)"
+        (cancelar)="cerrarModal()">
+    </app-form-categoria>
+</app-modal>

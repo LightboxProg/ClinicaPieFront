@@ -1,0 +1,23 @@
+<div class="burbujas-contenedor">
+  
+  <div *ngFor="let globo of historial" 
+       class="mensaje-fila"
+       [ngClass]="globo.emisor === 'doctor' ? 'fila-doctor' : 'fila-cliente'">
+
+    <div class="burbuja" [ngClass]="globo.emisor === 'doctor' ? 'burbuja-doctor' : 'burbuja-cliente'">
+      
+      <span class="quien-envia" *ngIf="globo.emisor === 'doctor'"></span>
+      <span class="quien-envia" *ngIf="globo.emisor === 'cliente'"> {{ usuario?.nombre || 'Cliente' }}</span>
+
+      <p class="texto-mensaje">{{ globo.mensaje }}</p>
+
+      <div class="hora-estado">
+        <small>{{ globo.fecha | date:'shortTime' }}</small>
+        <span class="check" *ngIf="globo.emisor === 'doctor'">✓✓</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

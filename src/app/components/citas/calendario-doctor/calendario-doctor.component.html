@@ -1,0 +1,66 @@
+<div class="agenda-doctor-container">
+
+  <header class="cabecera-agenda">
+    <div class="info-doctor">
+      <h2>🩺 Agenda Diaria</h2>
+      <p class="nombre-doc" *ngIf="doctorNombre">{{ doctorNombre }}</p>
+    </div>
+    
+    <div class="filtro-fecha">
+      <label>Día a consultar:</label>
+      <input type="date" [(ngModel)]="fechaSeleccionada" (change)="buscarDisponibilidad()">
+    </div>
+  </header>
+
+  <div *ngIf="!doctorIdActual && !cargando" class="estado-vacio">
+    <p>👈 Selecciona un especialista de la lista para ver su agenda.</p>
+  </div>
+
+  <div *ngIf="cargando" class="estado-vacio">
+    <div class="spinner"></div>
+    <p>Calculando disponibilidad...</p>
+  </div>
+
+  <div *ngIf="!cargando && doctorIdActual && bloques.length === 0" class="estado-vacio inactivo">
+    <p>🏖️ {{ mensajeBackend || 'No hay horarios configurados para este día.' }}</p>
+  </div>
+
+  <div *ngIf="!cargando && bloques.length > 0" class="timeline">
+    
+    <div *ngFor="let bloque of bloques" 
+         class="bloque-turno" 
+         [ngClass]="{'disponible': bloque.estado === 'disponible', 'ocupado': bloque.estado === 'ocupado'}">
+      
+      <div class="hora-col">
+        <span class="hora">{{ bloque.inicio }}</span>
+        <span class="hasta">a</span>
+        <span class="hora">{{ bloque.fin }}</span>
+      </div>
+
+      <div class="info-col">
+        
+        <ng-container *ngIf="bloque.estado === 'disponible'">
+          <h4>✨ Espacio Disponible</h4>
+          <button class="btn-agendar" (click)="seleccionarBloque(bloque)">
+            + Agendar Cita
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="bloque.estado === 'ocupado'">
+          <h4>{{ bloque.titulo }}</h4>
+          <p class="detalles-cita">{{ bloque.detalles }}</p>
+        </ng-container>
+
+      </div>
+    </div>
+
+  </div>
+
+  <app-agendar-cita 
+    *ngIf="mostrarModalAgendar" 
+    [datosPreconfigurados]="datosParaModal"
+    (cerrarModal)="mostrarModalAgendar = false"
+    (citaAgendada)="buscarDisponibilidad()">
+  </app-agendar-cita>
+
+</div>

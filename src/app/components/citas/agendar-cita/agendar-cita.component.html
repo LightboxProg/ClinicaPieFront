@@ -1,0 +1,116 @@
+<div class="modal-overlay" (click)="cerrar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+        <header class="modal-header">
+            <div class="header-text">
+                <h3>✨ Nueva Cita</h3>
+                <p>Completa los detalles para agendar en Google Calendar</p>
+            </div>
+            <button class="btn-close" (click)="cerrar()">&times;</button>
+        </header>
+
+        <form [formGroup]="citaForm" (ngSubmit)="guardarCita()" class="modal-body">
+
+            <div class="grid-form">
+
+                <div class="campo full contenedor-autocompletado">
+                    <label>🔍 Búsqueda Rápida (Opcional)</label>
+                    <input type="text" placeholder="Escribe el nombre, apellido o teléfono para buscar..."
+                        [(ngModel)]="terminoBusqueda" [ngModelOptions]="{standalone: true}"
+                        (input)="filtrarContactos($event)">
+
+                    <ul class="lista-resultados" *ngIf="contactosFiltrados.length > 0">
+                        <li *ngFor="let c of contactosFiltrados" (click)="seleccionarContactoLista(c)">
+                            <div class="info-principal">
+                                <strong>{{ c.nombre }} {{ c.apeP || c.apellidos || c.apellido }}</strong>
+                                <span class="badge" [ngClass]="c.tipoContactoDb">
+                                    {{ c.tipoContactoDb === 'paciente' ? 'Paciente' : 'Prospecto' }}
+                                </span>
+                            </div>
+                            <small>📞 {{ c.telefonoWhatsapp || c.numeroTelefono || c.telefono }}</small>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="campo full">
+                    <label>Teléfono WhatsApp (Con 52)</label>
+                    <input type="text" formControlName="telefono" placeholder="Ej: 524491234567">
+                    <small class="error" *ngIf="citaForm.get('telefono')?.invalid && citaForm.get('telefono')?.touched">
+                        Formato de teléfono inválido (10-12 dígitos).
+                    </small>
+                </div>
+
+                <div class="campo full" *ngIf="citaForm.get('telefono')?.valid">
+                    <div class="alerta-paciente" [ngClass]="tipoContacto">
+
+                        <span *ngIf="tipoContacto === 'paciente'">
+                            ✅ <strong>¡Paciente frecuente!</strong> Sus datos se autocompletaron.
+                        </span>
+
+                        <span *ngIf="tipoContacto === 'pregunton'">
+                            🎯 <strong>¡Prospecto (Preguntón) encontrado!</strong> Sus datos se autocompletaron.
+                        </span>
+
+
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label>Tipo de Agendamiento</label>
+                    <select formControlName="itemTipo">
+                        <option value="srv">Servicio Individual</option>
+                        <option value="prom">Promoción / Paquete</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label>Seleccionar Tratamiento</label>
+                    <select formControlName="itemId">
+                        <option value="" disabled selected>-- Selecciona uno --</option>
+
+                        <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'srv'">
+                            <option *ngFor="let srv of servicios" [value]="srv._id">
+                                {{ srv.nombre }} ({{ srv.duracion }} min)
+                            </option>
+                        </ng-container>
+
+                        <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'prom'">
+                            <option *ngFor="let prom of promociones" [value]="prom._id">
+                                {{ prom.nombre }}
+                            </option>
+                        </ng-container>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label>Fecha</label>
+                    <input type="date" formControlName="fechaCita" readonly class="input-readonly">
+                </div>
+
+                <div class="campo">
+                    <label>Hora Inicio</label>
+                    <input type="time" formControlName="horaInicio" [min]="horaMinimaPermitida"
+                        [max]="horaMaximaPermitida">
+
+                    <small class="error" *ngIf="horaFueraDeRango()">
+                        Debe ser entre las {{ horaMinimaPermitida }} y {{ horaMaximaPermitida }}.
+                    </small>
+                </div>
+
+                <div class="campo full">
+                    <label>Observaciones o Notas</label>
+                    <textarea formControlName="observaciones" rows="2" placeholder="Notas para el doctor..."></textarea>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <button type="button" class="btn-cancelar" (click)="cerrar()">Cancelar</button>
+                <button type="submit" class="btn-guardar" [disabled]="citaForm.invalid || cargando">
+                    <span *ngIf="!cargando">Confirmar y Agendar</span>
+                    <span *ngIf="cargando" class="loader"></span>
+                </button>
+            </footer>
+
+        </form>
+    </div>
+</div>

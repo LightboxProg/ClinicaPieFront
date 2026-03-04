@@ -1,0 +1,113 @@
+.agenda-doctor-container {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+}
+
+.cabecera-agenda {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+
+  .info-doctor {
+    h2 { margin: 0; color: #1e293b; font-size: 1.4rem; }
+    .nombre-doc { margin: 4px 0 0 0; color: #0ea5e9; font-weight: 600; }
+  }
+
+  .filtro-fecha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8fafc;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+
+    label { font-size: 0.9rem; color: #64748b; font-weight: 600; }
+    input { border: none; background: transparent; color: #334155; font-weight: bold; outline: none; }
+  }
+}
+
+/* MENSAJES DE ESTADO */
+.estado-vacio {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+
+  &.inactivo { background: #fff1f2; color: #e11d48; border-color: #fecdd3; }
+  
+  .spinner {
+    width: 30px; height: 30px;
+    border: 3px solid #cbd5e1; border-top-color: #0ea5e9;
+    border-radius: 50%; animation: spin 1s linear infinite;
+    margin: 0 auto 12px auto;
+  }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* LÍNEA DE TIEMPO (TIMELINE) */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bloque-turno {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  
+  .hora-col {
+    background: #f8fafc;
+    width: 110px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #e2e8f0;
+    
+    .hora { font-weight: 700; color: #334155; font-size: 0.9rem; }
+    .hasta { font-size: 0.75rem; color: #94a3b8; margin: 2px 0; }
+  }
+
+  .info-col {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h4 { margin: 0 0 6px 0; font-size: 1.1rem; }
+  }
+
+  /* ESTILOS SEGÚN ESTADO */
+  &.disponible {
+    border-left: 5px solid #10b981; /* Verde */
+    .info-col h4 { color: #059669; }
+    .btn-agendar {
+      align-self: flex-start; margin-top: 8px;
+      background: #10b981; color: white; border: none;
+      padding: 6px 12px; border-radius: 6px; font-weight: bold;
+      cursor: pointer; transition: 0.2s;
+      &:hover { background: #059669; }
+    }
+  }
+
+  &.ocupado {
+    border-left: 5px solid #ef4444; /* Rojo */
+    background: #fef2f2;
+    .info-col h4 { color: #b91c1c; }
+    .detalles-cita { margin: 0; font-size: 0.85rem; color: #7f1d1d; white-space: pre-wrap; }
+    .hora-col { background: #fef2f2; border-color: #fecdd3; }
+  }
+}

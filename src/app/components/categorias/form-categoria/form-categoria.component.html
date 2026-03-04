@@ -1,0 +1,38 @@
+<form (ngSubmit)="guardarForm($event)" class="form-container">
+  <label>
+    Nombre:
+    <input type="text" [(ngModel)]="formData.nombre" name="nombre" required
+      placeholder="Ingrese el nombre de la categoría" />
+  </label>
+
+  <label>
+    Descripción:
+    <textarea [(ngModel)]="formData.descripcion" name="descripcion" rows="3"
+      placeholder="Descripción opcional"></textarea>
+  </label>
+
+  <label>
+    Orden:
+    <input type="number" [(ngModel)]="formData.orden" name="orden" required min="0" step="1" />
+    <small>Define el orden de visualización (menor número = primero)</small>
+  </label>
+
+  <label class="checkbox-label">
+    <input type="checkbox" [(ngModel)]="formData.activa" name="activa" />
+    <span>Activa</span>
+  </label>
+
+  <!-- Información de modo -->
+  <div *ngIf="esEdicion" class="mode-info">
+    <small>Modo: Edición | ID: {{ formData._id }}</small>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn-primary">
+      {{ esEdicion ? 'Actualizar' : 'Crear' }} Categoría
+    </button>
+    <button type="button" (click)="cancelarForm()" class="btn-secondary">
+      Cancelar
+    </button>
+  </div>
+</form>

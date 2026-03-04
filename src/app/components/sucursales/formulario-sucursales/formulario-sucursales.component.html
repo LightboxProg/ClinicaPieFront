@@ -1,0 +1,135 @@
+<div class="main-container">
+
+    <div class="header-section">
+        <h1>{{ modoEdicion ? 'Editar Sucursal' : 'Nueva Sucursal' }}</h1>
+        <p>{{ modoEdicion ? 'Modifica la información de esta ubicación' : 'Configuración general y horarios de atención' }}</p>
+        <div *ngIf="cargandoDatos" class="cargando-msg">
+            <i class="fas fa-spinner fa-spin"></i> Cargando datos...
+        </div>
+    </div>
+
+    <form [formGroup]="sucursalForm" (ngSubmit)="onSubmit()">
+
+        <div class="card">
+            <div class="card-title">📍 Información de Ubicación</div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>Nombre de la Sucursal</label>
+                    <input type="text" formControlName="nombre" placeholder="Ej. Plaza Norte">
+                    <span class="error-msg"
+                        *ngIf="sucursalForm.get('nombre')?.invalid && sucursalForm.get('nombre')?.touched">Requerido</span>
+                </div>
+                <div class="input-group">
+                    <label>Link de Google Maps</label>
+                    <input type="text" formControlName="urlMapa" placeholder="https://maps.google...">
+                    <span class="error-msg"
+                        *ngIf="sucursalForm.get('urlMapa')?.invalid && sucursalForm.get('urlMapa')?.touched">Requerido</span>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>Teléfono</label>
+                    <input type="text" formControlName="telefono" placeholder="10 dígitos">
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" formControlName="email">
+                </div>
+            </div>
+
+            <div formGroupName="direccion" class="direccion-grid">
+                <div class="input-group full-width">
+                    <label>Calle y Número</label>
+                    <div class="merged-input">
+                        <input type="text" formControlName="calle" placeholder="Calle" style="flex:3">
+                        <input type="text" formControlName="numero" placeholder="Num" style="flex:1">
+                    </div>
+                </div>
+                <div class="input-group"><label>Colonia</label><input type="text" formControlName="colonia"></div>
+                <div class="input-group"><label>Ciudad</label><input type="text" formControlName="ciudad"></div>
+                <div class="input-group"><label>Estado</label><input type="text" formControlName="estado"></div>
+                <div class="input-group"><label>C.P.</label><input type="text" formControlName="codigoPostal"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title-row">
+                <div class="card-title">⏰ Horarios de Atención</div>
+
+                <div class="quick-fill-tool">
+                    <span>Llenado Rápido:</span>
+                    <input type="time" [(ngModel)]="genApertura" [ngModelOptions]="{standalone: true}">
+                    <span>a</span>
+                    <input type="time" [(ngModel)]="genCierre" [ngModelOptions]="{standalone: true}">
+
+                    <button type="button" class="btn-fill" (click)="generarHorarioSemanal()">
+                        <i class="fas fa-bolt"></i> Aplicar a todos
+                    </button>
+                </div>
+            </div>
+
+            <div formArrayName="horarios" class="days-container">
+                <div *ngFor="let day of horariosArr.controls; let i = index" [formGroupName]="i" class="day-row"
+                    [class.closed-row]="day.get('cerrado')?.value">
+
+                    <div class="day-header">
+                        <span class="day-name" *ngIf="day.get('dia')?.value !== 'Extra'">{{ day.get('dia')?.value
+                            }}</span>
+                        <input type="text" formControlName="dia" class="day-input-mini"
+                            *ngIf="day.get('dia')?.value === 'Extra'">
+
+                        <label class="switch">
+                            <input type="checkbox" [checked]="!day.get('cerrado')?.value"
+                                (change)="day.get('cerrado')?.setValue(!day.get('cerrado')?.value)">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="status-label" [class.open]="!day.get('cerrado')?.value">
+                            {{ day.get('cerrado')?.value ? 'CERRADO' : 'ABIERTO' }}
+                        </span>
+                    </div>
+
+                    <div class="day-controls" *ngIf="!day.get('cerrado')?.value">
+
+                        <div class="time-block">
+                            <input type="time" formControlName="apertura">
+                            <span class="separator">-</span>
+                            <input type="time" formControlName="cierre">
+                        </div>
+
+                        <div class="break-section">
+                            <div class="break-toggle">
+                                <input type="checkbox" id="break-{{i}}" formControlName="tieneDescanso">
+                                <label for="break-{{i}}">Descanso</label>
+                            </div>
+
+                            <div class="break-inputs" *ngIf="day.get('tieneDescanso')?.value">
+                                <input type="time" formControlName="descansoInicio">
+                                <span class="separator">a</span>
+                                <input type="time" formControlName="descansoFin">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="closed-msg" *ngIf="day.get('cerrado')?.value">
+                        Sin actividad laboral
+                    </div>
+
+                </div>
+            </div>
+
+            <div style="margin-top: 1rem; text-align: right;">
+                <button type="button" class="btn-text" (click)="agregarDia()">+ Agregar día extra</button>
+            </div>
+
+        </div>
+
+        <div class="actions">
+            <button type="button" class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+            <button type="submit" class="btn-save">{{ modoEdicion ? 'GUARDAR CAMBIOS' : 'GUARDAR SUCURSAL' }}</button>
+        </div>
+
+    </form>
+</div>

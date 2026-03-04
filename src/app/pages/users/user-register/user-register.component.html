@@ -1,0 +1,188 @@
+<div class="register-container">
+  <div class="background-elements">
+    <div class="element element-1"></div>
+    <div class="element element-2"></div>
+    <div class="element element-3"></div>
+  </div>
+
+  <div class="register-card">
+    <div class="card-header">
+      <h1 class="register-title">Registro de Usuario</h1>
+      <p class="register-subtitle">Crear nueva cuenta de usuario</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <div class="form-group">
+        <label for="nombre">
+          <i class="fas fa-user"></i>
+          Nombre(s) <span class="required">*</span>
+        </label>
+        <input id="nombre" type="text" placeholder="Ingresa Nombre(s)" formControlName="nombre"
+          [ngClass]="{'invalid': registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched, 'valid': registerForm.get('nombre')?.valid && registerForm.get('nombre')?.touched}">
+        <div class="input-focus-line"></div>
+        <div class="error-message" *ngIf="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
+          <span *ngIf="registerForm.get('nombre')?.errors?.['required']">El nombre es requerido</span>
+          <span *ngIf="registerForm.get('nombre')?.errors?.['minlength']">Mínimo 2 caracteres</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="apeP">
+            <i class="fas fa-user-tag"></i>
+            Apellido Paterno <span class="required">*</span>
+          </label>
+          <input id="apeP" type="text" placeholder="Ingresa Apellido Paterno" formControlName="apeP"
+            [ngClass]="{'invalid': registerForm.get('apeP')?.invalid && registerForm.get('apeP')?.touched, 'valid': registerForm.get('apeP')?.valid && registerForm.get('apeP')?.touched}">
+          <div class="input-focus-line"></div>
+          <div class="error-message" *ngIf="registerForm.get('apeP')?.invalid && registerForm.get('apeP')?.touched">
+            <span *ngIf="registerForm.get('apeP')?.errors?.['required']">El apellido paterno es requerido</span>
+            <span *ngIf="registerForm.get('apeP')?.errors?.['minlength']">Mínimo 2 caracteres</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="apeM">
+            <i class="fas fa-user-tag"></i>
+            Apellido Materno <span class="required">*</span>
+          </label>
+          <input id="apeM" type="text" placeholder="Ingresa Apellido Materno" formControlName="apeM"
+            [ngClass]="{'invalid': registerForm.get('apeM')?.invalid && registerForm.get('apeM')?.touched, 'valid': registerForm.get('apeM')?.valid && registerForm.get('apeM')?.touched}">
+          <div class="input-focus-line"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="correo">
+            <i class="fas fa-envelope"></i>
+            Email <span class="required">*</span>
+          </label>
+          <input id="correo" type="email" placeholder="Ingresa un Email" formControlName="correo"
+            [ngClass]="{'invalid': registerForm.get('correo')?.invalid && registerForm.get('correo')?.touched, 'valid': registerForm.get('correo')?.valid && registerForm.get('correo')?.touched}">
+          <div class="input-focus-line"></div>
+          <div class="error-message" *ngIf="registerForm.get('correo')?.invalid && registerForm.get('correo')?.touched">
+            <span *ngIf="registerForm.get('correo')?.errors?.['required']">El email es requerido</span>
+            <span *ngIf="registerForm.get('correo')?.errors?.['email']">Formato de email inválido</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="telefono">
+            <i class="fas fa-phone"></i>
+            Teléfono <span class="required">*</span>
+          </label>
+          <input id="telefono" type="tel" placeholder="Ingresa un Teléfono (10 dígitos)" formControlName="telefono"
+            [ngClass]="{'invalid': registerForm.get('telefono')?.invalid && registerForm.get('telefono')?.touched, 'valid': registerForm.get('telefono')?.valid && registerForm.get('telefono')?.touched}">
+          <div class="input-focus-line"></div>
+          <div class="error-message"
+            *ngIf="registerForm.get('telefono')?.invalid && registerForm.get('telefono')?.touched">
+            <span *ngIf="registerForm.get('telefono')?.errors?.['required']">El teléfono es requerido</span>
+            <span *ngIf="registerForm.get('telefono')?.errors?.['pattern']">Debe tener 10 dígitos numéricos</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="usuario">
+            <i class="fas fa-user-circle"></i>
+            Usuario <span class="required">*</span>
+          </label>
+          <input id="usuario" type="text" placeholder="Ingresa un Usuario" formControlName="usuario"
+            [ngClass]="{'invalid': registerForm.get('usuario')?.invalid && registerForm.get('usuario')?.touched, 'valid': registerForm.get('usuario')?.valid && registerForm.get('usuario')?.touched}">
+          <div class="input-focus-line"></div>
+          <div class="error-message"
+            *ngIf="registerForm.get('usuario')?.invalid && registerForm.get('usuario')?.touched">
+            <span *ngIf="registerForm.get('usuario')?.errors?.['required']">El usuario es requerido</span>
+            <span *ngIf="registerForm.get('usuario')?.errors?.['minlength']">Mínimo 3 caracteres</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">
+            <i class="fas fa-lock"></i>
+            Contraseña <span class="required">*</span>
+          </label>
+          <input id="password" type="password" placeholder="Ingresa una Contraseña" formControlName="password"
+            [ngClass]="{'invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched, 'valid': registerForm.get('password')?.valid && registerForm.get('password')?.touched}">
+          <div class="input-focus-line"></div>
+          <div class="error-message"
+            *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+            <span *ngIf="registerForm.get('password')?.errors?.['required']">La contraseña es requerida</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Mínimo 6 caracteres</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['pattern']">Debe tener letra y número</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="tipo">
+            <i class="fas fa-user-tie"></i>
+            Tipo de usuario <span class="required">*</span>
+          </label>
+          <select id="tipo" formControlName="tipo"
+            [ngClass]="{'invalid': registerForm.get('tipo')?.invalid && registerForm.get('tipo')?.touched, 'valid': registerForm.get('tipo')?.valid && registerForm.get('tipo')?.touched}">
+            <option value="">Selecciona una opción</option>
+            <option value="Administrador">Administrador</option>
+            <option value="Doctor">Doctor</option>
+            <option value="Recepcionista">Recepcionista</option>
+          </select>
+          <div class="input-focus-line"></div>
+          <div class="error-message" *ngIf="registerForm.get('tipo')?.invalid && registerForm.get('tipo')?.touched">
+            <span *ngIf="registerForm.get('tipo')?.errors?.['required']">Requerido</span>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="registerForm.get('tipo')?.value !== 'Administrador'">
+          <label for="sucursal">
+            <i class="fas fa-building"></i>
+            Sucursal <span class="required">*</span>
+          </label>
+          <select id="sucursal" formControlName="sucursal"
+            [ngClass]="{'invalid': registerForm.get('sucursal')?.invalid && registerForm.get('sucursal')?.touched, 'valid': registerForm.get('sucursal')?.valid && registerForm.get('sucursal')?.touched}">
+            <option value="">Selecciona Sucursal</option>
+            <option *ngFor="let suc of sucursalesList" [value]="suc._id">
+              {{ suc.nombre }}
+            </option>
+          </select>
+          <div class="input-focus-line"></div>
+          <div class="error-message"
+            *ngIf="registerForm.get('sucursal')?.invalid && registerForm.get('sucursal')?.touched">
+            <span *ngIf="registerForm.get('sucursal')?.errors?.['required']">La sucursal es requerida</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="registerForm.get('tipo')?.value === 'Doctor'">
+        <div class="form-group full-width">
+          <label for="especialidad">
+            <i class="fas fa-stethoscope"></i>
+            Especialidad <span class="required">*</span>
+          </label>
+          <input id="especialidad" type="text" placeholder="Ej. Cardiología, Pediatría..."
+            formControlName="especialidad"
+            [ngClass]="{'invalid': registerForm.get('especialidad')?.invalid && registerForm.get('especialidad')?.touched, 'valid': registerForm.get('especialidad')?.valid && registerForm.get('especialidad')?.touched}">
+          <div class="input-focus-line"></div>
+          <div class="error-message"
+            *ngIf="registerForm.get('especialidad')?.invalid && registerForm.get('especialidad')?.touched">
+            <span *ngIf="registerForm.get('especialidad')?.errors?.['required']">La especialidad es requerida para
+              doctores</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-button" [disabled]="!isFormValid()">
+        <i class="fas fa-user-plus"></i>
+        {{ registerForm.valid ? 'CREAR USUARIO' : 'COMPLETE EL FORMULARIO' }}
+        <div class="btn-shine"></div>
+      </button>
+
+      <div class="form-status" *ngIf="registerForm.touched">
+        <div class="status-indicator" [ngClass]="{'valid': registerForm.valid, 'invalid': registerForm.invalid}">
+          <i class="fas" [class.fa-check-circle]="registerForm.valid"
+            [class.fa-times-circle]="registerForm.invalid"></i>
+          {{ registerForm.valid ? 'Formulario completo y válido' : 'Formulario incompleto o inválido' }}
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

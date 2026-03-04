@@ -1,0 +1,17 @@
+.cont-chats{
+    width: 100%;
+    display: flex;
+}
+
+
+
+
+@media (max-width:760px){
+
+
+    .cont-chats{
+        display: flex;
+        flex-direction: column;
+        
+    }
+}

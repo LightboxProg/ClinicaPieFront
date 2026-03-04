@@ -1,0 +1,132 @@
+.pagina-calendario {
+  padding: 24px;
+  background-color: #f1f5f9;
+  min-height: 100vh;
+}
+
+/* --- TABS SUPERIORES --- */
+.tabs-navegacion {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 12px;
+
+  button {
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #64748b;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+
+    &:hover { background: #e2e8f0; }
+
+    &.activo {
+      background: white;
+      color: #0ea5e9;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+  }
+}
+
+/* --- PANEL DE SELECCIÓN DE DOCTORES --- */
+.panel-doctores {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+  margin-bottom: 24px;
+
+  h3 { margin: 0 0 16px 0; color: #334155; font-size: 1.1rem; }
+
+  .botones-doctores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .btn-doctor {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    padding: 10px 18px;
+    border-radius: 30px;
+    color: #475569;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover { background: #e2e8f0; transform: translateY(-1px); }
+
+    &.btn-activo {
+      background: #0ea5e9;
+      color: white;
+      border-color: #0284c7;
+      box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+    }
+  }
+}
+
+.mensaje-selecciona {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  font-size: 1.1rem;
+  background: white;
+  border-radius: 12px;
+  border: 1px dashed #cbd5e1;
+}
+
+/* Animación suave al cambiar de pestaña */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.panel-seleccion {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+  margin-bottom: 24px;
+
+  h3 { margin: 0 0 16px 0; color: #334155; font-size: 1.1rem; }
+
+  .botones-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .btn-item {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    padding: 10px 18px;
+    border-radius: 30px;
+    color: #475569;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover { background: #e2e8f0; transform: translateY(-1px); }
+
+    &.btn-activo {
+      background: #0ea5e9;
+      color: white;
+      border-color: #0284c7;
+      box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+    }
+    
+    &.btn-sucursal.btn-activo {
+      background: #10b981; // Verde para sucursales si quieres diferenciarlas
+      border-color: #059669;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    }
+  }
+}

@@ -1,0 +1,128 @@
+<div class="list-container">
+
+  <!-- Cabecera: Título + Botón Crear -->
+  <div class="header-action">
+    <div class="titles">
+      <h1>Mis Sucursales</h1>
+      <p>Administra las ubicaciones de ProPigment</p>
+    </div>
+    <button class="btn-create" routerLink="/sucursales-formulario">
+      <i class="fas fa-plus"></i> Nueva Sucursal
+    </button>
+  </div>
+
+  <!-- Barra de búsqueda y filtros de estado -->
+  <div class="filtros-bar">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input
+        type="text"
+        placeholder="Buscar por nombre o teléfono..."
+        [(ngModel)]="filtroBusqueda"
+        (input)="aplicarFiltros()"
+      />
+      <button class="clear-btn" *ngIf="filtroBusqueda" (click)="limpiarFiltros()" title="Limpiar">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="estado-tabs">
+      <button
+        class="tab"
+        [class.active]="filtroEstado === 'todos'"
+        (click)="setFiltroEstado('todos')"
+      >Todas ({{ sucursales.length }})</button>
+      <button
+        class="tab tab-active"
+        [class.active]="filtroEstado === 'activo'"
+        (click)="setFiltroEstado('activo')"
+      ><span class="dot verde"></span> Activas ({{ totalActivas }})</button>
+      <button
+        class="tab tab-inactive"
+        [class.active]="filtroEstado === 'inactivo'"
+        (click)="setFiltroEstado('inactivo')"
+      ><span class="dot gris"></span> Inactivas ({{ totalInactivas }})</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="cargando">
+    <div class="spinner"></div>
+    <p>Cargando sucursales...</p>
+  </div>
+
+  <!-- Sin resultados de filtro -->
+  <div class="empty-state" *ngIf="!cargando && sucursalesFiltradas.length === 0 && sucursales.length > 0">
+    <i class="fas fa-search"></i>
+    <h3>Sin resultados</h3>
+    <p>No hay sucursales que coincidan con tu búsqueda.</p>
+    <button (click)="limpiarFiltros()">Limpiar filtros</button>
+  </div>
+
+  <!-- Sin sucursales en absoluto -->
+  <div class="empty-state" *ngIf="!cargando && sucursales.length === 0">
+    <i class="fas fa-store-slash"></i>
+    <h3>No hay sucursales registradas</h3>
+    <button routerLink="/sucursales-formulario">Registrar la primera</button>
+  </div>
+
+  <!-- Grid de tarjetas -->
+  <div class="grid-cards" *ngIf="!cargando && sucursalesFiltradas.length > 0">
+
+    <div class="branch-card" *ngFor="let suc of sucursalesFiltradas" [class.inactiva]="!suc.activo">
+
+      <!-- Badge de estado -->
+      <div class="status-badge" [class.inactive]="!suc.activo">
+        <span class="badge-dot"></span>
+        {{ suc.activo ? 'ACTIVO' : 'INACTIVO' }}
+      </div>
+
+      <!-- Contenido principal de la tarjeta -->
+      <div class="card-content">
+        <h2 class="branch-name">{{ suc.nombre }}</h2>
+
+        <div class="info-row">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>{{ suc.direccion?.ciudad }}, {{ suc.direccion?.calle }} {{ suc.direccion?.numero }}</span>
+        </div>
+
+        <div class="info-row">
+          <i class="fas fa-phone"></i>
+          <span>{{ suc.telefono || 'Sin teléfono' }}</span>
+        </div>
+
+        <div class="info-row map-link" *ngIf="suc.urlMapa">
+          <i class="fas fa-external-link-alt"></i>
+          <a [href]="suc.urlMapa" target="_blank">Ver en Google Maps</a>
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div class="card-actions">
+        <!-- Editar -->
+        <button class="btn-icon edit" (click)="editarSucursal(suc._id)" title="Editar">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+
+        <!-- Toggle Activar / Desactivar -->
+        <button
+          class="btn-icon"
+          [class.deactivate]="suc.activo"
+          [class.activate]="!suc.activo"
+          (click)="toggleEstado(suc)"
+          [title]="suc.activo ? 'Desactivar' : 'Activar'"
+        >
+          <i class="fas" [class.fa-toggle-on]="suc.activo" [class.fa-toggle-off]="!suc.activo"></i>
+        </button>
+
+        <!-- Eliminar permanentemente -->
+        <button class="btn-icon delete" (click)="eliminarSucursal(suc)" title="Eliminar permanentemente">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

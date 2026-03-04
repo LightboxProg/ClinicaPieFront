@@ -1,0 +1,36 @@
+<!-- <div class="form-container">
+    <h2>Registro de Doctores</h2>
+    <button (click)="abrirModal()">Nuevo Doctores</button>
+</div>
+   -->
+
+<div class="p-2">
+  <button (click)="abrirModal()">Nuevo Doctores</button>
+</div>
+
+<!-- Modal para registrar un nuevo doctor -->
+<app-modal [isVisible]="isModalVisible" [title]="esEdicion ? 'Editar Doctor' : 'Registro de Doctores'" (close)="cerrarModal()">
+    <form (submit)="agregarDoctor(); $event.preventDefault()">
+      <label>
+        Nombre completo:
+        <input type="text" [(ngModel)]="nuevoDoctor.nombre" name="nombre" required />
+      </label>
+      <label>
+        Edad:
+        <input type="number" [(ngModel)]="nuevoDoctor.edad" name="edad" required />
+      </label>
+      <label>
+        Teléfono:
+        <input type="number" [(ngModel)]="nuevoDoctor.telefono" name="telefono" required />
+      </label>
+      <label>
+        Correo electrónico:
+        <input type="email" [(ngModel)]="nuevoDoctor.correo" name="correo" required />
+      </label>
+      <label>
+        Especialidad
+        <input type="text" [(ngModel)]="nuevoDoctor.especialidad" name="especialidad" required />
+      </label>
+      <button type="submit">{{ esEdicion ? 'Actualizar' : 'Registrar' }}</button>
+    </form>
+</app-modal>

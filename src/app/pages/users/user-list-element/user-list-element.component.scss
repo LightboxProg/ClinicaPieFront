@@ -1,0 +1,322 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+// Variables mejoradas
+$primary-color: #ff5a5f;
+$secondary-color: #00a699;
+$accent-color: #ffb400;
+$dark-color: #2d2d2d;
+$light-color: #f8f9fa;
+$text-dark: #333333;
+$text-med: #666666;
+$border-radius: 12px;
+
+.m-2 {
+  padding: 1.5rem;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: 1fr 130px;
+  margin: 18px 0 0 0;
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+  border: 1px solid #e8ecef;
+  border-radius: $border-radius;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, $primary-color, $secondary-color);
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgba(255, 90, 95, 0.3);
+  }
+
+  &:nth-child(odd) {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  }
+}
+
+.usuario {
+  display: grid;
+  grid-template-areas: "imagen info";
+  grid-template-columns: 160px 1fr;
+  cursor: pointer;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+p {
+  grid-area: info;
+  padding-left: 5%;
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  color: $text-dark;
+  line-height: 1.6;
+
+  // Mejorar la presentación de cada línea
+  br {
+    display: block;
+    margin-bottom: 0.5rem;
+    content: "";
+  }
+}
+
+// Estilos para resaltar las etiquetas
+.usuario-info {
+  grid-area: info;
+  padding-left: 5%;
+
+  .info-line {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.6rem;
+    font-family: "Inter", sans-serif;
+    font-size: 0.95rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .label {
+      font-weight: 600;
+      color: $dark-color;
+      min-width: 120px;
+      font-size: 0.9rem;
+    }
+
+    .value {
+      color: $text-med;
+      flex: 1;
+
+      &.username {
+        color: $primary-color;
+        font-weight: 500;
+      }
+
+      &.specialty {
+        color: $secondary-color;
+        font-weight: 500;
+      }
+
+      &.type {
+        background: rgba(255, 90, 95, 0.1);
+        color: $primary-color;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+figure {
+  grid-area: imagen;
+  justify-self: center;
+  border-right: 2px solid;
+  border-image: linear-gradient(
+      to bottom,
+      rgba(255, 90, 95, 0.2),
+      rgba(0, 166, 153, 0.2),
+      rgba(255, 180, 0, 0.2)
+    )
+    1 100%;
+  padding: 0 1.5rem 0 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.boton {
+  height: auto;
+  align-self: center;
+  justify-self: center;
+  margin-right: 12px;
+}
+
+img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid transparent;
+  background: linear-gradient(45deg, $primary-color, $secondary-color)
+    border-box;
+  transition: transform 0.3s ease;
+
+  .list:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.btn-danger {
+  color: #fff;
+  background: linear-gradient(135deg, #ff4757, #e84118);
+  border: none;
+  padding: 10px 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+
+    &::after {
+      width: 120px;
+      height: 120px;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-edit {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    $secondary-color,
+    darken($secondary-color, 10%)
+  );
+  border: none;
+  padding: 10px 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba($secondary-color, 0.3);
+  margin-right: 8px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba($secondary-color, 0.4);
+  }
+}
+
+// Responsive mejorado
+@media (max-width: 768px) {
+  .m-2 {
+    padding: 1rem;
+  }
+
+  .list {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin: 15px 0 0 0;
+    padding: 1.2rem;
+
+    &::before {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, $primary-color, $secondary-color);
+    }
+  }
+
+  .usuario {
+    grid-template-columns: 120px 1fr;
+    gap: 1.2rem;
+  }
+
+  figure {
+    padding: 0 1.2rem 0 0;
+  }
+
+  img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .usuario-info {
+    padding-left: 0;
+
+    .info-line {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.2rem;
+
+      .label {
+        min-width: auto;
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .boton {
+    margin-right: 0;
+
+    .btn-danger {
+      width: 100%;
+      padding: 12px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .usuario {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  figure {
+    border-right: none;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(
+        to right,
+        rgba(255, 90, 95, 0.2),
+        rgba(0, 166, 153, 0.2)
+      )
+      1 100%;
+    padding: 0 0 1rem 0;
+  }
+
+  .usuario-info {
+    text-align: center;
+
+    .info-line {
+      align-items: center;
+    }
+  }
+
+  img {
+    width: 90px;
+    height: 90px;
+  }
+}

@@ -1,0 +1,75 @@
+// ==========================================
+// VARIABLES DE COLOR (Estilo WhatsApp)
+// ==========================================
+$bg-barra: #f0f2f5; // Fondo gris de la barra inferior
+$bg-input: #ffffff; // Fondo blanco del campo de texto
+$primary: #00a884;  // Verde WhatsApp
+$text-dark: #111b21;
+$text-placeholder: #8696a0;
+$border-color: #d1d7db;
+
+// ==========================================
+// CONTENEDOR PRINCIPAL
+// ==========================================
+.input-contenedor {
+  display: flex;
+  align-items: center;
+  background-color: $bg-barra;
+  padding: 10px 15px;
+  border-top: 1px solid $border-color;
+  gap: 12px; // Separación exacta entre el cuadro de texto y el botón
+  min-height: 62px; // Altura estándar para que no se vea aplastado
+  z-index: 10;
+}
+
+// ==========================================
+// CAMPO DE TEXTO (El Input)
+// ==========================================
+input[type="text"] {
+  flex: 1; // Le dice que tome absolutamente todo el ancho disponible
+  border: none;
+  border-radius: 8px; // Bordes suavemente redondeados
+  padding: 12px 15px;
+  font-size: 0.95rem;
+  color: $text-dark;
+  background-color: $bg-input;
+  outline: none; // Quita el borde azul feo que ponen los navegadores
+  transition: box-shadow 0.2s ease; // Animación suave
+
+  &::placeholder {
+    color: $text-placeholder;
+  }
+
+  // Cuando el doctor le da clic para empezar a escribir
+  &:focus {
+    box-shadow: 0 0 0 1.5px $primary; // Le ponemos un borde verde sutil
+  }
+}
+
+// ==========================================
+// BOTÓN DE ENVIAR
+// ==========================================
+button {
+  background-color: transparent;
+  border: none;
+  color: $text-placeholder; // Por defecto es gris
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  // Efecto cuando el mouse pasa por encima
+  &:hover {
+    color: $primary; // El texto/ícono se vuelve verde
+    background-color: rgba($primary, 0.1); // Fondo verde súper clarito
+  }
+
+  // Pequeña animación cuando le das clic
+  &:active {
+    transform: scale(0.95);
+  }
+}

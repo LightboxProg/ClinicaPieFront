@@ -1,0 +1,23 @@
+<div class="lista" *ngIf="isMobile==true && seCliqueo==false || isMobile==false && seCliqueo==false">
+    <div class="chat-element p-1" *ngFor="let chat of pacientes" (click)="seleccionarChat(chat._id)">
+        <div class="flex">
+            <div class="flex-1">
+                <img class="img-chat" src="../../../../assets/imgs/user.jpg">
+            </div>
+            <div class="w-80">
+                <div class="chat-element-title flex-sb ">
+                    <div>{{chat.telefonoWhatsapp}}</div>
+                    
+                </div>
+                <div class="txt-sm">
+                    {{chat.nombre}} {{chat.apeP}} {{chat.apeM}}
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+    
+   
+</div>

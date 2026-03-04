@@ -1,0 +1,135 @@
+<div class="promociones-container">
+    <div class="header">
+        <h2>Gestión de Promociones</h2>
+        <div class="header-buttons">
+            <button class="btn-secondary" (click)="importarPromocionesIniciales()">
+                <i class="fas fa-download"></i> Importar Promos Iniciales
+            </button>
+            <button class="btn-primary" (click)="nuevaPromocion()">
+                <i class="fas fa-plus"></i> Nueva Promoción
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filtros">
+        <div class="filtro-item">
+            <label>Activa:</label>
+            <select [(ngModel)]="filtroActiva" (change)="aplicarFiltros()">
+                <option value="">Todas</option>
+                <option value="true">Activas</option>
+                <option value="false">Inactivas</option>
+            </select>
+        </div>
+        <div class="filtro-item">
+            <label>Vigente:</label>
+            <select [(ngModel)]="filtroVigente" (change)="aplicarFiltros()">
+                <option value="">Todas</option>
+                <option value="true">Vigentes</option>
+                <option value="false">No vigentes</option>
+            </select>
+        </div>
+        <div class="filtro-item">
+            <label>Servicio:</label>
+            <select [(ngModel)]="filtroServicio" (change)="aplicarFiltros()">
+                <option value="">Todos</option>
+                <option *ngFor="let s of servicios" [value]="s._id">{{ s.nombre }}</option>
+            </select>
+        </div>
+        <div class="filtro-item">
+            <label>Categoría:</label>
+            <select [(ngModel)]="filtroCategoria" (change)="aplicarFiltros()">
+                <option value="">Todas</option>
+                <option *ngFor="let c of categorias" [value]="c._id">{{ c.nombre }}</option>
+            </select>
+        </div>
+        <div class="filtro-item">
+            <label>Sucursal:</label>
+            <select [(ngModel)]="filtroSucursal" (change)="aplicarFiltros()">
+                <option value="">Todas</option>
+                <option *ngFor="let s of sucursales" [value]="s._id">{{ s.nombre }}</option>
+            </select>
+        </div>
+        <button class="btn-secondary" (click)="limpiarFiltros()">Limpiar</button>
+    </div>
+
+    <!-- Tabla de promociones -->
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Tipo Anclaje</th>
+                    <th>Vigencia</th>
+                    <th>Descuento</th>
+                    <th>Código</th>
+                    <th>Palabras Clave</th>
+                    <th>Usos</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                    <th>Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of promociones">
+                    <td>{{ p.nombre }}</td>
+                    <td>{{ p.descripcion | slice:0:50 }}...</td>
+                    <td>
+                        <span *ngIf="p.tipoAnclaje === 'servicio'">
+                            Servicios:
+                            <ng-container *ngIf="p.servicios && p.servicios[0]?.nombre; else ids">
+                                {{ nombresServicios(p.servicios) }}
+                            </ng-container>
+                            <ng-template #ids>{{ p.servicios?.join(', ') }}</ng-template>
+                        </span>
+                        <span *ngIf="p.tipoAnclaje === 'categoria'">Categoría: {{ p.categoria?.nombre || p.categoria
+                            }}</span>
+                        <span *ngIf="p.tipoAnclaje === 'global'">Global</span>
+                    </td>
+                    <td>{{ p.fechaInicio | date:'dd/MM/yyyy' }} - {{ p.fechaFin | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                        <span *ngIf="p.tipoDescuento === 'porcentaje'">{{ p.valorDescuento }}%</span>
+                        <span *ngIf="p.tipoDescuento === 'monto_fijo'">${{ p.valorDescuento }}</span>
+                        <span *ngIf="p.montoMinimo"> (mín ${{ p.montoMinimo }})</span>
+                    </td>
+                    <td>{{ p.codigo || '—' }}</td>
+                    <td>
+                        <span *ngIf="p.palabrasClave?.length; else sinPalabras">
+                            {{ p.palabrasClave!.join(', ') }}
+                        </span>
+                        <ng-template #sinPalabras>—</ng-template>
+                    </td>
+                    <td>{{ p.usosActuales || 0 }}/{{ p.usosMaximos || '∞' }}</td>
+                    <td>
+                        <span class="badge" [class.badge-success]="p.activo" [class.badge-danger]="!p.activo">
+                            {{ p.activo ? 'Activa' : 'Inactiva' }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn-icon" (click)="editarPromocion(p._id!)" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon" *ngIf="p.activo" (click)="desactivarPromocion(p._id!)"
+                            title="Desactivar">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                        <button class="btn-icon" *ngIf="!p.activo" (click)="activarPromocion(p._id!)" title="Activar">
+                            <i class="fas fa-check-circle"></i>
+                        </button>
+                        <button class="btn-icon text-danger" (click)="eliminarPromocion(p._id!)" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <img *ngIf="p.imagenUrl" [src]="p.imagenUrl" alt="Promo" class="table-img">
+                        <span *ngIf="!p.imagenUrl" class="no-image">Sin imagen</span>
+                    </td>
+                </tr>
+                <tr *ngIf="promociones.length === 0">
+                    <td colspan="10" class="text-center">No hay promociones que mostrar</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

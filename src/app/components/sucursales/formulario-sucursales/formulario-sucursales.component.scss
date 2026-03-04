@@ -1,0 +1,474 @@
+/* --- Variables de Diseño (Paleta ProPigment) --- */
+$primary: #ff5a5f;       // Rojo coral (igual que navbar)
+$primary-hover: #e04a4f; // Rojo más oscuro para hover
+$primary-light: #fff0f0; // Fondo rojo muy claro
+$accent: #ff7e5f;        // Naranja-coral (gradiente secundario)
+$bg-app: #F3F4F6;        // Gris muy claro de fondo
+$card-bg: #FFFFFF;       // Blanco para tarjetas
+$text-main: #111827;     // Gris casi negro
+$text-secondary: #6B7280;// Gris medio
+$border-color: #E5E7EB;  // Bordes suaves
+$success: #10B981;       // Verde éxito
+$warning-bg: #FFFBEB;    // Fondo amarillo suave (descansos)
+$warning-border: #FCD34D;// Borde amarillo
+$danger: #EF4444;        // Rojo error
+
+/* --- Layout Principal --- */
+.main-container {
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: $bg-app;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.header-section {
+  margin-bottom: 2rem;
+  text-align: center;
+  
+  h1 { 
+    font-size: 1.8rem; 
+    font-weight: 700; 
+    color: $text-main; 
+    margin-bottom: 0.5rem; 
+  }
+  p { 
+    color: $text-secondary; 
+    font-size: 1rem;
+  }
+}
+
+/* --- Estilos de Tarjetas --- */
+.card {
+  background: $card-bg;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(0,0,0,0.02);
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $text-main;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  
+  &::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 18px;
+    background: $primary;
+    border-radius: 2px;
+  }
+}
+
+/* --- Grids y Layouts de Formulario --- */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.direccion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 2 columnas por defecto
+  gap: 1.5rem;
+  
+  .full-width { 
+    grid-column: span 2; 
+  }
+}
+
+/* --- Inputs --- */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  
+  label { 
+    font-size: 0.85rem; 
+    font-weight: 600; 
+    color: $text-main; 
+    margin-bottom: 0.4rem; 
+  }
+  
+  input[type="text"], 
+  input[type="email"], 
+  input[type="tel"] {
+    padding: 0.75rem;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: #F9FAFB;
+    transition: all 0.2s;
+    
+    &:focus { 
+      outline: none; 
+      background: #FFF;
+      border-color: $primary; 
+      box-shadow: 0 0 0 3px rgba($primary, 0.1); 
+    }
+  }
+
+  .merged-input { 
+    display: flex; 
+    gap: 0.8rem; 
+  }
+
+  .error-msg {
+    color: $danger;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+}
+
+/* --- SECCIÓN DE HORARIOS --- */
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $border-color;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  
+  .card-title { margin-bottom: 0; }
+}
+
+/* Herramienta de Llenado Rápido */
+.quick-fill-tool {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: $primary-light; // Fondo rojo muy claro
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba($primary, 0.12);
+  
+  span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $primary;
+  }
+
+  input[type="time"] {
+    border: 1px solid rgba($primary, 0.3);
+    border-radius: 6px;
+    padding: 4px 8px;
+    color: $primary;
+    font-weight: bold;
+    background: white;
+    cursor: pointer;
+  }
+
+  .btn-fill {
+    background: $primary;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    &:hover { background: $primary-hover; }
+  }
+}
+
+/* Lista de Días */
+.days-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.day-row {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: rgba($primary, 0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  }
+  
+  &.closed-row {
+    background: #F9FAFB;
+    border-style: dashed;
+    border-color: #D1D5DB;
+    opacity: 0.75;
+    
+    &:hover { opacity: 1; border-color: $text-secondary; }
+  }
+}
+
+/* Cabecera del Día (Nombre + Switch) */
+.day-header {
+  display: flex;
+  align-items: center;
+  width: 220px; // Ancho fijo para alinear columnas
+  gap: 15px;
+
+  .day-name { 
+    font-weight: 700; 
+    color: $text-main; 
+    width: 80px; 
+    font-size: 1rem;
+  }
+
+  .day-input-mini {
+    width: 80px;
+    padding: 4px;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+  }
+
+  .status-label { 
+    font-size: 0.7rem; 
+    font-weight: 800; 
+    color: $text-secondary; 
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 60px;
+    
+    &.open { color: $success; }
+  }
+}
+
+/* Controles del Día (Horas + Descanso) */
+.day-controls {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 2rem;
+  justify-content: flex-start;
+  
+  .time-block {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    input[type="time"] { 
+      border: 1px solid $border-color; 
+      border-radius: 6px; 
+      padding: 6px 10px; 
+      color: $text-main; 
+      font-family: inherit;
+      background: #fff;
+    }
+    .separator { color: $text-secondary; font-weight: bold; }
+  }
+
+  /* Sección de Descanso (Amarilla) */
+  .break-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: $warning-bg; 
+    padding: 6px 12px;
+    border-radius: 30px;
+    border: 1px solid rgba($warning-border, 0.5);
+    
+    .break-toggle { 
+      display: flex; 
+      align-items: center; 
+      gap: 6px; 
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #92400E; // Marrón oscuro
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .break-inputs {
+      display: flex; 
+      align-items: center; 
+      gap: 6px;
+      animation: slideRight 0.3s ease-out;
+      
+      input { 
+        width: 95px; 
+        border: 1px solid $warning-border; 
+        padding: 4px; 
+        border-radius: 5px;
+        font-size: 0.9rem;
+        color: #92400E;
+        background: white;
+      }
+      .separator { color: #92400E; font-weight: bold; }
+    }
+  }
+}
+
+.closed-msg {
+  flex: 1;
+  text-align: center;
+  color: $text-secondary;
+  font-style: italic;
+  font-size: 0.9rem;
+  background: rgba(0,0,0,0.02);
+  padding: 5px;
+  border-radius: 6px;
+}
+
+/* --- Toggle Switch Moderno (iOS Style) --- */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  
+  input { opacity: 0; width: 0; height: 0; }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #E5E7EB;
+    transition: .4s;
+    border: 1px solid #D1D5DB;
+    
+    &.round { border-radius: 34px; }
+    &.round:before { border-radius: 50%; }
+    
+    &:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+  }
+  
+  input:checked + .slider { 
+    background-color: $success; 
+    border-color: $success;
+  }
+  input:checked + .slider:before { transform: translateX(22px); }
+}
+
+/* --- Botones y Acciones --- */
+.btn-text {
+  background: none;
+  border: 1px dashed $primary;
+  color: $primary;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: all 0.2s;
+  
+  &:hover { background: $primary-light; }
+}
+
+.actions {
+  margin-top: 3rem;
+  display: flex;
+  gap: 1rem;
+
+  .btn-cancelar {
+    flex: 0 0 auto;
+    padding: 1.2rem 2rem;
+    background: transparent;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-secondary;
+    cursor: pointer;
+    transition: all 0.2s;
+    &:hover { border-color: $primary; color: $primary; background: $primary-light; }
+  }
+
+  .btn-save {
+    flex: 1;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, $primary, $accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba($primary, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+    &:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 15px 20px -3px rgba($primary, 0.5); 
+    }
+    &:active { transform: translateY(0); }
+  }
+}
+
+.cargando-msg {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: $primary;
+  i { margin-right: 6px; }
+}
+
+/* --- Animaciones --- */
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- Responsive --- */
+@media(max-width: 900px) {
+  .day-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .day-header {
+    width: 100%;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.8rem;
+  }
+  
+  .day-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    
+    .time-block { justify-content: space-between; }
+    .break-section { justify-content: space-between; }
+  }
+}
+
+@media(max-width: 640px) {
+  .grid-2, .direccion-grid { grid-template-columns: 1fr; }
+  .direccion-grid .full-width { grid-column: span 1; }
+  
+  .card-title-row { flex-direction: column; align-items: stretch; }
+  .quick-fill-tool { flex-direction: column; align-items: stretch; text-align: center;}
+}

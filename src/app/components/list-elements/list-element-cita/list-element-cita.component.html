@@ -1,0 +1,22 @@
+<div class="list-element">
+    <div class="list-info">
+        <div class="name-date">
+            <div>ID: <strong>{{ cita._id }}</strong></div>
+            <div>Fecha: <strong>{{ cita.hora_inicio }} de {{ cita.hora_final }}</strong></div>
+        </div>
+
+        <div class="desc">
+            <strong>Doctor:</strong> {{ cita.doctor }}
+        </div>
+
+        <div class="desc">
+            <strong>Motivo:</strong> {{ cita.nota || 'No hay motivo' }}
+        </div>
+    </div>
+
+    <div class="list-options">
+        <button>Ver</button>
+        <button>Modificar</button>
+        <button>Eliminar</button>
+    </div>
+</div>

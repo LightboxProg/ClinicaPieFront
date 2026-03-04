@@ -1,0 +1,55 @@
+.filtros{
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px  rgba(0, 0, 0, 0.077);
+}
+
+*{
+  font-family: "Inter", serif;
+  font-weight: 300;
+}
+
+
+.title{
+  background-color: #282927;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+
+  padding: 10px;
+  color: white;
+
+}
+
+.filter-opt-container{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+
+}
+
+
+
+.filter-opt{
+ margin-top: 1rem;
+
+}
+
+
+.btn{
+  background-color: #282927;
+  color: white;
+  border-radius: 5px;
+}
+
+input{
+  border: 1px solid black;
+
+}
+
+input, select{
+  box-sizing: border-box;
+border-radius: 2px;
+padding: 4px;
+}

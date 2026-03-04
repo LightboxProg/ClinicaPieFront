@@ -1,0 +1,37 @@
+/* semaforo.component.scss */
+.semaforo {
+    display: flex;
+    gap: 5px; /* Espacio entre los círculos */
+  }
+
+  .circle {
+
+    width: 1rem; /* Tamaño ajustable */
+    height: 1rem;
+    border-radius: 50%;
+    background-color: gray; /* Color por defecto */
+    opacity: 0.2; /* Opacidad para círculos inactivos */
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .circle.gray {
+    background-color: rgb(97, 96, 96);
+  }
+
+  .circle.green {
+    background-color: rgb(2, 98, 2);
+  }
+
+  .circle.yellow {
+    background-color: rgb(255, 230, 0);
+  }
+
+  .circle.red {
+    background-color: red;
+  }
+
+  /* Estilo para el círculo activo */
+  .active {
+    opacity: 1;
+    transform: scale(1.2);
+  }

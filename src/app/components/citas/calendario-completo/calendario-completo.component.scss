@@ -1,0 +1,199 @@
+// ==========================================
+// VARIABLES DE COLOR Y ESTILO
+// ==========================================
+$bg-fondo: #f4f7f6;
+$text-dark: #2c3e50;
+$text-muted: #7f8c8d;
+$primary: #00a884; // Verde estilo tu chat
+$borde: #e0e6ed;
+
+.contenedor-calendario {
+    padding: 24px;
+    background-color: $bg-fondo;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+}
+
+.cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+        margin: 0;
+        color: $text-dark;
+        font-size: 1.5rem;
+    }
+
+    .btn-recargar {
+        background-color: white;
+        border: 1px solid $borde;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        color: $text-dark;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        &:hover {
+            background-color: #f8fafc;
+            transform: translateY(-1px);
+        }
+    }
+}
+
+// ==========================================
+// ESTADOS DE CARGA Y VACÍO
+// ==========================================
+.estado-mensaje {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    border: 1px dashed $borde;
+    color: $text-muted;
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba($primary, 0.2);
+        border-top-color: $primary;
+        border-radius: 50%;
+        animation: girar 1s linear infinite;
+        margin-bottom: 16px;
+    }
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// ==========================================
+// GRID DE TARJETAS DE EVENTOS
+// ==========================================
+.grid-eventos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.tarjeta-evento {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+    display: flex;
+    overflow: hidden;
+    transition: transform 0.2s;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    // Barrita indicadora de color a la izquierda
+    .barra-color {
+        width: 6px;
+        background-color: #cbd5e1; // Gris por defecto
+
+        &.paciente {
+            background-color: #10b981;
+        }
+
+        // Verde
+        &.lead {
+            background-color: #f59e0b;
+        }
+
+        // Amarillo
+    }
+
+    .contenido-evento {
+        padding: 16px;
+        flex: 1;
+
+        .titulo {
+            margin: 0 0 12px 0;
+            font-size: 1.1rem;
+            color: $text-dark;
+            line-height: 1.3;
+        }
+
+        .detalles {
+            font-size: 0.85rem;
+            color: #475569;
+            margin-bottom: 12px;
+
+            .fecha {
+                margin: 4px 0;
+
+                strong {
+                    color: $text-dark;
+                }
+            }
+        }
+
+        .descripcion {
+            font-size: 0.8rem;
+            color: $text-muted;
+            background-color: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            white-space: pre-wrap; // Respeta los saltos de línea de tu CRM
+            margin: 0;
+
+            p {
+                margin: 0;
+            }
+        }
+    }
+}
+
+// Estilos para la barra de fechas
+.filtros-fecha {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid $borde;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+
+    .campo-fecha {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: $text-muted;
+        }
+
+        input[type="date"] {
+            border: 1px solid $borde;
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: $text-dark;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+
+            &:focus {
+                border-color: $primary;
+            }
+        }
+    }
+
+    .separador {
+        color: $borde;
+        font-weight: bold;
+    }
+}

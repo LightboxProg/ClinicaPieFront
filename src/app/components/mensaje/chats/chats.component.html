@@ -1,0 +1,46 @@
+<div class="crm-chat-layout">
+    <div class="sidebar-chats">
+
+        <div class="tabs">
+            <button (click)="pestanaActiva = 'preguntones'" [class.activo]="pestanaActiva === 'preguntones'">
+                Leads ({{ chatsPreguntones.length }})
+            </button>
+            <button (click)="pestanaActiva = 'pacientes'" [class.activo]="pestanaActiva === 'pacientes'">
+                Pacientes ({{ chatsPacientes.length }})
+            </button>
+        </div>
+
+        <app-chat-pregunton *ngIf="pestanaActiva === 'preguntones'" [chats]="chatsPreguntones"
+            (seleccionar)="abrirChat($event)" (cambiarStatusSaludos)="cambiarStatusSaludos($event)">
+        </app-chat-pregunton>
+
+        <app-chat-paciente *ngIf="pestanaActiva === 'pacientes'" [chats]="chatsPacientes"
+            (seleccionar)="abrirChat($event)" (cambiarStatusSaludos)="cambiarStatusSaludos($event)">
+        </app-chat-paciente>
+
+    </div>
+
+    <div class="area-conversacion">
+
+        <div *ngIf="!usuarioActivo" class="estado-vacio">
+            <h3>Selecciona un chat para comenzar a enviar mensajes</h3>
+        </div>
+
+        <ng-container *ngIf="usuarioActivo">
+
+            <div class="chat-header">
+                <h3>{{ usuarioActivo.nombre }}</h3>
+                <small>{{ usuarioActivo.telefono }}</small>
+            </div>
+
+            <app-contenedor-chat #chatBurbujas [usuario]="usuarioActivo">
+            </app-contenedor-chat>
+
+            <app-mandar-mensaje [usuario]="usuarioActivo"
+                (mensajeEnviado)="chatBurbujas.cargarHistorial(usuarioActivo.idUsuario); cargarBandeja()">
+            </app-mandar-mensaje>
+
+        </ng-container>
+
+    </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="m-1">
+
+  <button (click)="abrirModal()">Nuevo Paciente</button>
+</div>
+
+<!-- Modal para registrar un nuevo paciente -->
+<app-modal [isVisible]="isModalVisible" [title]="esEdicion ? 'Editar Paciente' : 'Registro de Pacientes'" (close)="cerrarModal()">
+  <form (submit)="agregarPaciente(); $event.preventDefault()">
+    <label>
+      Nombre completo:
+      <input type="text" [(ngModel)]="nuevoPaciente.nombre" name="nombre" required />
+    </label>
+    <label>
+      Fecha de nacimiento:
+      <input type="date" [(ngModel)]="nuevoPaciente.fechaNacimiento" name="fechaNacimiento" required />
+    </label>
+    <label>
+      Teléfono:
+      <input type="number" [(ngModel)]="nuevoPaciente.telefono" name="telefono" required />
+    </label>
+    <label>
+      Correo electrónico:
+      <input type="email" [(ngModel)]="nuevoPaciente.correo" name="correo" required />
+    </label>
+    <label>
+      Dirección:
+      <input type="text" [(ngModel)]="nuevoPaciente.direccion" name="direccion" required />
+    </label>
+    <label>
+      Condiciones médicas actuales:
+      <textarea [(ngModel)]="nuevoPaciente.condicionesMedicas" name="condicionesMedicas" required></textarea>
+    </label>
+    <label>
+      Alergias conocidas:
+      <textarea [(ngModel)]="nuevoPaciente.alergias" name="alergias" required></textarea>
+    </label>
+    <label>
+      Cirugías previas o tratamientos médicos importantes:
+      <textarea [(ngModel)]="nuevoPaciente.cirugiasPrevias" name="cirugiasPrevias" required></textarea>
+    </label>
+    <label>
+      Seguro dental:
+      <input type="checkbox" [(ngModel)]="nuevoPaciente.seguroDental" name="seguroDental" />
+    </label>
+    <label>
+      Peso (kg):
+      <input type="number" [(ngModel)]="nuevoPaciente.peso" name="peso" required />
+    </label>
+    <label>
+      Altura (m):
+      <input type="number" [(ngModel)]="nuevoPaciente.altura" name="altura" required />
+    </label>
+    <label>
+      Tensión arterial:
+      <input type="checkbox" [(ngModel)]="nuevoPaciente.tensionArterial" name="tensionArterial" />
+    </label>
+    <button type="submit">{{ esEdicion ? 'Actualizar' : 'Registrar' }}</button>
+  </form>
+</app-modal>

@@ -1,0 +1,47 @@
+<div class="w-100 ">
+    <div class="m-1 filtros">
+        <div class="title">
+            <p><strong>Filtros</strong></p>
+        </div>
+
+        <div class="p-1 filter-opt-container">
+            <form [formGroup]="filterForm" (ngSubmit)="obtenerFiltros()">
+                <div class="filter-opt">
+                    <p>Filtrar mensajes por:</p>
+                    <select formControlName="estado" class="w-100">
+                        <option value="" selected>Ninguno</option>
+                        <option value="noleido">No leido</option>
+                        <option value="atendido">Leido</option>
+                        <option value="esperandorespuesta">Esperando respuesta</option>
+                        <option value="urgente">Urgente</option>
+                    </select>
+                </div>
+
+                <div class="filter-opt">
+                    <p>Ordenar por fecha:</p>
+                    <select formControlName="orden" class="w-100">
+                        <option value="" selected>Ninguno</option>
+                        <option value="desc">Mensajes mas nuevos</option>
+                        <option value="asc">Mensajes mas antiguos</option>
+                    </select>
+                </div>
+
+                <div class="filter-opt">
+                    <p>Buscar por numero</p>
+                    <input formControlName="search" type="text" class="w-100">
+                </div>
+
+                <button class="btn mt-1" type="submit">
+                    Aplicar
+                </button>
+            </form>
+
+
+
+
+
+        </div>
+
+    </div>
+
+</div>

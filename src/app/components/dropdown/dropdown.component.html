@@ -1,0 +1,21 @@
+<div class="dropdown">
+  <!-- Elemento seleccionado -->
+  <div class="dropdown-selected" (click)="toggleDropdown()">
+    {{ selectedOption || 'Seleccione una opción' }}
+  </div>
+
+  <!-- Menú desplegable -->
+  <div class="dropdown-menu" [class.open]="isOpen">
+    <div class="dropdown-item" *ngFor="let option of options" (click)="selectOption(option)">
+      {{ option }}
+    </div>
+  </div>
+</div>
+
+
+<br>
+<br>
+
+<div>
+
+</div>

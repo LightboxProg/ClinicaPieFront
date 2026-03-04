@@ -1,0 +1,74 @@
+<div class="blacklist-card" (click)="verPerfil(entrada.paciente._id)">
+  <div class="card-warning-strip"></div>
+  
+  <div class="card-content">
+    <!-- Header de la tarjeta -->
+    <div class="card-header">
+      <div class="patient-avatar">
+        <div class="avatar-placeholder">
+          <i class="fas fa-user-slash"></i>
+        </div>
+      </div>
+      
+      <div class="patient-main-info">
+        <h3 class="patient-name">{{ entrada.paciente.nombre }} {{ entrada.paciente.apeP }} {{ entrada.paciente.apeM }}</h3>
+        <div class="contact-info">
+          <span class="contact-item">
+            <i class="fas fa-phone"></i>
+            {{ entrada.paciente.telefonoWhatsapp }}
+          </span>
+        </div>
+      </div>
+      
+      <div class="warning-badge">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Lista Negra</span>
+      </div>
+    </div>
+
+    <!-- Información de la lista negra -->
+    <div class="blacklist-details">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">Tipo:</span>
+          <span class="detail-value type-badge" [class]="entrada.tipo">{{ entrada.tipo }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Razón:</span>
+          <span class="detail-value">{{ entrada.razon }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="detail-label">Fecha:</span>
+          <span class="detail-value">{{ formatearFecha(entrada.fechaAgregado) }}</span>
+        </div>
+      </div>
+      
+      <!-- Detalles expandibles -->
+      <div class="details-expandable" *ngIf="entrada.detalles">
+        <div class="details-toggle" (click)="$event.stopPropagation(); toggleDetails()">
+          <span>Detalles adicionales</span>
+          <i class="fas fa-chevron-down" [class.rotated]="showDetails"></i>
+        </div>
+        
+        <div class="details-content" [class.show]="showDetails">
+          <p>{{ entrada.detalles }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer con información adicional -->
+    <div class="card-footer">
+      <div class="footer-item">
+        <i class="fas fa-calendar"></i>
+        <span>Agregado el {{ formatearFecha(entrada.fechaAgregado) }}</span>
+      </div>
+      
+      <div class="footer-item click-hint">
+        <i class="fas fa-mouse-pointer"></i>
+        <span>Haz clic para ver perfil completo</span>
+      </div>
+    </div>
+  </div>
+</div>

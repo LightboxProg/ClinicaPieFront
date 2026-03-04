@@ -1,0 +1,269 @@
+<nav class="navbar">
+  <!-- Logo en la izquierda -->
+  <div class="navbar-left">
+    <img src="../../../assets/logos/logo.png" alt="Logo" class="logo-img">
+  </div>
+
+  <!-- Título centrado -->
+  <div class="navbar-center">
+    <div class="flex-col-c">
+      <h2 class="clinic-name">Pro Pigment</h2>
+      <p class="doctor-name"></p>
+    </div>
+  </div>
+
+  <!-- vista en computadores -->
+  <div class="navbar-right" *ngIf="!isMobileView">
+    <div class="navbar-right-container navbar-pc">
+      <!-- Opciones visibles solo cuando NO estás autenticado -->
+      <div *ngIf="!isLoggedIn" class="nav-item">
+        <button class="nav-link" (click)="navigate('/login')">Iniciar Sesión</button>
+      </div>
+
+      <!-- Opciones visibles solo cuando esta autenticado-->
+      <div *ngIf="isLoggedIn" class="nav-dropdown">
+        <button class="nav-link dropdown-toggle">
+          <i class="fas fa-comments nav-icon"></i>
+          Chats <i class="fas fa-chevron-down dropdown-icon"></i>
+        </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item" (click)="navigate('/chats')">
+            <i class="fas fa-comments"></i> Chats
+          </button>
+          <button class="dropdown-item" (click)="navigate('/messages')">
+            <i class="fas fa-envelope"></i> Mensajes
+          </button>
+          <button class="dropdown-item" (click)="navigate('/lista-mensajes')">
+            <i class="fas fa-filter"></i> Filtros
+          </button>
+          <button class="dropdown-item" (click)="navigate('/mensajes-masivos')">
+            <i class="fas fa-filter"></i> Mensajes Masivos
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)" class="nav-dropdown">
+        <button class="nav-link dropdown-toggle">
+          <i class="fas fa-calendar-alt nav-icon"></i>
+          Citas <i class="fas fa-chevron-down dropdown-icon"></i>
+        </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item" (click)="navigate('/calendario')">
+            <i class="fas fa-calendar"></i> Calendario
+          </button>
+          <button class="dropdown-item" (click)="navigate('/agenda-doctor')">
+            <i class="fas fa-calendar"></i> Agenda
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="isLoggedIn && ['Doctor'].includes(credentials?.tipo)" class="nav-dropdown">
+        <button class="nav-link" (click)="navigate('/agenda-doctor')">
+          <i class="fas fa-calendar"></i> Agenda
+        </button>
+      </div>
+
+      <!-- sucursales -->
+      <div *ngIf="isLoggedIn" class="nav-dropdown">
+        <button class="nav-link dropdown-toggle">
+          <i class="fas fa-user-injured nav-icon"></i>
+          Sucursales <i class="fas fa-chevron-down dropdown-icon"></i>
+        </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item" (click)="navigate('/sucursales-lista')">
+            <i class="fas fa-list"></i> Lista de Sucursales
+          </button>
+
+          <button class="dropdown-item" (click)="navigate('/sucursales-formulario')">
+            <i class="fas fa-plus-circle"></i> Registrar Sucursal
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="isLoggedIn" class="nav-dropdown">
+        <button class="nav-link dropdown-toggle">
+          <i class="fas fa-user-injured nav-icon"></i>
+          Pacientes <i class="fas fa-chevron-down dropdown-icon"></i>
+        </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item" (click)="navigate('/lista-pacientes')">
+            <i class="fas fa-list"></i> Lista de Pacientes
+          </button>
+          <button class="dropdown-item" (click)="navigate('/lista-negra')">
+            <i class="fas fa-user-slash"></i> Black List
+          </button>
+          <div *ngIf="isLoggedIn && ['Administrador', 'Doctor'].includes(credentials?.tipo)">
+            <button class="dropdown-item" (click)="navigate('/registroP')">
+              <i class="fas fa-user-plus"></i> Registrar Paciente
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NUEVA OPCIÓN: Categorías y Servicios (solo Administrador) -->
+      <div *ngIf="isLoggedIn && ['Administrador'].includes(credentials?.tipo)" class="nav-dropdown">
+        <button class="nav-link dropdown-toggle">
+          <i class="fas fa-layer-group nav-icon"></i>
+          Catálogo <i class="fas fa-chevron-down dropdown-icon"></i>
+        </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item" (click)="navigate('/categorias')">
+            <i class="fas fa-tags"></i> Categorías
+          </button>
+          <button class="dropdown-item" (click)="navigate('/servicios')">
+            <i class="fas fa-concierge-bell"></i> Servicios
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)" class="nav-dropdown">
+        <button class="nav-link dropdown-toggle">
+          <i class="fas fa-percent nav-icon"></i>
+          Promociones <i class="fas fa-chevron-down dropdown-icon"></i>
+        </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item" (click)="navigate('/promociones')">
+            <i class="fas fa-list"></i> Lista de Promociones
+          </button>
+          <button class="dropdown-item" (click)="navigate('/promocion-form')">
+            <i class="fas fa-plus"></i> Nueva Promoción
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="isLoggedIn && ['Administrador'].includes(credentials?.tipo)" class="nav-dropdown">
+        <button class="nav-link dropdown-toggle">
+          <i class="fas fa-users nav-icon"></i>
+          Usuarios <i class="fas fa-chevron-down dropdown-icon"></i>
+        </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item" (click)="navigate('/lista-usuarios')">
+            <i class="fas fa-users"></i> Lista de Usuarios
+          </button>
+          <button class="dropdown-item" (click)="navigate('/registro')">
+            <i class="fas fa-user-plus"></i> Registrar Usuario
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="isLoggedIn" class="nav-item">
+        <button class="nav-link logout-btn" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú hamburguesa para móvil -->
+  <div class="mobile-menu-toggle" *ngIf="isMobileView" (click)="toggleMobileMenu()">
+    <i class="fas fa-bars"></i>
+  </div>
+</nav>
+
+<!-- Menú móvil desplegable -->
+<div class="mobile-menu-overlay" [class.active]="isMobileView && mobileMenuOpen"
+  [hidden]="!(isMobileView && mobileMenuOpen)" (click)="toggleMobileMenu()"></div>
+
+<div class="mobile-menu" [class.active]="isMobileView && mobileMenuOpen" [hidden]="!(isMobileView && mobileMenuOpen)">
+  <div class="mobile-menu-header">
+    <h3>Menú</h3>
+    <button class="close-menu" (click)="toggleMobileMenu()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="mobile-menu-content">
+    <!-- Opciones cuando NO está autenticado -->
+    <div *ngIf="!isLoggedIn" class="mobile-menu-item" (click)="navigate('/login'); toggleMobileMenu()">
+      <i class="fa-solid fa-right-to-bracket"></i>
+      <span>Iniciar Sesión</span>
+    </div>
+
+    <div *ngIf="isLoggedIn" class="mobile-menu-item" (click)="navigate('/chats'); toggleMobileMenu()">
+      <i class="fa-solid fa-comment-dots"></i>
+      <span>Chats</span>
+    </div>
+
+    <div *ngIf="isLoggedIn" class="mobile-menu-item" (click)="navigate('/messages'); toggleMobileMenu()">
+      <i class="fa-solid fa-envelope"></i>
+      <span>Mensajes</span>
+    </div>
+
+    <div *ngIf="isLoggedIn && credentials?.tipo === 'Administrador'" class="mobile-menu-item"
+      (click)="navigate('/registro'); toggleMobileMenu()">
+      <i class="fa-solid fa-user-plus"></i>
+      <span>Registrar Usuario</span>
+    </div>
+
+    <div *ngIf="isLoggedIn" class="mobile-menu-item" (click)="navigate('/lista-pacientes'); toggleMobileMenu()">
+      <i class="fa-solid fa-hospital-user"></i>
+      <span>Lista de Pacientes</span>
+    </div>
+
+    <div *ngIf="isLoggedIn && ['Administrador'].includes(credentials?.tipo)" class="mobile-menu-item"
+      (click)="navigate('/lista-usuarios'); toggleMobileMenu()">
+      <i class="fa-solid fa-users"></i>
+      <span>Lista de Usuarios</span>
+    </div>
+
+    <div *ngIf="isLoggedIn" class="mobile-menu-item" (click)="navigate('/lista-mensajes'); toggleMobileMenu()">
+      <i class="fa-solid fa-filter"></i>
+      <span>Filtros</span>
+    </div>
+
+    <div *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)" class="mobile-menu-item"
+      (click)="navigate('/calendario'); toggleMobileMenu()">
+      <i class="fa-solid fa-calendar-days"></i>
+      <span>Calendario</span>
+    </div>
+
+    <div *ngIf="isLoggedIn && credentials?.tipo === 'Doctor'" class="mobile-menu-item"
+      (click)="navigate('/agenda-doctor'); toggleMobileMenu()">
+      <i class="fa-solid fa-calendar-check"></i>
+      <span>Agenda</span>
+    </div>
+
+    <div *ngIf="isLoggedIn && ['Administrador', 'Doctor'].includes(credentials?.tipo)" class="mobile-menu-item"
+      (click)="navigate('/registroP'); toggleMobileMenu()">
+      <i class="fa-solid fa-id-card"></i>
+      <span>Registrar Paciente</span>
+    </div>
+
+    <div *ngIf="isLoggedIn && ['Administrador', 'Doctor'].includes(credentials?.tipo)" class="mobile-menu-item"
+      (click)="navigate('/lista-negra'); toggleMobileMenu()">
+      <i class="fa-solid fa-user-slash"></i>
+      <span>Black List</span>
+    </div>
+
+    <!-- NUEVAS OPCIONES MÓVIL: Categorías y Servicios (solo Administrador) -->
+    <div *ngIf="isLoggedIn && ['Administrador'].includes(credentials?.tipo)" class="mobile-menu-item"
+      (click)="navigate('/categorias'); toggleMobileMenu()">
+      <i class="fa-solid fa-tags"></i>
+      <span>Categorías</span>
+    </div>
+
+    <div *ngIf="isLoggedIn && ['Administrador'].includes(credentials?.tipo)" class="mobile-menu-item"
+      (click)="navigate('/servicios'); toggleMobileMenu()">
+      <i class="fa-solid fa-concierge-bell"></i>
+      <span>Servicios</span>
+    </div>
+
+    <div *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)" class="mobile-menu-item"
+      (click)="navigate('/promociones'); toggleMobileMenu()">
+      <i class="fa-solid fa-percent"></i>
+      <span>Promociones</span>
+    </div>
+
+    <div *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)" class="mobile-menu-item"
+      (click)="navigate('/promocion-form'); toggleMobileMenu()">
+      <i class="fa-solid fa-percent"></i>
+      <span>Nueva Promoción</span>
+    </div>
+
+    <div *ngIf="isLoggedIn" class="mobile-menu-item logout-item" (click)="logout(); toggleMobileMenu()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      <span>Cerrar Sesión</span>
+    </div>
+  </div>
+</div>

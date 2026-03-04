@@ -1,0 +1,83 @@
+<div class="patient-profile" *ngIf="paciente; else cargando">
+  <div class="list-element" *ngIf="!estaEnListaNegra(paciente._id)">
+    <div class="list-info" (click)="verPerfil(paciente._id)" [ngClass]="{'finado': paciente.finado}">
+      <div class="paciente-card">
+        <figure class="paciente-avatar">
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png"
+            alt="Avatar usuario" width="64" height="64" />
+        </figure>
+        <div class="paciente-details">
+          <p><strong>Nombre:</strong> {{paciente.nombre}} {{paciente.apeP}} {{paciente.apeM}}</p>
+          <p><strong>Fecha de nacimiento:</strong> {{formatearFecha(paciente.fechaNac)}}</p>
+          <p><strong>Teléfono:</strong> {{paciente.telefonoWhatsapp}}<br>
+            <strong>Correo:</strong> {{paciente.correoElectronico || 'No proporcionado'}}
+          </p>
+          <p><strong>Fecha de nacimiento:</strong> {{formatearFecha(paciente.fechaNac)}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="list-options">
+      <button class="Lista-negra" (click)="abrirListaNegra(paciente)">
+        <span>Lista Negra</span>
+        <span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-miterlimit="2" stroke-linejoin="round"
+            fill-rule="evenodd" clip-rule="evenodd">
+            <path fill-rule="nonzero"
+              d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z">
+            </path>
+          </svg>
+        </span>
+      </button>
+
+    </div>
+
+
+  </div>
+  <app-modal [title]="''" [isVisible]="showListaNegraModal" (close)="onCloseListaNegraModal()">
+    <form (ngSubmit)="agregarListaNegra()" class="blacklist-form clean-theme">
+      <div class="modal-banner">
+        <span class="material-icons icon-alert">block</span>
+        <div>
+          <h2>Agregar a Lista Negra</h2>
+          <p>Indica el motivo para registrar a este paciente.</p>
+        </div>
+      </div>
+
+      <div class="form-body">
+        <div class="form-group">
+          <label for="razon">Razón *</label>
+          <input id="razon" type="text" [(ngModel)]="razon" name="razon" required maxlength="200"
+            placeholder="Motivo principal" />
+        </div>
+
+        <div class="form-group">
+          <label for="detalles">Detalles</label>
+          <textarea id="detalles" rows="4" [(ngModel)]="detalles" name="detalles" maxlength="1000"
+            placeholder="Detalles adicionales (opcional)"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="tipo">Tipo de bloqueo</label>
+          <select id="tipo" [(ngModel)]="tipo" name="tipo" required>
+            <option value="permanente">Permanente</option>
+            <option value="temporal">Temporal</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="button" class="btn-secondary" (click)="onCloseListaNegraModal()">
+          <span class="material-icons">cancel</span> Cancelar
+        </button>
+        <button type="submit" class="btn-primary">
+          <span class="material-icons">check_circle</span> Confirmar
+        </button>
+      </div>
+    </form>
+  </app-modal>
+</div>
+
+<ng-template #cargando>
+  <div class="spinner">Cargando...</div>
+</ng-template>

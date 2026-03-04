@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="list-element ">
+    <div class="w-100 flex-sb">
+        <div>
+            <!-- <i class="fa-solid fa-delete-left" (click)="eliminarMensaje(mensaje._id)"></i> -->
+            <div>{{mensaje.telefono  }} <i class="fa-brands fa-whatsapp"></i></div>
+
+        </div>
+        <div>
+            <app-semaforo [estado]="mensaje.estado"  [fecha]="mensaje.fecha"></app-semaforo>
+        </div>
+
+
+    </div>
+    <div class="bar"></div>
+    <div>
+        <div class="name-date flex-sb">
+            <div>{{ mensaje.fecha | date:'dd/MM/yyyy hh:mm a':'GMT-0600' }}</div>
+
+        </div>
+        <div class="desc">
+                 {{mensaje.mensaje}}
+        </div>
+     </div>
+    <div>
+      <button *ngIf="mensaje.estado === 'urgente'" (click)="verChat(mensaje.telefono)">Ver</button>
+
+    </div>
+</div>

@@ -1,0 +1,33 @@
+.paciente-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .paciente-cell {
+    flex: 1;
+    padding: 10px;
+    text-align: center; /* Centra el texto en la celda */
+    display: flex;
+    justify-content: center; /* Centra el contenido en la celda */
+    align-items: center; /* Asegura que el contenido esté alineado verticalmente */
+  }
+  
+  .paciente-cell button {
+    padding: 8px 15px;
+    background-color: #282927;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  
+  .paciente-cell button:hover {
+    background-color: #4f5553;
+  }
+  
+  .paciente-row:hover {
+    background-color: #f1f1f1;
+  }
+  

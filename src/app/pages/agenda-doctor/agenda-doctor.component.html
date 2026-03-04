@@ -1,0 +1,148 @@
+<div class="agenda-container">
+
+  <!-- Cabecera principal -->
+  <div class="header">
+    <h2>{{ tituloAgenda }}</h2>
+
+    <div class="controls">
+      <button class="nav-btn" (click)="previousWeek()">
+        <i class="fas fa-chevron-left"></i> Anterior
+      </button>
+      <button class="today-btn" (click)="goToCurrentWeek()">Hoy</button>
+      <button class="nav-btn" (click)="nextWeek()">
+        Siguiente <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="week-range">{{ getWeekRange() }}</div>
+  </div>
+
+  <!-- Panel de filtro de doctores (solo en vista general) -->
+  <div *ngIf="esVistaGeneral" class="filtro-bar">
+    <div class="filtro-izq">
+      <i class="fas fa-filter"></i>
+      <span class="filtro-label">Filtrar por doctor:</span>
+
+      <!-- Chips de doctores seleccionados -->
+      <div class="chips-container">
+        <span
+          *ngFor="let doc of doctoresFiltro"
+          class="doctor-chip"
+          [class.activo]="doc.seleccionado"
+          [style.border-color]="doc.color"
+          [style.background-color]="doc.seleccionado ? doc.color + '22' : 'transparent'"
+          [style.color]="doc.seleccionado ? doc.color : '#999'"
+          (click)="toggleDoctor(doc)"
+        >
+          <span class="chip-dot" [style.background]="doc.seleccionado ? doc.color : '#ccc'"></span>
+          Dr. {{ doc.nombre }}
+        </span>
+
+        <span *ngIf="doctoresFiltro.length === 0 && !cargandoDoctores" class="sin-doctores">
+          Sin doctores con calendario asignado
+        </span>
+        <span *ngIf="cargandoDoctores" class="cargando-filtro">
+          <i class="fas fa-spinner fa-spin"></i> Cargando...
+        </span>
+      </div>
+    </div>
+
+    <div class="filtro-der">
+      <!-- Toggle seleccionar todos -->
+      <label class="toggle-todos" *ngIf="doctoresFiltro.length > 0">
+        <input type="checkbox" [checked]="todosSeleccionados" (change)="toggleTodos($event)" />
+        Todos
+      </label>
+
+      <!-- Botón aplicar -->
+      <button class="btn-aplicar" (click)="aplicarFiltro()" [disabled]="cargando">
+        <i class="fas fa-check"></i> Aplicar
+      </button>
+    </div>
+  </div>
+
+  <!-- Aviso cuando el doctor no tiene calendario de Google asignado -->
+  <div *ngIf="sinCalendario" class="no-calendar-banner">
+    <i class="fas fa-calendar-times"></i>
+    <div>
+      <strong>Sin calendario asignado</strong>
+      <p>{{ mensajeSinCalendario }}</p>
+      <small>Contacta al administrador para que asigne tu calendario de Google.</small>
+    </div>
+  </div>
+
+  <!-- Cuadrícula del calendario -->
+  <div class="calendar-wrapper">
+    <div class="calendar-grid" *ngIf="weeks.length > 0">
+
+      <!-- Columna de horas -->
+      <div class="time-column">
+        <div class="time-header">Hora</div>
+        <div class="time-slot" *ngFor="let hora of horasDelDia">{{ hora }}</div>
+      </div>
+
+      <!-- Columnas de días -->
+      <div class="day-column" *ngFor="let dia of weeks[0]">
+        <div class="day-header">
+          <div class="day-name">{{ dia.nombre }}</div>
+          <div class="day-date">{{ dia.fechaFormateada }}</div>
+        </div>
+
+        <div class="day-slots">
+          <div
+            *ngFor="let horario of dia.horarios"
+            class="slot"
+            [class.cita]="horario.esCitaExistente"
+            [style.border-left-color]="horario.esCitaExistente ? horario.colorEvento : 'transparent'"
+            [style.background-color]="horario.esCitaExistente ? (horario.colorEvento + '22') : ''"
+            (click)="verDetalles(horario)"
+          >
+            <div class="slot-content" *ngIf="horario.esPrimerBloqueEvento">
+              <span class="slot-text" [style.color]="horario.colorEvento">
+                {{ horario.textoMostrar }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Estado vacío cuando no hay eventos -->
+    <div *ngIf="!cargando && weeks.length === 0 && !sinCalendario" class="estado-vacio">
+      <i class="fas fa-calendar-week"></i>
+      <p>No hay citas para esta semana.</p>
+    </div>
+  </div>
+
+  <!-- Spinner de carga -->
+  <div *ngIf="cargando" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Cargando agenda...</p>
+  </div>
+
+  <!-- Modal de Detalles -->
+  <div class="modal-backdrop" *ngIf="mostrarModalDetalles" (click)="cerrarModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header" [style.background]="eventoSeleccionado?.color || '#d63384'">
+        <h3>Detalles del Evento</h3>
+        <button class="close-btn" (click)="cerrarModal()">✕</button>
+      </div>
+      <div class="modal-body" *ngIf="eventoSeleccionado">
+        <div class="detalle-row" *ngIf="esVistaGeneral && eventoSeleccionado.doctor">
+          <span class="detalle-label">Doctor</span>
+          <span class="detalle-valor">Dr. {{ eventoSeleccionado.doctor }}</span>
+        </div>
+        <div class="detalle-row">
+          <span class="detalle-label">Evento</span>
+          <span class="detalle-valor">{{ eventoSeleccionado.descripcion }}</span>
+        </div>
+        <div class="detalle-row" *ngIf="eventoSeleccionado.detalles">
+          <span class="detalle-label">Detalles</span>
+          <span class="detalle-valor">{{ eventoSeleccionado.detalles }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

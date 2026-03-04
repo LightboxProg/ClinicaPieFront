@@ -1,0 +1,8 @@
+<div class="button-container">
+  <button (click)="showAgendar()">Mostrar Agendar Cita</button>
+</div>
+
+<div>
+  <app-agendar-cita *ngIf="componenteActivo === 'agendar'"></app-agendar-cita>
+</div>
+

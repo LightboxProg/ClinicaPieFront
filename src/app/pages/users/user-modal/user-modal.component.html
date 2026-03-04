@@ -1,0 +1,192 @@
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ editMode ? '✎ Editar Usuario' : 'Detalles del Usuario' }}</h2>
+      <div class="header-actions">
+        <button *ngIf="!editMode" class="edit-btn" (click)="activarEdicion()">
+          <i class="fas fa-pen"></i> Editar
+        </button>
+        <button class="close-btn" (click)="closeModal()" aria-label="Cerrar">✖</button>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <!-- MODO VISTA -->
+      <div *ngIf="!editMode" class="view-mode">
+        <div class="info-card">
+          <div class="info-row">
+            <span class="label">Usuario:</span>
+            <span class="value">{{ usuario?.usuario }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Nombre completo:</span>
+            <span class="value">{{ usuario?.nombre }} {{ usuario?.apeP }} {{ usuario?.apeM }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Teléfono:</span>
+            <span class="value">{{ usuario?.telefono }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Correo:</span>
+            <span class="value">{{ usuario?.correo }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Tipo:</span>
+            <span class="value"><span class="badge" [ngClass]="'badge-' + (usuario?.tipo | lowercase)">{{ usuario?.tipo
+                }}</span></span>
+          </div>
+          <div class="info-row" *ngIf="usuario?.tipo === 'Doctor'">
+            <span class="label">Especialidad:</span>
+            <span class="value">{{ usuario?.especialidad }}</span>
+          </div>
+          <div class="info-row" *ngIf="usuario?.tipo === 'Doctor'">
+            <span class="label">Se encuentra enfermo: </span>
+            <span class="value">{{ usuario?.enfermo ? 'Sí' : 'No' }}</span>
+          </div> 
+          <div class="info-row" *ngIf="usuario?.tipo !== 'Administrador'">
+            <span class="label">Sucursal:</span>
+            <span class="value">{{ getSucursalName(usuario?.sucursal) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODO EDICIÓN -->
+      <div *ngIf="editMode" class="edit-mode">
+        <form (ngSubmit)="guardarCambios()" #editForm="ngForm">
+          <!-- SECCIÓN: DATOS BÁSICOS -->
+          <div class="form-section">
+            <h3 class="section-title">Datos básicos</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Usuario <span class="required">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="usuarioEdit.usuario" name="usuario" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nombre <span class="required">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="usuarioEdit.nombre" name="nombre" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Apellido Paterno <span class="required">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="usuarioEdit.apeP" name="apeP" required>
+              </div>
+              <div class="form-group">
+                <label>Apellido Materno</label>
+                <input type="text" class="form-control" [(ngModel)]="usuarioEdit.apeM" name="apeM">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Teléfono <span class="required">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="usuarioEdit.telefono" name="telefono" required>
+              </div>
+              <div class="form-group">
+                <label>Correo <span class="required">*</span></label>
+                <input type="email" class="form-control" [(ngModel)]="usuarioEdit.correo" name="correo" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN: ROL Y SUCURSAL -->
+          <div class="form-section">
+            <h3 class="section-title">Rol y ubicación</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tipo <span class="required">*</span></label>
+                <select class="form-control" [(ngModel)]="usuarioEdit.tipo" name="tipo" required>
+                  <option value="Administrador">Administrador</option>
+                  <option value="Doctor">Doctor</option>
+                  <option value="Recepcionista">Recepcionista</option>
+                </select>
+              </div>
+              <div class="form-group" *ngIf="usuarioEdit.tipo !== 'Administrador'">
+                <label>Sucursal <span class="required">*</span></label>
+                <select class="form-control" [(ngModel)]="usuarioEdit.sucursal" name="sucursal" required>
+                  <option value="">Selecciona una sucursal</option>
+                  <option *ngFor="let suc of sucursales" [value]="suc._id">{{ suc.nombre }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="usuarioEdit.tipo === 'Doctor'">
+              <label>Especialidad <span class="required">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="usuarioEdit.especialidad" name="especialidad"
+                required>
+            </div>
+          </div>
+
+          <!-- SECCIÓN: GESTIÓN DE PACIENTES (solo doctores) -->
+          <div *ngIf="usuarioEdit.tipo === 'Doctor'" class="form-section patient-section">
+            <h3 class="section-title">Pacientes asignados</h3>
+
+            <!-- Lista de pacientes actuales -->
+            <div class="assigned-list">
+              <h4>Actuales ({{ usuarioEdit.idPacientes?.length || 0 }})</h4>
+              <div *ngIf="!usuarioEdit.idPacientes?.length" class="empty-message">
+                <i class="fas fa-info-circle"></i> Ningún paciente asignado
+              </div>
+              <div *ngFor="let pacienteId of usuarioEdit.idPacientes" class="assigned-item">
+                <span class="patient-name">{{ getPacienteName(pacienteId) }}</span>
+                <button class="remove-btn" type="button" (click)="removerPacienteEdit(pacienteId)"
+                  title="Quitar paciente">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Asignar nuevo paciente -->
+            <div class="assign-section">
+              <h4>Asignar nuevo</h4>
+              <div class="assign-row">
+                <select #nuevoPacienteSelect class="form-control">
+                  <option value="">Seleccione un paciente</option>
+                  <option *ngFor="let paciente of getAvailablePatients()" [value]="paciente._id">
+                    {{ paciente.nombre }} {{ paciente.apeP }} {{ paciente.apeM }}
+                  </option>
+                </select>
+                <button class="btn-assign" type="button" (click)="asignarPacienteEdit(nuevoPacienteSelect.value)">
+                  <i class="fas fa-plus"></i> Asignar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section security-section">
+            <h3 class="section-title">Activo</h3>
+            <!-- Campo Enfermo (solo doctores) -->
+            <div class="form-group d-flex align-items-center one-line" *ngIf="usuarioEdit.tipo === 'Doctor'" style="gap: 15px;">
+              <label class="mb-0">¿Se encuentra enfermo?</label>
+              <div class="d-flex align-items-center one-line" style="gap: 10px;">
+                <span [ngClass]="{'text-muted': usuarioEdit.enfermo, 'fw-bold': !usuarioEdit.enfermo}">No</span>
+                <label class="switch mx-2">
+                  <input type="checkbox" [(ngModel)]="usuarioEdit.enfermo" name="enfermo">
+                  <span class="slider round"></span>
+                </label>
+                <span [ngClass]="{'text-rosa': usuarioEdit.enfermo, 'text-muted': !usuarioEdit.enfermo, 'fw-bold': usuarioEdit.enfermo}">Sí</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- SECCIÓN: SEGURIDAD -->
+          <div class="form-section security-section">
+            <h3 class="section-title">Seguridad</h3>
+            <button class="btn-password" type="button" (click)="cambiarPassword()">
+              <i class="fas fa-key"></i> Cambiar contraseña
+            </button>
+          </div>
+          
+
+          <!-- BOTONES DE ACCIÓN -->
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="cancelarEdicion()">Cancelar</button>
+            <button type="submit" class="btn-save" [disabled]="editForm.invalid">
+              <i class="fas fa-save"></i> Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

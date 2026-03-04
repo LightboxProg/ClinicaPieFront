@@ -1,0 +1,9 @@
+<div class="input-contenedor">
+  <input 
+    type="text" 
+    [(ngModel)]="textoMensaje" 
+    (keyup.enter)="enviarMensaje()"
+    placeholder="Escribe un mensaje aquí...">
+  
+  <button (click)="enviarMensaje()">Enviar ✈️</button>
+</div>

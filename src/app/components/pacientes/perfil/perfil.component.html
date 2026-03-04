@@ -1,0 +1,526 @@
+<div class="patient-profile">
+  <!-- Header con gradiente -->
+  <div class="profile-header">
+    <div class="header-background"></div>
+    <div class="header-content">
+      <div class="patient-avatar">
+        <img class="profile-img"
+          [src]="paciente?.foto || 'https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png'"
+          alt="Foto paciente">
+        <div class="avatar-status" [class.finado]="paciente?.finado"></div>
+      </div>
+      <div class="patient-basic-info">
+        <h1 class="patient-name" *ngIf="!editando">{{paciente.nombre}} {{paciente.apeP}} {{paciente.apeM}}</h1>
+        <div class="patient-meta">
+          <span class="meta-item">{{calcularEdad(paciente?.fechaNac)}} años</span>
+          <span class="meta-item">{{paciente?.genero}}</span>
+          <span class="meta-item status-badge" [class.finado]="paciente?.finado">
+            {{paciente?.finado ? 'Finado' : 'Activo'}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-content">
+    <!-- Columna izquierda - Información personal -->
+    <div class="profile-column personal-info">
+      <div class="info-card" [class.finado]="paciente?.finado">
+        <div class="card-header">
+          <h3>Información Personal</h3>
+          <button *ngIf="!editando && !paciente?.finado" class="edit-btn" (click)="editando = true">
+            <i class="fas fa-edit"></i>
+          </button>
+        </div>
+
+        <div class="info-grid">
+          <!-- Nombre -->
+          <div class="info-item">
+            <label>Nombre Completo</label>
+            <div *ngIf="!editando" class="info-value">{{paciente.nombre}} {{paciente.apeP}} {{paciente.apeM}}</div>
+            <div *ngIf="editando" class="edit-inputs">
+              <input [(ngModel)]="paciente.nombre" placeholder="Nombre" />
+              <input [(ngModel)]="paciente.apeP" placeholder="Apellido paterno" />
+              <input [(ngModel)]="paciente.apeM" placeholder="Apellido materno" />
+            </div>
+          </div>
+
+          <!-- Contacto -->
+          <div class="info-item">
+            <label>Contacto</label>
+            <div *ngIf="!editando" class="contact-info">
+              <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <span>{{paciente.telefonoWhatsapp}}</span>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <span>{{paciente.correoElectronico || 'No proporcionado'}}</span>
+              </div>
+            </div>
+            <div *ngIf="editando" class="edit-inputs">
+              <input [(ngModel)]="paciente.telefonoWhatsapp" placeholder="Teléfono" />
+              <input [(ngModel)]="paciente.correoElectronico" placeholder="Correo electrónico" />
+            </div>
+          </div>
+
+          <!-- Dirección -->
+          <div class="info-item">
+            <label>Dirección</label>
+            <div *ngIf="!editando" class="info-value">{{paciente.direccion || 'No proporcionada'}}</div>
+            <textarea *ngIf="editando" [(ngModel)]="paciente.direccion" placeholder="Dirección"></textarea>
+          </div>
+
+          <!-- Estado -->
+          <div class="info-item">
+            <label>Estado</label>
+            <div class="status-control">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="paciente.finado" [disabled]="paciente?.finado || !editando" />
+                <span class="checkmark"></span>
+                Finado
+              </label>
+            </div>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="action-buttons" *ngIf="editando">
+            <button class="btn-save" (click)="guardarCambiosGenerales()">
+              <i class="fas fa-save"></i> Guardar
+            </button>
+            <button class="btn-cancel" (click)="editando = false">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alergias y Medicamentos -->
+      <div class="medical-cards">
+        <!-- Alergias -->
+        <div class="medical-card">
+          <div class="card-header">
+            <h3><i class="fas fa-allergies"></i> Alergias</h3>
+          </div>
+          <textarea class="medical-textarea" rows="4" [(ngModel)]="paciente.alergias"
+            placeholder="Lista de alergias del paciente..."></textarea>
+          <button class="btn-medical" *ngIf="!paciente?.finado" (click)="guardarAlergias()">
+            <i class="fas fa-save"></i> Guardar Alergias
+          </button>
+        </div>
+
+        <!-- Medicamentos -->
+        <div class="medical-card">
+          <div class="card-header">
+            <h3><i class="fas fa-pills"></i> Medicamentos</h3>
+          </div>
+          <textarea class="medical-textarea" rows="4" [(ngModel)]="paciente.medicamentos"
+            placeholder="Medicamentos actuales del paciente..."></textarea>
+          <button class="btn-medical" *ngIf="!paciente?.finado" (click)="guardarMedicamentos()">
+            <i class="fas fa-save"></i> Guardar Medicamentos
+          </button>
+        </div>
+      </div>
+
+      <!-- Botón eliminar -->
+      <div class="delete-section" *ngIf="listaNegra && esAdmin && !paciente?.finado">
+        <button class="btn-delete" (click)="eliminarPaciente()">
+          <i class="fas fa-trash"></i> Eliminar Paciente
+        </button>
+      </div>
+    </div>
+
+    <!-- Columna derecha - Citas y Galería -->
+    <div class="profile-column appointments-gallery">
+      <!-- Lista Negra -->
+      <div *ngIf="listaNegra" class="blacklist-card">
+        <div class="blacklist-header">
+          <i class="fas fa-ban"></i>
+          <h3>Paciente en Lista Negra</h3>
+        </div>
+        <div class="blacklist-content">
+          <div class="blacklist-item">
+            <strong>Agregado por:</strong> {{ listaNegra.agregadoPor?.usuario }} ({{ listaNegra.agregadoPor?.tipo }})
+          </div>
+          <div class="blacklist-item">
+            <strong>Razón:</strong> {{ listaNegra.razon }}
+          </div>
+          <div class="blacklist-item">
+            <strong>Detalles:</strong> {{ listaNegra.detalles }}
+          </div>
+          <div class="blacklist-item">
+            <strong>Tipo:</strong> {{ listaNegra.tipo }}
+          </div>
+          <button class="btn-remove-blacklist" (click)="eliminarDeListaNegra()">
+            <i class="fas fa-user-check"></i> Remover de Lista Negra
+          </button>
+        </div>
+      </div>
+
+      <!-- Citas -->
+      <div class="appointments-section">
+        <div class="section-header">
+          <h3><i class="fas fa-calendar-alt"></i> Citas y Tratamientos</h3>
+          <button class="btn-new-appointment" (click)="register()" *ngIf="!paciente?.finado">
+            <i class="fas fa-plus"></i> Nueva Cita
+          </button>
+        </div>
+
+        <div class="appointments-grid">
+          <div class="appointment-card" *ngFor="let cita of citas">
+            <div class="appointment-header">
+              <h4>{{ cita.tratamiento }}</h4>
+              <span class="appointment-date">{{ cita.fecha | date: 'dd/MM/yyyy' }}</span>
+            </div>
+
+            <div class="appointment-body">
+              <div class="appointment-observation" *ngIf="cita.observaciones">
+                <strong>Observaciones:</strong>
+                <p>{{ cita.observaciones }}</p>
+              </div>
+
+              <div class="appointment-details">
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span>{{ cita.horaInicio || '--:--' }} - {{ cita.horaFin || '--:--' }}</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-user-md"></i>
+                  <span>{{ cita.realizo || 'No especificado' }}</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-dollar-sign"></i>
+                  <span>${{ cita.pago || '0' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servicios Contratados -->
+      <div class="servicios-contratados-section">
+        <div class="section-header">
+          <h3><i class="fas fa-boxes"></i> Servicios Contratados</h3>
+          <button class="btn-new-service" (click)="abrirModalContratarServicio()" *ngIf="!paciente?.finado">
+            <i class="fas fa-plus"></i> Contratar Servicio
+          </button>
+        </div>
+
+        <div class="servicios-grid" *ngIf="serviciosContratados.length > 0; else sinServicios">
+          <div class="servicio-card" *ngFor="let servicio of serviciosContratados"
+            [class.completado]="servicio.estado === 'completado'" [class.expirado]="servicio.estado === 'expirado'">
+
+            <div class="servicio-header">
+              <h4>{{ servicio.servicio?.nombre }}</h4>
+              <div class="servicio-header-right">
+                <span class="servicio-estado" [class]="servicio.estado">
+                  {{ servicio.estado | titlecase }}
+                </span>
+                <span class="servicio-sesiones">
+                  {{ servicio.sesionesUsadas }}/{{ servicio.sesionesTotales }}
+                </span>
+              </div>
+            </div>
+
+            <div class="servicio-body">
+              <div class="servicio-info-grid">
+                <div class="info-item">
+                  <i class="fas fa-calendar"></i>
+                  <div class="info-content">
+                    <span class="info-label">Contratado:</span>
+                    <span class="info-value">{{ servicio.fechaContratacion | date: 'dd/MM/yyyy' }}</span>
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <i class="fas fa-hourglass-half"></i>
+                  <div class="info-content">
+                    <span class="info-label">Sesiones usadas:</span>
+                    <span class="info-value">{{ servicio.sesionesUsadas }}</span>
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <i class="fas fa-clock"></i>
+                  <div class="info-content">
+                    <span class="info-label">Sesiones restantes:</span>
+                    <span class="info-value">{{ servicio.sesionesRestantes }}</span>
+                  </div>
+                </div>
+
+                <div *ngIf="servicio.fechaExpiracion" class="info-item">
+                  <i class="fas fa-calendar-times"></i>
+                  <div class="info-content">
+                    <span class="info-label">Expira:</span>
+                    <span class="info-value">{{ servicio.fechaExpiracion | date: 'dd/MM/yyyy' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Acordeón de Observaciones -->
+              <div class="observaciones-section" *ngIf="servicio.observaciones && servicio.observaciones.length > 0">
+                <div class="observaciones-header" (click)="toggleObservaciones(servicio)">
+                  <h5>
+                    <i class="fas fa-comment-medical"></i>
+                    Observaciones
+                    <span class="badge">{{ servicio.observaciones.length }}</span>
+                  </h5>
+                  <span class="accordion-icon" [class.rotate]="servicio.mostrarObservaciones">
+                    <i class="fas fa-chevron-down"></i>
+                  </span>
+                </div>
+
+                <div class="observaciones-content" [class.expanded]="servicio.mostrarObservaciones">
+                  <div class="observaciones-timeline">
+                    <!-- Agrupar observaciones por fecha -->
+                    <div *ngFor="let group of getObservationsGroupedByDate(servicio.observaciones)"
+                      class="observacion-group">
+                      <div class="observacion-date">
+                        <i class="fas fa-calendar-day"></i>
+                        {{ group.fecha | date: 'dd/MM/yyyy' }}
+                      </div>
+                      <div class="observacion-list">
+                        <div *ngFor="let obs of group.observaciones; let i = index" class="observacion-item">
+                          <div class="observacion-time">
+                            <i class="fas fa-clock"></i>
+                            {{ formatTime(obs.hora) }}
+                          </div>
+                          <div class="observacion-text">{{ obs.texto }}</div>
+                          <div class="observacion-meta">
+                            <span class="observacion-author" *ngIf="obs.autor">
+                              <i class="fas fa-user-md"></i> {{ obs.autor }}
+                            </span>
+                            <span class="observacion-index">#{{ i + 1 }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Si no hay observaciones agrupadas por fecha (formato antiguo) -->
+                    <div *ngIf="!isObservacionesArray(servicio.observaciones)" class="observacion-item legacy">
+                      <div class="observacion-text">{{ servicio.observaciones }}</div>
+                      <div class="observacion-meta">
+                        <span class="observacion-date">
+                          <i class="fas fa-history"></i> Observación general
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Acciones del servicio -->
+              <div class="servicio-actions" *ngIf="servicio.estado === 'activo'">
+                <button class="btn-use-session" (click)="usarSesion(servicio)"
+                  [disabled]="servicio.sesionesRestantes <= 0">
+                  <i class="fas fa-check"></i> Usar Sesión
+                </button>
+                <button class="btn-add-sessions" (click)="abrirModalAgregarSesiones(servicio)">
+                  <i class="fas fa-plus-circle"></i> Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #sinServicios>
+          <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <p>No hay servicios contratados</p>
+            <button class="btn-empty-state" (click)="abrirModalContratarServicio()" *ngIf="!paciente?.finado">
+              Contratar primer servicio
+            </button>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Modal Contratar Servicio -->
+      <div class="modal-overlay" *ngIf="mostrarModalServicio" (click)="mostrarModalServicio = false">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>Contratar Nuevo Servicio</h3>
+            <button class="modal-close" (click)="mostrarModalServicio = false">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Servicio *</label>
+              <select [(ngModel)]="nuevoServicio.servicioId" class="form-select">
+                <option value="">Selecciona un servicio</option>
+                <option *ngFor="let servicio of serviciosDisponibles" [value]="servicio._id">
+                  {{ servicio.nombre }} ({{ servicio.sesiones?.numero || 1 }} sesiones)
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Sesiones Totales</label>
+              <input type="number" [(ngModel)]="nuevoServicio.sesionesTotales" min="1" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label>Fecha de Expiración (opcional)</label>
+              <input type="date" [(ngModel)]="nuevoServicio.fechaExpiracion" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label>Observaciones</label>
+              <textarea [(ngModel)]="nuevoServicio.observaciones" rows="3" class="form-textarea"></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn-cancel" (click)="mostrarModalServicio = false">Cancelar</button>
+            <button class="btn-submit" (click)="contratarServicio()">Contratar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Agregar Sesiones -->
+      <div class="modal-overlay" *ngIf="mostrarModalAgregarSesiones" (click)="mostrarModalAgregarSesiones = false">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>Agregar Sesiones a {{ servicioParaAgregarSesiones?.servicio?.nombre }}</h3>
+            <button class="modal-close" (click)="mostrarModalAgregarSesiones = false">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="current-sessions">
+              <p>Sesiones actuales: {{ servicioParaAgregarSesiones?.sesionesUsadas }}/{{
+                servicioParaAgregarSesiones?.sesionesTotales }}</p>
+              <p>Sesiones restantes: {{ servicioParaAgregarSesiones?.sesionesRestantes }}</p>
+            </div>
+
+            <div class="form-group">
+              <label>Cantidad de Sesiones a Agregar *</label>
+              <input type="number" [(ngModel)]="nuevasSesiones.cantidad" min="1" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label>Motivoo (opcional)</label>
+              <input type="text" [(ngModel)]="nuevasSesiones.motivo" class="form-input"
+                placeholder="Ej: Extensión de paquete, promoción, etc.">
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn-cancel" (click)="mostrarModalAgregarSesiones = false">Cancelar</button>
+            <button class="btn-submit" (click)="agregarSesiones()">Agregar Sesiones</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Galería -->
+      <div class="gallery-section">
+        <div class="section-header">
+          <h3><i class="fas fa-images"></i> Galería del Paciente</h3>
+          <div class="add-image-btn" (click)="!subiendoImagenes && triggerFileInput()"
+            [class.disabled]="subiendoImagenes">
+            <i class="fas fa-plus"></i>
+          </div>
+        </div>
+
+        <input type="file" #fileInput accept="image/*" multiple style="display:none"
+          (change)="onFileSelected($event)" />
+
+        <div class="gallery-grid">
+          <div class="gallery-item" *ngFor="let foto of fotosPaciente; let i = index">
+            <img [src]="foto.url" (click)="abrirModalImagen(foto, i)" alt="Foto paciente" />
+            <div class="gallery-overlay">
+              <i class="fas fa-search-plus"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Galería de Imágenes -->
+<div class="gallery-modal-overlay" *ngIf="mostrarModalGaleria" (click)="cerrarModalGaleria()">
+  <div class="gallery-modal-container" (click)="$event.stopPropagation()">
+    <button class="gallery-modal-close" (click)="cerrarModalGaleria()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="gallery-modal-content">
+      <div class="gallery-modal-image-container">
+        <img [src]="imagenSeleccionada?.url" class="gallery-modal-image" alt="Imagen ampliada" />
+
+        <!-- Controles de navegación -->
+        <div class="gallery-modal-controls" *ngIf="fotosPaciente.length > 1">
+          <button class="gallery-control-btn prev-btn" (click)="imagenAnterior()">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="gallery-control-btn next-btn" (click)="imagenSiguiente()">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- Contador de imágenes -->
+        <div class="gallery-counter" *ngIf="fotosPaciente.length > 1">
+          {{ indiceImagenActual + 1 }} / {{ fotosPaciente.length }}
+        </div>
+      </div>
+
+      <!-- Información de la imagen (opcional) -->
+      <div class="gallery-modal-info" *ngIf="imagenSeleccionada?.fecha">
+        <p><i class="fas fa-calendar"></i> Subida: {{ imagenSeleccionada.fecha | date: 'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cita -->
+<app-modal [title]="'Nueva Cita'" [isVisible]="showModal" (close)="onCloseModal()">
+  <form class="appointment-form" (ngSubmit)="nuevaCita()">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="tratamiento">Tratamiento *</label>
+        <input id="tratamiento" type="text" [(ngModel)]="tratamiento" name="tratamiento" required>
+      </div>
+
+      <div class="form-group">
+        <label for="realizo">Realizado por</label>
+        <input id="realizo" type="text" [(ngModel)]="realizo" name="realizo">
+      </div>
+
+      <div class="form-group">
+        <label for="fechaCita">Fecha de Cita *</label>
+        <input id="fechaCita" type="date" [(ngModel)]="fechaCita" name="fechaCita" required>
+      </div>
+
+      <div class="form-group time-group">
+        <label>Horario *</label>
+        <div class="time-inputs">
+          <input type="time" [(ngModel)]="horaInicio" name="horaInicio" placeholder="Inicio" required>
+          <span>a</span>
+          <input type="time" [(ngModel)]="horaFin" name="horaFin" placeholder="Fin" required>
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="observaciones">Observaciones</label>
+        <textarea id="observaciones" rows="3" [(ngModel)]="observaciones" name="observaciones"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="pago">Pago ($)</label>
+        <div class="price-input">
+          <span class="currency">$</span>
+          <input id="pago" type="number" [(ngModel)]="pago" name="pago" min="0" step="0.01" placeholder="0.00">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="onCloseModal()">Cancelar</button>
+      <button type="submit" class="btn-submit">Crear Cita</button>
+    </div>
+  </form>
+</app-modal>

@@ -1,0 +1,24 @@
+<div class="blacklist-container">
+  <div class="blacklist-header">
+    <div class="header-background"></div>
+    <div class="header-content">
+      <h1 class="blacklist-title">Lista Negra de Pacientes</h1>
+      <p class="blacklist-subtitle">Pacientes con restricciones especiales</p>
+    </div>
+  </div>
+
+  <div class="blacklist-content">
+    <div class="lista-container">
+      <div *ngFor="let entrada of pacientesListaNegra" class="blacklist-item-wrapper">
+        <app-lista-negra [entrada]="entrada"></app-lista-negra>
+      </div>
+      
+      <!-- Estado vacío -->
+      <div *ngIf="pacientesListaNegra.length === 0" class="empty-state">
+        <div class="empty-icon">🚫</div>
+        <h3>No hay pacientes en lista negra</h3>
+        <p>No se han registrado pacientes con restricciones especiales</p>
+      </div>
+    </div>
+  </div>
+</div>

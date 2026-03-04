@@ -1,0 +1,57 @@
+<div class="pagina-calendario">
+
+  <div class="tabs-navegacion">
+    <button [class.activo]="vistaActual === 'general'" (click)="cambiarVista('general')">
+      🌐 Agenda General
+    </button>
+    <button [class.activo]="vistaActual === 'individual'" (click)="cambiarVista('individual')">
+      👨‍⚕️ Agenda por Especialista
+    </button>
+    <button [class.activo]="vistaActual === 'sucursales'" (click)="cambiarVista('sucursales')">
+      🏥 Agenda por Sucursal
+    </button>
+  </div>
+
+  <div *ngIf="vistaActual === 'general'" class="vista-contenedor fade-in">
+    <app-calendario-completo></app-calendario-completo>
+  </div>
+
+  <div *ngIf="vistaActual === 'individual'" class="vista-contenedor fade-in">
+    <div class="panel-seleccion">
+      <h3>Selecciona un Especialista:</h3>
+      <div class="botones-grid">
+        <button *ngFor="let doc of doctores"
+                (click)="seleccionarDoctor(doc.id)"
+                [class.btn-activo]="doctorIdSeleccionado === doc.id"
+                class="btn-item">
+          {{ doc.nombre }}
+        </button>
+      </div>
+    </div>
+    <app-calendario-doctor *ngIf="doctorIdSeleccionado" [doctorIdExterno]="doctorIdSeleccionado"></app-calendario-doctor>
+  </div>
+
+  <div *ngIf="vistaActual === 'sucursales'" class="vista-contenedor fade-in">
+    <div class="panel-seleccion">
+      <h3>Selecciona una Sucursal:</h3>
+      <div class="botones-grid">
+        <button *ngFor="let suc of sucursales"
+                (click)="seleccionarSucursal(suc._id)"
+                [class.btn-activo]="sucursalIdSeleccionada === suc._id"
+                class="btn-item btn-sucursal">
+          📍 {{ suc.nombre }}
+        </button>
+      </div>
+    </div>
+
+    <app-agenda-sucursales 
+      *ngIf="sucursalIdSeleccionada" 
+      [sucursalIdExterno]="sucursalIdSeleccionada">
+    </app-agenda-sucursales>
+
+    <div *ngIf="!sucursalIdSeleccionada" class="mensaje-selecciona">
+      <p>☝️ Selecciona una clínica para ver la agenda semanal de sus doctores.</p>
+    </div>
+  </div>
+
+</div>

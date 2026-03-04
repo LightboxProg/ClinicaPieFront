@@ -1,0 +1,84 @@
+<div class="contenedor-masivos">
+  
+  <div class="header-pagina">
+    <h2>🚀 Lanzar Campaña Masiva</h2>
+    <p>Selecciona tu audiencia, configura tu mensaje y envía notificaciones por WhatsApp a múltiples contactos.</p>
+  </div>
+
+  <div class="grid-dos-columnas">
+    
+    <div class="tarjeta-formulario">
+      
+      <div *ngIf="mensajeExito" class="alerta-exito">✅ {{ mensajeExito }}</div>
+      <div *ngIf="error" class="alerta-error">⚠️ {{ error }}</div>
+
+      <div class="seccion-form">
+        <h3>1. Selecciona la Audiencia</h3>
+        
+        <div class="campo-grupo">
+          <label>¿A quién enviarás el mensaje?</label>
+          <select [(ngModel)]="audienciaSeleccionada" class="form-control">
+            <option value="todos">A Todos (Pacientes y Preguntones)</option>
+            <option value="pacientes">Solo a Pacientes Registrados</option>
+            <option value="preguntones">Solo a Preguntones (Leads)</option>
+          </select>
+        </div>
+
+        <div class="filtros-tiempo">
+          <div class="campo-grupo">
+            <label>Días sin contacto (Opcional)</label>
+            <input type="number" [(ngModel)]="diasSinContacto" class="form-control" placeholder="Ej. 15">
+          </div>
+          <div class="campo-grupo">
+            <label>Meses sin contacto (Opcional)</label>
+            <input type="number" [(ngModel)]="mesesSinContacto" class="form-control" placeholder="Ej. 3">
+          </div>
+        </div>
+      </div>
+
+      <div class="seccion-form">
+        <h3>2. Configura el Mensaje</h3>
+        
+        <div class="campo-grupo">
+          <label>Plantilla de Meta</label>
+          <select (change)="onPlantillaSeleccionada($event)" class="form-control">
+            <option value="" disabled selected>-- Elige una plantilla --</option>
+            <option *ngFor="let plantilla of plantillasDisponibles" [value]="plantilla.id">
+              {{ plantilla.nombre }} ({{ plantilla.categoria }})
+            </option>
+          </select>
+        </div>
+
+        <div class="campo-grupo animate-fade-in" *ngIf="requiereImagen">
+          <label class="label-destacado">📷 Enlace de la Imagen (URL)</label>
+          <input type="text" [(ngModel)]="urlImagenHeader" class="form-control" placeholder="https://ejemplo.com/foto.jpg">
+          <small>Esta plantilla requiere una imagen en la cabecera.</small>
+        </div>
+
+        <div class="variables-contenedor" *ngIf="variablesDinamicas.length > 0">
+          <h4>Variables del mensaje:</h4>
+          <div class="campo-grupo" *ngFor="let variable of variablesDinamicas; let i = index; trackBy: trackByIndex">
+            <label>Variable {{ '{' }}{{ i + 1 }}{{ '}' }}</label>
+            <input type="text" [(ngModel)]="variablesDinamicas[i]" class="form-control" placeholder="Texto para la variable {{i+1}}">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-lanzar" (click)="lanzarCampana()" [disabled]="enviando || !plantillaSeleccionada">
+        {{ enviando ? 'Procesando Envíos...' : '📢 Lanzar Campaña Ahora' }}
+      </button>
+
+    </div>
+
+    <div class="tarjeta-preview">
+      <h3>Vista Previa del Cliente</h3>
+      
+      <app-plantillas-meta 
+        [plantilla]="plantillaSeleccionada" 
+        [valoresVariables]="variablesDinamicas">
+      </app-plantillas-meta>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<!-- Filtro por estado -->
+<div class="filtro-estado">
+  <button (click)="setFiltro('todos')" [class.active]="filtroEstado === 'todos'">Todos</button>
+  <button (click)="setFiltro('verde')" [class.active]="filtroEstado === 'verde'">🟢 Verde</button>
+  <button (click)="setFiltro('amarillo')" [class.active]="filtroEstado === 'amarillo'">🟡 Amarillo</button>
+  <button (click)="setFiltro('rojo')" [class.active]="filtroEstado === 'rojo'">🔴 Rojo</button>
+</div>
+
+<!-- Lista de chats filtrados -->
+<div class="lista-chats">
+  <div class="chat-item" *ngFor="let chat of chatsFiltrados" (click)="clickChat(chat)">
+    <div class="info-usuario">
+      <strong>
+        <!-- Indicador de estado (semáforo) -->
+        <span class="estado-indicador" [ngClass]="obtenerClaseEstado(chat)"></span>
+        {{ chat.nombre }} 
+      </strong>
+      <span class="fecha">{{ chat.fecha | date:'shortTime' }}</span>
+    </div>
+    <div class="mensaje-previo">
+      <p>{{ chat.mensaje }}</p>
+      <span class="badge" *ngIf="chat.cantidadPendientes > 0">
+        {{ chat.cantidadPendientes }}
+      </span>
+      <!-- Botón para cambiar status a saludos -->
+      <button class="btn-saludos" (click)="$event.stopPropagation(); cambiarStatusSaludos.emit(chat)">
+        👋
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensaje cuando no hay chats en el filtro seleccionado -->
+  <div class="lista-vacia" *ngIf="chatsFiltrados.length === 0">
+    No hay chats en este estado.
+  </div>
+</div>

@@ -1,0 +1,152 @@
+// ==========================================
+// VARIABLES DE COLOR Y DISEÑO
+// ==========================================
+$primary: #00a884; // Verde estilo WhatsApp
+$primary-hover: #008f6f;
+$bg-app: #f0f2f5; // Fondo grisecito para el área vacía
+$bg-blanco: #ffffff;
+$border-color: #d1d7db;
+$text-dark: #111b21;
+$text-muted: #667781;
+
+// ==========================================
+// CONTENEDOR PRINCIPAL (El "Marco" de la app)
+// ==========================================
+.crm-chat-layout {
+  display: flex;
+  width: 100%;
+  // Restamos unos píxeles por si tienes un menú superior (navbar) en tu CRM
+  height: calc(100vh - 100px); 
+  min-height: 600px;
+  background-color: $bg-blanco;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden; // Nada se sale de los bordes redondeados
+  border: 1px solid $border-color;
+}
+
+// ==========================================
+// COLUMNA IZQUIERDA: BARRA LATERAL (Listas)
+// ==========================================
+.sidebar-chats {
+  flex: 0 0 380px; // Ancho fijo de 380px, no crece ni se encoge
+  border-right: 1px solid $border-color;
+  display: flex;
+  flex-direction: column;
+  background-color: $bg-blanco;
+  
+  // PESTAÑAS (Tabs: Leads vs Pacientes)
+  .tabs {
+    display: flex;
+    background-color: $bg-app;
+    padding: 10px 15px;
+    gap: 10px;
+    border-bottom: 1px solid $border-color;
+
+    button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      background-color: transparent;
+      color: $text-muted;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: darken($bg-app, 5%);
+      }
+
+      // Estilo de la pestaña seleccionada
+      &.activo {
+        background-color: $bg-blanco;
+        color: $primary;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      }
+    }
+  }
+}
+
+// ==========================================
+// COLUMNA DERECHA: ÁREA DE CONVERSACIÓN
+// ==========================================
+.area-conversacion {
+  flex: 1; // Toma todo el espacio sobrante a la derecha
+  display: flex;
+  flex-direction: column;
+  background-color: #efeae2; // El fondo clásico beige de los chats
+  position: relative;
+  
+  // Fondo con patrón de WhatsApp (Opcional, le da un toque genial)
+  background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+  background-repeat: repeat;
+  background-size: 400px;
+  background-blend-mode: overlay;
+
+  // CABECERA DEL CHAT (Donde sale el nombre del doc/paciente)
+  .chat-header {
+    background-color: $bg-app;
+    padding: 15px 20px;
+    border-bottom: 1px solid $border-color;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 10; // Para que la sombra se vea por encima de los mensajes
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+    h3 {
+      margin: 0;
+      color: $text-dark;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    small {
+      color: $text-muted;
+      font-size: 0.85rem;
+      margin-top: 3px;
+    }
+  }
+
+  // ESTADO VACÍO (Cuando no has seleccionado a nadie)
+  .estado-vacio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: $bg-app;
+    text-align: center;
+    padding: 20px;
+
+    h3 {
+      background-color: white;
+      padding: 15px 30px;
+      border-radius: 30px;
+      color: $text-muted;
+      font-weight: normal;
+      font-size: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+  }
+}
+
+// ==========================================
+// RESPONSIVE (Pantallas pequeñas)
+// ==========================================
+@media (max-width: 800px) {
+  .crm-chat-layout {
+    flex-direction: column;
+    height: calc(100vh - 60px);
+  }
+  
+  .sidebar-chats {
+    flex: 1; // En móviles, la lista toma toda la pantalla
+    border-right: none;
+    border-bottom: 1px solid $border-color;
+  }
+
+  // Si hay un usuario activo en móvil, ocultamos la lista y mostramos el chat
+  // (Esta lógica la puedes mejorar después, pero por ahora mantiene el layout sano)
+}

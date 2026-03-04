@@ -1,0 +1,697 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
+
+// Variables
+$primary-color: #ff5a5f;
+$secondary-color: #00a699;
+$dark-color: #2d2d2d;
+$light-gray: #f9fafb;
+$medium-gray: #eaeef2;
+$border-color: #e2e8f0;
+$text-dark: #1e293b;
+$text-med: #475569;
+$text-light: #64748b;
+$success: #10b981;
+$warning: #f59e0b;
+$danger: #ef4444;
+$border-radius: 12px;
+$box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// Overlay
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+// Contenido principal
+.modal-content {
+  background: white;
+  border-radius: $border-radius;
+  width: 95%;
+  max-width: 700px;
+  max-height: 90vh;
+  box-shadow: $box-shadow;
+  animation: slideUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// Cabecera
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 2px solid $medium-gray;
+  background: linear-gradient(98deg, #ffffff 0%, $light-gray 100%);
+
+  h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $primary-color;
+    margin: 0;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: $dark-color;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: $light-gray;
+    }
+  }
+}
+
+// Cuerpo del modal con scroll
+.modal-body {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// Filas de información
+.modal-row {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+
+  .label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: $text-dark;
+    margin-bottom: 0.25rem;
+  }
+
+  .value {
+    font-size: 1rem;
+    color: $text-med;
+    word-break: break-word;
+  }
+}
+
+// Estilos específicos para secciones de doctor
+.doctor-section {
+  .services-section {
+    margin-top: 1rem;
+  }
+}
+
+.one-line {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: $text-light;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: $light-gray;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: $primary-color; 
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px $primary-color;
+}
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+.slider.round {
+  border-radius: 34px;
+  &:before {
+    border-radius: 50%;
+  }
+}
+.text-rosa {
+  color: $primary-color;
+}
+
+// Lista de servicios asignados
+.assigned-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  min-height: 40px;
+
+  .service-tag {
+    background-color: $medium-gray;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 24px;
+      background: $primary-color;
+      border-radius: 4px;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .edit-btn {
+    background: $secondary-color;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+
+    i {
+      font-size: 0.9rem;
+    }
+
+    &:hover {
+      background: darken($secondary-color, 8%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba($secondary-color, 0.3);
+    }
+  }
+
+  .close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: $text-med;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+
+    &:hover {
+      background: $medium-gray;
+      color: $dark-color;
+      transform: rotate(90deg);
+    }
+  }
+}
+
+// Cuerpo con scroll
+.modal-body {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background: $light-gray;
+
+  // Estilo para modo vista
+  .view-mode {
+    .info-card {
+      background: white;
+      border-radius: $border-radius - 2px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      border: 1px solid $border-color;
+    }
+
+    .info-row {
+      display: flex;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid $medium-gray;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .label {
+        width: 140px;
+        font-weight: 600;
+        color: $text-dark;
+        font-size: 0.95rem;
+      }
+
+      .value {
+        flex: 1;
+        color: $text-med;
+        font-size: 0.95rem;
+        font-weight: 500;
+
+        .badge {
+          display: inline-block;
+          padding: 0.25rem 0.75rem;
+          border-radius: 30px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          text-transform: uppercase;
+
+          &-administrador {
+            background: rgba($primary-color, 0.15);
+            color: $primary-color;
+          }
+          &-doctor {
+            background: rgba($secondary-color, 0.15);
+            color: $secondary-color;
+          }
+          &-recepcionista {
+            background: rgba($warning, 0.15);
+            color: darken($warning, 10%);
+          }
+        }
+      }
+    }
+  }
+
+  // Modo edición
+  .edit-mode {
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-section {
+      background: white;
+      border-radius: $border-radius - 2px;
+      padding: 1.25rem 1.5rem;
+      border: 1px solid $border-color;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+
+      .section-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $text-dark;
+        margin: 0 0 1.25rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid $medium-gray;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 0;
+
+      label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-dark;
+        margin-bottom: 0.35rem;
+
+        .required {
+          color: $danger;
+          margin-left: 2px;
+        }
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.95rem;
+        border: 2px solid $border-color;
+        border-radius: 8px;
+        background: white;
+        transition: all 0.2s;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+        }
+
+        &::placeholder {
+          color: $text-light;
+          opacity: 0.7;
+        }
+      }
+
+      select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 14px;
+        padding-right: 2.5rem;
+      }
+    }
+
+    // Sección de pacientes
+    .patient-section {
+      .assigned-list {
+        margin-bottom: 1.5rem;
+
+        h4 {
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: $text-med;
+          margin: 0 0 0.75rem 0;
+        }
+
+        .empty-message {
+          text-align: center;
+          padding: 1rem;
+          background: $light-gray;
+          border-radius: 8px;
+          color: $text-light;
+          font-style: italic;
+          font-size: 0.95rem;
+
+          i {
+            margin-right: 0.5rem;
+            color: $warning;
+          }
+        }
+
+        .assigned-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.5rem 0.75rem;
+          background: $light-gray;
+          border-radius: 8px;
+          margin-bottom: 0.5rem;
+          border: 1px solid $border-color;
+
+          &:hover {
+            background: darken($light-gray, 2%);
+          }
+
+          .patient-name {
+            font-size: 0.95rem;
+            color: $text-dark;
+            font-weight: 500;
+          }
+
+          .remove-btn {
+            background: transparent;
+            border: none;
+            color: $danger;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+
+            &:hover {
+              background: rgba($danger, 0.1);
+              transform: scale(1.1);
+            }
+          }
+        }
+      }
+
+      .assign-section {
+        h4 {
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: $text-med;
+          margin: 0 0 0.75rem 0;
+        }
+
+        .assign-row {
+          display: flex;
+          gap: 0.5rem;
+
+          select {
+            flex: 1;
+          }
+
+          .btn-assign {
+            background: $secondary-color;
+            color: white;
+            border: none;
+            padding: 0 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+
+            i {
+              font-size: 0.9rem;
+            }
+
+            &:hover {
+              background: darken($secondary-color, 8%);
+              transform: translateY(-2px);
+            }
+          }
+        }
+      }
+    }
+
+    // Sección de seguridad
+    .security-section {
+      .btn-password {
+        width: 100%;
+        padding: 0.75rem;
+        background: $warning;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+
+        i {
+          font-size: 1rem;
+        }
+
+        &:hover {
+          background: darken($warning, 8%);
+          box-shadow: 0 4px 8px rgba($warning, 0.3);
+        }
+      }
+    }
+
+    // Botones de acción finales
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 0.5rem;
+
+      .btn-cancel, .btn-save {
+        padding: 0.7rem 1.5rem;
+        border: none;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-cancel {
+        background: white;
+        color: $text-med;
+        border: 2px solid $border-color;
+
+        &:hover {
+          background: $light-gray;
+          border-color: $text-med;
+        }
+      }
+
+      .btn-save {
+        background: $primary-color;
+        color: white;
+        box-shadow: 0 4px 8px rgba($primary-color, 0.3);
+
+        &:hover:not(:disabled) {
+          background: darken($primary-color, 8%);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 12px rgba($primary-color, 0.4);
+        }
+
+        &:disabled {
+          background: lighten($primary-color, 20%);
+          cursor: not-allowed;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+// Animaciones
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Scrollbar personalizado
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: $medium-gray;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: $text-light;
+  border-radius: 4px;
+
+  &:hover {
+    background: darken($text-light, 10%);
+  }
+}
+
+// Responsive
+@media (max-width: 640px) {
+  .modal-content {
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .modal-header {
+    padding: 1rem;
+
+    h2 {
+      font-size: 1.3rem;
+    }
+  }
+
+  .modal-body {
+    padding: 1rem;
+
+    .view-mode .info-row {
+      flex-direction: column;
+      padding: 0.5rem 0;
+
+      .label {
+        width: auto;
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    .edit-mode {
+      .form-row {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .form-section {
+        padding: 1rem;
+      }
+
+      .assign-row {
+        flex-direction: column;
+
+        .btn-assign {
+          width: 100%;
+          padding: 0.6rem;
+        }
+      }
+
+      .form-actions {
+        flex-direction: column-reverse;
+
+        .btn-cancel, .btn-save {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}

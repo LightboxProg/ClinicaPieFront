@@ -1,0 +1,103 @@
+<div class="m-4">
+  <!-- Filters Container -->
+  <div
+    style="background-color: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid #f3f4f6;">
+    <h3
+      style="font-size: 1.125rem; font-weight: 600; color: #374151; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center;">
+      <!-- Filter Icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; margin-right: 0.5rem; color: #ef4444;"
+        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+      </svg>
+      Filtros de Búsqueda
+    </h3>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-end;">
+      <!-- Search Input -->
+      <div style="flex: 1; min-width: 250px; position: relative;">
+        <label
+          style="display: block; font-size: 0.875rem; font-weight: 500; color: #6b7280; margin-bottom: 0.25rem; margin-left: 0.25rem;">Buscar
+          Usuario</label>
+        <div style="position: relative;">
+          <div
+            style="position: absolute; top: 0; bottom: 0; left: 0; padding-left: 0.75rem; display: flex; align-items: center; pointer-events: none;">
+            <!-- Search Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; color: #9ca3af;" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input type="text" placeholder="Nombre, usuario o teléfono..." [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+            style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; background-color: #f9fafb; color: #374151; outline: none; transition: all 0.2s;">
+        </div>
+      </div>
+
+      <!-- Role Dropdown -->
+      <div style="width: 100%; max-width: 280px;">
+        <label
+          style="display: block; font-size: 0.875rem; font-weight: 500; color: #6b7280; margin-bottom: 0.25rem; margin-left: 0.25rem;">Filtrar
+          por Rol</label>
+        <div style="position: relative;">
+          <div
+            style="position: absolute; top: 0; bottom: 0; left: 0; padding-left: 0.75rem; display: flex; align-items: center; pointer-events: none;">
+            <!-- Users Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; color: #9ca3af;" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </div>
+          <select [(ngModel)]="selectedRole" (change)="onRoleChange()"
+            style="width: 100%; padding: 0.75rem 2rem 0.75rem 2.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; background-color: #f9fafb; color: #374151; outline: none; appearance: none; cursor: pointer; background-image: none;">
+            <option value="">Todos los roles</option>
+            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+          </select>
+          <div
+            style="position: absolute; top: 0; bottom: 0; right: 0; padding-right: 0.75rem; display: flex; align-items: center; pointer-events: none;">
+            <!-- Chevron Down Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px; color: #9ca3af;" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngFor="let usuario of filteredUsuarios" class="list">
+    <div class="usuario" (click)="verDetalles(usuario)">
+      <figure>
+        <img
+          src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png">
+      </figure>
+      <div class="usuario-info">
+        <div class="info-line">
+          <span class="label">Nombre:</span>
+          <span class="value">{{usuario.nombre}} {{usuario.apeP}} {{usuario.apeM}}</span>
+        </div>
+        <div class="info-line">
+          <span class="label">Usuario:</span>
+          <span class="value username">{{usuario.usuario}}</span>
+        </div>
+        <div class="info-line">
+          <span class="label">Tipo:</span>
+          <span class="value type">{{usuario.tipo}}</span>
+        </div>
+        <div class="info-line">
+          <span class="label">Especialidad:</span>
+          <span class="value specialty">{{usuario.especialidad}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="boton">
+      <button class="btn-edit" (click)="editarUsuario(usuario)">Editar</button>
+      <button class="btn-danger" (click)="eliminarUsuario(usuario)">Eliminar</button>
+    </div>
+  </div>
+  <app-user-modal [usuario]="selectedUser" (usuarioActualizado)="recargar()">
+  </app-user-modal>
+</div>

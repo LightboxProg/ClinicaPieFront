@@ -1,0 +1,176 @@
+<div class="register-container">
+  <div class="background-elements">
+    <div class="element element-1"></div>
+    <div class="element element-2"></div>
+    <div class="element element-3"></div>
+  </div>
+
+  <div class="register-card">
+    <div class="card-header">
+      <h1 class="register-title">Registro Paciente</h1>
+      <p class="register-subtitle">Adjunta los datos del Paciente</p>
+    </div>
+
+    <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">
+            <i class="fas fa-user"></i>
+            Nombre Completo <span class="required">*</span>
+          </label>
+          <input type="text" id="nombre" placeholder="Ingrese su nombre" formControlName="nombre" 
+                 [ngClass]="{'invalid': f['nombre'].invalid && f['nombre'].touched, 'valid': f['nombre'].valid && f['nombre'].touched}" />
+          <div class="input-focus-line"></div>
+          <div class="error-message" *ngIf="f['nombre'].invalid && f['nombre'].touched">
+            <span *ngIf="f['nombre']?.errors?.['required']">El nombre es requerido</span>
+            <span *ngIf="f['nombre']?.errors?.['minlength']">Mínimo 2 caracteres</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="apeP">
+            <i class="fas fa-user-tag"></i>
+            Apellido Paterno <span class="required">*</span>
+          </label>
+          <input type="text" id="apeP" placeholder="Ingrese su apellido paterno" formControlName="apeP" 
+                 [ngClass]="{'invalid': f['apeP'].invalid && f['apeP'].touched, 'valid': f['apeP'].valid && f['apeP'].touched}" />
+          <div class="input-focus-line"></div>
+          <div class="error-message" *ngIf="f['apeP'].invalid && f['apeP'].touched">
+            <span *ngIf="f['apeP']?.errors?.['required']">El apellido paterno es requerido</span>
+            <span *ngIf="f['apeP']?.errors?.['minlength']">Mínimo 2 caracteres</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="apeM">
+            <i class="fas fa-user-tag"></i>
+            Apellido Materno <span class="required">*</span>
+          </label>
+          <input type="text" id="apeM" placeholder="Ingrese su apellido materno" formControlName="apeM" 
+                 [ngClass]="{'invalid': f['apeM'].invalid && f['apeM'].touched, 'valid': f['apeM'].valid && f['apeM'].touched}" />
+          <div class="input-focus-line"></div>
+          <div class="error-message" *ngIf="f['apeM'].invalid && f['apeM'].touched">
+            <span *ngIf="f['apeM']?.errors?.['required']">El apellido materno es requerido</span>
+            <span *ngIf="f['apeM']?.errors?.['minlength']">Mínimo 2 caracteres</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="apodo">
+            <i class="fas fa-signature"></i>
+            Apodo <span class="required">*</span>
+          </label>
+          <input type="text" id="apodo" placeholder="Ingrese un apodo" formControlName="apodo" 
+                 [ngClass]="{'invalid': f['apodo'].invalid && f['apodo'].touched, 'valid': f['apodo'].valid && f['apodo'].touched}" />
+          <div class="input-focus-line"></div>
+          <div class="error-message" *ngIf="f['apodo'].invalid && f['apodo'].touched">
+            <span *ngIf="f['apodo']?.errors?.['required']">El apodo es requerido</span>
+            <span *ngIf="f['apodo']?.errors?.['minlength']">Mínimo 2 caracteres</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="correo">
+          <i class="fas fa-envelope"></i>
+          Correo electrónico <span class="required">*</span>
+        </label>
+        <input type="email" id="correo" placeholder="Ingrese su correo electrónico" formControlName="correoElectronico" 
+               [ngClass]="{'invalid': f['correoElectronico'].invalid && f['correoElectronico'].touched, 'valid': f['correoElectronico'].valid && f['correoElectronico'].touched}" />
+        <div class="input-focus-line"></div>
+        <div class="error-message" *ngIf="f['correoElectronico'].invalid && f['correoElectronico'].touched">
+          <span *ngIf="f['correoElectronico']?.errors?.['required']">El correo electrónico es requerido</span>
+          <span *ngIf="f['correoElectronico']?.errors?.['email']">Formato de correo electrónico inválido</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="telefono">
+          <i class="fas fa-phone"></i>
+          Teléfono <span class="required">*</span>
+        </label>
+        <div class="phone-input-container">
+          <select formControlName="codigoPais" class="country-code-select" (change)="updatePhonePattern($event)">
+            <option *ngFor="let country of countries" [value]="country.dialCode">
+              +{{country.dialCode}} {{country.name}}
+            </option>
+          </select>
+          <div class="phone-input-wrapper">
+            <input type="tel" id="telefono" placeholder="Ingrese su teléfono" formControlName="telefono" 
+                   [ngClass]="{'invalid': f['telefono'].invalid && f['telefono'].touched, 'valid': f['telefono'].valid && f['telefono'].touched}" />
+            <div class="input-focus-line"></div>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="f['telefono'].invalid && f['telefono'].touched">
+          <span *ngIf="f['telefono']?.errors?.['required']">El teléfono es requerido</span>
+          <span *ngIf="f['telefono']?.errors?.['pattern']">Formato de teléfono inválido para el país seleccionado</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="genero">
+            <i class="fas fa-venus-mars"></i>
+            Género <span class="required">*</span>
+          </label>
+          <select class="genero" formControlName="genero" id="genero" 
+                  [ngClass]="{'invalid': f['genero'].invalid && f['genero'].touched, 'valid': f['genero'].valid && f['genero'].touched}">
+            <option value="">Seleccione género</option>
+            <option value="H">Hombre</option>
+            <option value="M">Mujer</option>
+          </select>
+          <div class="input-focus-line"></div>
+          <div class="error-message" *ngIf="f['genero'].invalid && f['genero'].touched">
+            <span *ngIf="f['genero']?.errors?.['required']">El género es requerido</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="fechaNac">
+            <i class="fas fa-birthday-cake"></i>
+            Fecha de nacimiento <span class="required">*</span>
+          </label>
+          <input type="date" id="fechaNac" formControlName="fechaNac" 
+                 [ngClass]="{'invalid': f['fechaNac'].invalid && f['fechaNac'].touched, 'valid': f['fechaNac'].valid && f['fechaNac'].touched}" />
+          <div class="input-focus-line"></div>
+          <div class="error-message" *ngIf="f['fechaNac'].invalid && f['fechaNac'].touched">
+            <span *ngIf="f['fechaNac']?.errors?.['required']">La fecha de nacimiento es requerida</span>
+            <span *ngIf="f['fechaNac']?.errors?.['futureDate']">La fecha de nacimiento no puede ser futura</span>
+            <span *ngIf="f['fechaNac']?.errors?.['invalidAge']">La edad calculada es inválida</span>
+            <span *ngIf="f['fechaNac']?.errors?.['tooOld']">La edad no puede ser mayor a 120 años</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="direccion">
+          <i class="fas fa-home"></i>
+          Dirección
+        </label>
+        <input type="text" id="direccion" placeholder="Ingrese su dirección completa" formControlName="direccion" 
+               [ngClass]="{'invalid': f['direccion'].invalid && f['direccion'].touched, 'valid': f['direccion'].valid && f['direccion'].touched}" />
+        <div class="input-focus-line"></div>
+        <div class="error-message" *ngIf="f['direccion'].invalid && f['direccion'].touched">
+          <span *ngIf="f['direccion']?.errors?.['minlength']">Mínimo 5 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Botón deshabilitado hasta que el formulario sea válido -->
+      <button type="submit" class="submit-btn" [disabled]="!isFormValid()">
+        <i class="fas fa-user-plus"></i>
+        {{ registerForm.valid ? 'REGISTRAR PACIENTE' : 'COMPLETE EL FORMULARIO' }}
+        <div class="btn-shine"></div>
+      </button>
+
+      <!-- Indicador de estado del formulario -->
+      <div class="form-status" *ngIf="registerForm.touched">
+        <div class="status-indicator" [ngClass]="{'valid': registerForm.valid, 'invalid': registerForm.invalid}">
+          <i class="fas" [class.fa-check-circle]="registerForm.valid" [class.fa-times-circle]="registerForm.invalid"></i>
+          {{ registerForm.valid ? 'Formulario completo y válido' : 'Formulario incompleto o inválido' }}
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+
+.list-element{
+    display: flex;
+    width: 100%;
+    background-color: rgb(233, 233, 233);
+    border-bottom: solid 5px rgb(255, 255, 255);
+}
+
+.list-info{
+    font-size: .8rem;
+    font-weight: 300;
+    width: 90%;
+  
+    box-sizing: border-box;
+    padding: 10px;
+    color: rgb(41, 39, 39);
+    
+}
+
+.name-date{
+    display: flex;
+    justify-content: space-between
+}
+
+.desc{
+    font-size: .5rem;
+    margin: 8px 0px;
+    text-align: justify;
+}
+
+.other-data{
+    font-size: .6rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.list-options{
+    background-color: rgb(188, 187, 187);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 10%;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+button{
+    width: 100%;
+
+}
+

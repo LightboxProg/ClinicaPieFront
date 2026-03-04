@@ -1,0 +1,144 @@
+<form (ngSubmit)="guardarForm($event)" class="form-container">
+    <!-- Dos columnas principales -->
+    <div class="form-row">
+        <!-- Columna izquierda -->
+        <div class="form-column">
+            <label>
+                Nombre del Servicio:
+                <input type="text" [(ngModel)]="formData.nombre" name="nombre" required
+                    placeholder="Ej: Depilación Láser - Bigote" />
+            </label>
+
+            <label>
+                Categoría:
+                <select [(ngModel)]="formData.categoria" name="categoria" required>
+                    <option value="">Selecciona una categoría</option>
+                    <option *ngFor="let categoria of categorias" [value]="categoria._id">
+                        {{ categoria.nombre }}
+                    </option>
+                </select>
+            </label>
+
+            <label>
+                Duración (minutos):
+                <input type="number" [(ngModel)]="formData.duracion" name="duracion" required min="1" />
+                <small>Tiempo estimado del servicio en minutos</small>
+            </label>
+
+            <div class="form-row half-width">
+                <label class="half-width">
+                    Costo Individual:
+                    <input type="number" [(ngModel)]="formData.costo" name="costo" min="0" step="0.01"
+                        placeholder="Dejar vacío si es a consultar" />
+                </label>
+
+                <label class="half-width">
+                    Costo de Paquete:
+                    <input type="number" [(ngModel)]="formData.costoPaquete" name="costoPaquete" min="0" step="0.01"
+                        placeholder="Opcional" />
+                </label>
+            </div>
+        </div>
+
+        <!-- Columna derecha (sin FAQs) -->
+        <div class="form-column">
+            <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="formData.tieneSesiones" name="tieneSesiones" />
+                <span>¿Incluye sesiones múltiples?</span>
+            </label>
+
+            <div *ngIf="formData.tieneSesiones" class="sesiones-info">
+                <label>
+                    Número de Sesiones:
+                    <input type="number" [(ngModel)]="formData.sesiones.numero" name="sesionesNumero" min="1" />
+                </label>
+
+                <label>
+                    Descripción de Sesiones:
+                    <textarea [(ngModel)]="formData.sesiones.descripcion" name="sesionesDescripcion" rows="2"
+                        placeholder="Ej: Paquete recomendado de 10 sesiones"></textarea>
+                </label>
+            </div>
+
+            <label>
+                Descripción Corta:
+                <textarea [(ngModel)]="formData.descripcionCorta" name="descripcionCorta" rows="3"
+                    placeholder="Breve descripción para mostrar en listados"></textarea>
+            </label>
+
+            <label>
+                Beneficios:
+                <div class="beneficios-container">
+                    <div class="add-beneficio">
+                        <input type="text" [(ngModel)]="nuevoBeneficio" name="nuevoBeneficio"
+                            placeholder="Ej: Resultados visibles desde la primera sesión" />
+                        <button type="button" (click)="agregarBeneficio()" class="btn-small">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <div *ngIf="formData.beneficios && formData.beneficios.length > 0" class="beneficios-list">
+                        <div *ngFor="let beneficio of formData.beneficios; let i = index; trackBy: trackByIndex"
+                            class="beneficio-item">
+                            <span>{{ beneficio }}</span>
+                            <button type="button" (click)="eliminarBeneficio(i)" class="btn-remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </label>
+        </div>
+    </div> <!-- Fin form-row -->
+
+    <!-- Sección de FAQs a ancho completo -->
+    <div class="faqs-full-width">
+        <label>
+            Preguntas Frecuentes:
+            <div class="faqs-container">
+                <div class="add-faq">
+                    <input type="text" [(ngModel)]="nuevaFaq.pregunta" name="nuevaFaqPregunta" placeholder="Pregunta"
+                        class="faq-pregunta" />
+                    <input type="text" [(ngModel)]="nuevaFaq.respuesta" name="nuevaFaqRespuesta" placeholder="Respuesta"
+                        class="faq-respuesta" />
+                    <button type="button" (click)="agregarFaq()" class="btn-small">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <div *ngIf="formData.faqs && formData.faqs.length > 0" class="faqs-list">
+                    <div *ngFor="let faq of formData.faqs; let i = index; trackBy: trackByIndex" class="faq-item">
+                        <div class="faq-content">
+                            <strong>P: {{ faq.pregunta }}</strong>
+                            <p>R: {{ faq.respuesta }}</p>
+                        </div>
+                        <button type="button" (click)="eliminarFaq(i)" class="btn-remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </label>
+    </div>
+
+    <!-- Checkbox Activo -->
+    <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="formData.activo" name="activo" />
+        <span>Activo</span>
+    </label>
+
+    <!-- Información de modo (solo edición) -->
+    <div *ngIf="esEdicion" class="mode-info">
+        <small>Modo: Edición | ID: {{ formData._id }}</small>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">
+            {{ esEdicion ? 'Actualizar' : 'Crear' }} Servicio
+        </button>
+        <button type="button" (click)="cancelarForm()" class="btn-secondary">
+            Cancelar
+        </button>
+    </div>
+</form>

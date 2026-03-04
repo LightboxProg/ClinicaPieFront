@@ -1,0 +1,167 @@
+<div class="container">
+    <h2>Gestión de Servicios</h2>
+
+    <!-- Panel de estadísticas y filtros -->
+    <div class="dashboard-panel">
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-number">{{ totalServicios }}</span>
+                <span class="stat-label">Total Servicios</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ serviciosActivos }}</span>
+                <span class="stat-label">Activos</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ serviciosInactivos }}</span>
+                <span class="stat-label">Inactivos</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ categoriasDisponibles.length }}</span>
+                <span class="stat-label">Categorías</span>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="filtroEstado">Filtrar por estado:</label>
+                <select id="filtroEstado" [(ngModel)]="filtroEstado" (change)="onFiltroEstadoChange()">
+                    <option value="todos">Todos los servicios</option>
+                    <option value="activos">Solo activos</option>
+                    <option value="inactivos">Solo inactivos</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="filtroCategoria">Filtrar por categoría:</label>
+                <select id="filtroCategoria" [(ngModel)]="filtroCategoria" (change)="onFiltroCategoriaChange()">
+                    <option value="">Todas las categorías</option>
+                    <option *ngFor="let categoria of categoriasDisponibles" [value]="categoria._id">
+                        {{ categoria.nombre }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="buscarTexto">Buscar:</label>
+                <input type="text" id="buscarTexto" [(ngModel)]="buscarTexto" (input)="onBuscarChange()"
+                    placeholder="Buscar por nombre o descripción...">
+            </div>
+
+            <button (click)="limpiarFiltros()" class="btn-secondary">
+                <i class="fas fa-times"></i> Limpiar filtros
+            </button>
+        </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="actions">
+        <button (click)="abrirModal()" class="btn-primary">
+            <i class="fas fa-plus"></i> Nuevo Servicio
+        </button>
+        <button (click)="inicializarServicios()" class="btn-secondary">
+            <i class="fas fa-download"></i> Importar Servicios Iniciales
+        </button>
+    </div>
+
+    <!-- Tabla de servicios -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Duración</th>
+                    <th>Costo</th>
+                    <th>Costo Paquete</th>
+                    <th>Sesiones</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let servicio of serviciosFiltrados" [class.inactive-row]="!servicio.activo">
+                    <td>
+                        <strong>{{ servicio.nombre }}</strong>
+                        <div *ngIf="servicio.descripcionCorta" class="descripcion-corta">
+                            {{ servicio.descripcionCorta }}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge-categoria">
+                            {{ servicio.categoria?.nombre || 'Sin categoría' }}
+                        </span>
+                    </td>
+                    <td>{{ servicio.duracion }} min</td>
+                    <td>
+                        <span *ngIf="servicio.costo !== null && servicio.costo !== undefined">
+                            ${{ servicio.costo | number:'1.0-2' }}
+                        </span>
+                        <span *ngIf="servicio.costo === null || servicio.costo === undefined" class="text-muted">
+                            A consultar
+                        </span>
+                    </td>
+                    <td>
+                        <span *ngIf="servicio.costoPaquete !== null && servicio.costoPaquete !== undefined">
+                            ${{ servicio.costoPaquete | number:'1.0-2' }}
+                        </span>
+                        <span *ngIf="servicio.costoPaquete === null || servicio.costoPaquete === undefined"
+                            class="text-muted">
+                            -
+                        </span>
+                    </td>
+                    <td>
+                        <span *ngIf="servicio.tieneSesiones" class="badge-sesiones">
+                            {{ servicio.sesiones?.numero || 1 }} sesión(es)
+                        </span>
+                        <span *ngIf="!servicio.tieneSesiones" class="text-muted">
+                            Única
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge" [ngClass]="servicio.activo ? 'badge-success' : 'badge-danger'">
+                            {{ servicio.activo ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td class="actions-cell">
+                        <button (click)="editarServicio(servicio)" class="btn-edit">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+
+                        <!-- Botón Desactivar (solo si está activo) -->
+                        <button *ngIf="servicio.activo" (click)="desactivarServicio(servicio._id, servicio.nombre)"
+                            class="btn-warning">
+                            <i class="fas fa-power-off"></i> Desactivar
+                        </button>
+
+                        <!-- Botón Reactivar (solo si está inactivo) -->
+                        <button *ngIf="!servicio.activo" (click)="reactivarServicio(servicio._id)" class="btn-success">
+                            <i class="fas fa-check"></i> Reactivar
+                        </button>
+
+                        <!-- Botón Eliminar permanentemente (siempre visible) -->
+                        <button (click)="eliminarPermanentemente(servicio._id, servicio.nombre)" class="btn-delete">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div *ngIf="serviciosFiltrados.length === 0" class="empty-table">
+            <p>No se encontraron servicios con los filtros aplicados.</p>
+        </div>
+    </div>
+
+    <!-- Mostrar contador de resultados filtrados -->
+    <div class="results-count">
+        Mostrando {{ serviciosFiltrados.length }} de {{ totalServicios }} servicios
+    </div>
+</div>
+
+<app-modal [isVisible]="isModalVisible" [title]="esEdicion ? 'Editar Servicio' : 'Nuevo Servicio'"
+    (close)="cerrarModal()">
+    <app-form-servicio [servicio]="servicioSeleccionado" [categorias]="categoriasDisponibles"
+        (guardar)="onGuardarServicio($event)" (cancelar)="cerrarModal()">
+    </app-form-servicio>
+</app-modal>

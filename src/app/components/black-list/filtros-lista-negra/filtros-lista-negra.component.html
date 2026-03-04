@@ -1,0 +1,34 @@
+<div class="w-100 ">
+  <div class="m-1 filtros">
+    <div class="title">
+      <p><strong>Filtros</strong></p>
+    </div>
+    <div class="p-1 filter-opt-container">
+      <form [formGroup]="filterForm" (ngSubmit)="aplicarFiltros()">
+        <div class="filter-opt">
+          <p>Filtrar tipo:</p>
+          <select formControlName="estado" class="w-100">
+            <option value="" selected>Ninguno</option>
+            <option value="temporal">Temporal</option>
+            <option value="permanente">Permanente</option>
+          </select>
+        </div>
+        <div class="filter-opt">
+          <p>Ordenar por fecha:</p>
+          <select formControlName="orden" class="w-100">
+            <option value="" selected>Ninguno</option>
+            <option value="desc">Más recientes</option>
+            <option value="asc">Más antiguos</option>
+          </select>
+        </div>
+        <div class="filter-opt">
+          <p>Buscar por nombre o número</p>
+          <input formControlName="search" type="text" class="w-100" placeholder="Ej. Naomi o 524751052361">
+        </div>
+        <button class="btn mt-1" type="submit">
+          Aplicar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
