@@ -97,7 +97,7 @@ export class PerfilComponent {
       });
     }
     const usuario = JSON.parse(localStorage.getItem('usuarioAutenticado') || '{}');
-    this.esAdmin = usuario?.tipo === 'Administrador'; 
+    this.esAdmin = usuario?.tipo === 'Administrador';
   }
 
   obtenerCitasPorPaciente(id: string) {
@@ -270,15 +270,36 @@ export class PerfilComponent {
   activarEdicion() {
     this.editando = true;
   }
+
   guardarCambiosGenerales() {
     // Si se marca como finado y no hay fecha de fallecimiento, asigna la fecha actual
     if (this.paciente.finado && !this.paciente.fechaFallecimiento) {
-      this.paciente.fechaFallecimiento = new Date(); // Fecha actual
+      this.paciente.fechaFallecimiento = new Date();
     }
 
     // Si se desmarca como finado, limpia la fecha de fallecimiento
     if (!this.paciente.finado) {
       this.paciente.fechaFallecimiento = null;
+    }
+
+    // --- Sincronización de teléfonos ---
+    const telefonoWhatsapp = this.paciente.telefonoWhatsapp;
+    if (telefonoWhatsapp) {
+      // Convertir a string por si es número
+      const telefonoStr = telefonoWhatsapp.toString();
+
+      // Determinar si es México: asumimos que el código de país son los primeros 2 dígitos (52)
+      const esMexico = telefonoStr.startsWith('52') && telefonoStr.length >= 12; // 52 + 10 dígitos
+
+      if (esMexico) {
+        // Extraer el número local (después del código 52)
+        const numeroLocal = telefonoStr.substring(2); // deberían ser 10 dígitos
+        // Construir telefonoPaciente: 52 + 1 + numeroLocal
+        this.paciente.telefonoPaciente = Number('52' + '1' + numeroLocal);
+      } else {
+        // Para otros países, ambos números son iguales
+        this.paciente.telefonoPaciente = Number(telefonoStr);
+      }
     }
 
     this.pacienteService.actualizarPaciente(this.paciente._id, this.paciente).subscribe({
