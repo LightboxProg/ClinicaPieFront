@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+
+// Variables Propigment Mejoradas
+$primary-color: #ff5a5f;
+$secondary-color: #00a699;
+$accent-color: #ffb400;
+$dark-color: #1a1a1a;
+$light-color: #f8f9fa;
+$text-dark: #2d2d2d;
+$text-med: #6c757d;
+$text-light: #ffffff;
+$border-radius: 16px;
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 24px;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 300px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 90, 95, 0.05) 0%,
+      rgba(0, 166, 153, 0.05) 100%
+    );
+    z-index: 0;
+  }
+}
+
+.filtros {
+  flex: 1;
+  min-width: 320px;
+  position: relative;
+  z-index: 1;
+}
+
+.mensajes {
+  flex: 2;
+  min-width: 320px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive */
+@media screen and (max-width: 1024px) {
+  .flex {
+    padding: 16px;
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .flex {
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  .filtros,
+  .mensajes {
+    width: 100%;
+    flex: none;
+  }
+}

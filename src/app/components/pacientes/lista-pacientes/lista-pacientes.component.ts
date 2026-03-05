@@ -26,6 +26,7 @@ export class ListaPacientesComponent {
       this.pacientes=pacientes;
     })
     this.pacienteService.obtenerPacientes();
+    console.log(this.pacientes);
   }
 
 

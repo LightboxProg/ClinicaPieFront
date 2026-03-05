@@ -1,6 +1,8 @@
-<div class="patient-profile" *ngIf="paciente; else cargando">
-  <div class="list-element" *ngIf="!estaEnListaNegra(paciente._id)">
-    <div class="list-info" (click)="verPerfil(paciente._id)" [ngClass]="{'finado': paciente.finado}">
+<div class="patient-profile" *ngIf="pregunton; else cargando">
+  <!-- <div class="list-element" *ngIf="!estaEnListaNegra(pregunton._id)"> -->
+  <div class="list-element">
+    <!-- <div class="list-info" (click)="verPerfil(pregunton._id)" [ngClass]="{'finado': pregunton.finado}"> -->
+    <div class="list-info">
       <div class="paciente-card">
         <figure class="paciente-avatar">
           <img
@@ -8,16 +10,14 @@
             alt="Avatar usuario" width="64" height="64" />
         </figure>
         <div class="paciente-details">
-          <p><strong>Nombre:</strong> {{paciente.nombre}} {{paciente.apeP}} {{paciente.apeM}}</p>
-          <p><strong>Fecha de nacimiento:</strong> {{formatearFecha(paciente.fechaNac)}}</p>
-          <p><strong>Teléfono:</strong> {{paciente.telefonoWhatsapp}}<br>
-            <strong>Correo:</strong> {{paciente.correoElectronico || 'No proporcionado'}}
-          </p>
+          <p><strong>Nombre:</strong> {{pregunton.nombre}}</p>
+          <p><strong>Teléfono:</strong> {{pregunton.telefonoWhatsapp}}<br></p>
         </div>
       </div>
     </div>
-    <div class="list-options">
-      <button class="Lista-negra" (click)="abrirListaNegra(paciente)">
+
+    <!-- <div class="list-options">
+      <button class="Lista-negra" (click)="abrirListaNegra(pregunton)">
         <span>Lista Negra</span>
         <span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-miterlimit="2" stroke-linejoin="round"
@@ -29,17 +29,17 @@
         </span>
       </button>
 
-    </div>
+    </div> -->
 
 
   </div>
-  <app-modal [title]="''" [isVisible]="showListaNegraModal" (close)="onCloseListaNegraModal()">
+  <!--<app-modal [title]="''" [isVisible]="showListaNegraModal" (close)="onCloseListaNegraModal()">
     <form (ngSubmit)="agregarListaNegra()" class="blacklist-form clean-theme">
       <div class="modal-banner">
         <span class="material-icons icon-alert">block</span>
         <div>
           <h2>Agregar a Lista Negra</h2>
-          <p>Indica el motivo para registrar a este paciente.</p>
+          <p>Indica el motivo para registrar a este prospecto.</p>
         </div>
       </div>
 
@@ -74,7 +74,7 @@
         </button>
       </div>
     </form>
-  </app-modal>
+  </app-modal> -->
 </div>
 
 <ng-template #cargando>
