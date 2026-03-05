@@ -115,14 +115,23 @@ export class PacienteRegistroComponent {
 
   onSubmit() {
     if (this.registerForm.invalid) {
-      // Marcar todos los campos como tocados para mostrar errores
       this.registerForm.markAllAsTouched();
       this.swalService.error('Por favor, complete todos los campos obligatorios correctamente');
       return;
     }
 
     const form = this.registerForm.value;
-    const telefonoCompleto = form.codigoPais + form.telefono;
+    const codigoPais = form.codigoPais;
+    const numeroLocal = form.telefono;
+    const codigoDigitos = codigoPais.replace('+', '');
+    const telefonoWhatsappStr = codigoDigitos + numeroLocal;
+    let telefonoPacienteStr = telefonoWhatsappStr;
+    if (codigoPais === '+52') {
+      telefonoPacienteStr = '52' + '1' + numeroLocal;
+    }
+
+    const telefonoWhatsapp = Number(telefonoWhatsappStr);
+    const telefonoPaciente = Number(telefonoPacienteStr);
 
     const nuevoPaciente = {
       nombre: form.nombre,
@@ -130,8 +139,8 @@ export class PacienteRegistroComponent {
       apeM: form.apeM,
       apodo: form.apodo,
       nombreReferido: form.nombreReferido,
-      telefonoPaciente: telefonoCompleto,
-      telefonoWhatsapp: telefonoCompleto,
+      telefonoPaciente: telefonoPaciente,
+      telefonoWhatsapp: telefonoWhatsapp,
       correoElectronico: form.correoElectronico,
       genero: form.genero,
       fechaNac: form.fechaNac,
@@ -154,6 +163,6 @@ export class PacienteRegistroComponent {
     });
   }
 
-  
+
 }
 
