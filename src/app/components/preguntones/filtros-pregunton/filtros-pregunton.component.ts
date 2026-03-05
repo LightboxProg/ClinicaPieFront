@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EventEmitter } from '@angular/core';
 import { PacientesService } from 'src/app/services/pacientes.service';
 
 @Component({
@@ -20,10 +19,8 @@ export class FiltrosPreguntonComponent implements OnInit {
   selectedRole: string = '';
   roles: string[] = ['Administrador', 'Doctor', 'Recepcionista']; // Adjusted based on screenshot 'Administrador'
 
-  constructor(private userService: UserService, private loginService: LoginService) { }
 
   ngOnInit() {
-    this.cargarusuarios();
   }
 
 
@@ -51,7 +48,6 @@ export class FiltrosPreguntonComponent implements OnInit {
   }
 
   recargar() {
-    this.cargarusuarios();
   }
 }
 
