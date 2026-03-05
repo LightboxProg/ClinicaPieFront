@@ -44,8 +44,8 @@ export const routes: Routes = [
   { path: "checkout/:id", component: CheckoutComponent },
   { path: "pagos/:fecha/:id/:tipo", component: PasarelaComponent },
 
-  { path: "prueba", component: CalendarioPageComponent, canActivate: [authGuard] },
   // Rutas para usuarios autenticados (sin restricción de roles)
+  { path: "prueba", component: CalendarioPageComponent, canActivate: [authGuard] },
   { path: "chats2", component: DebugComponent, canActivate: [authGuard] },
   { path: "messages", component: ChatsComponent, canActivate: [authGuard] },
   { path: "list", component: ListComponent, canActivate: [authGuard] },
@@ -61,7 +61,7 @@ export const routes: Routes = [
   { path: "sucursales-formulario", component: FormularioSucursalesComponent, canActivate: [authGuard] },
   { path: "sucursales-lista", component: ListaSucursalesComponent, canActivate: [authGuard] },
   { path: "mensajes-masivos", component: MensajesMasivosComponent, canActivate: [authGuard] },
-  {path: "chats", component: ChatsComponent, canActivate: [authGuard]},
+  { path: "chats", component: ChatsComponent, canActivate: [authGuard] },
 
   // Rutas solo para Administrador
   {
