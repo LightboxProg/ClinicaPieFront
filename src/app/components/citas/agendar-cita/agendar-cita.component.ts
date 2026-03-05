@@ -126,7 +126,7 @@ export class AgendarCitaComponent implements OnInit {
     });
   }
 
-  // 🌟 FUNCIÓN NUEVA: Une ambas listas para facilitar la búsqueda
+  //  Une ambas listas para facilitar la búsqueda
   actualizarListaMaestra(): void {
     this.todosLosContactos = [
       ...this.todosLosPacientes.map(p => ({ ...p, tipoContactoDb: 'paciente' })),
@@ -134,7 +134,7 @@ export class AgendarCitaComponent implements OnInit {
     ];
   }
 
-  // 🌟 FUNCIÓN NUEVA: Filtra mientras escribes (por nombre o teléfono)
+  //Filtra mientras escribes (por nombre o teléfono)
   filtrarContactos(event: any): void {
     const termino = event.target.value.toLowerCase().trim();
     
@@ -151,7 +151,7 @@ export class AgendarCitaComponent implements OnInit {
     }).slice(0, 5); // Mostramos solo los 5 mejores resultados para no saturar la pantalla
   }
 
-  // 🌟 FUNCIÓN NUEVA: Al hacer clic en un resultado de la lista
+  //  Al hacer clic en un resultado de la lista
   seleccionarContactoLista(contacto: any): void {
     // 1. Limpiamos el buscador
     this.terminoBusqueda = '';
@@ -246,7 +246,7 @@ export class AgendarCitaComponent implements OnInit {
 
     const payload = this.citaForm.getRawValue();
 
-    // 🌟 Si dejaron el nombre en blanco, le ponemos uno por defecto para el Calendar
+    // Si dejaron el nombre en blanco, le ponemos uno por defecto para el Calendar
     if (!payload.nombre || payload.nombre.trim() === '') {
       payload.nombre = 'Paciente por Confirmar';
     }

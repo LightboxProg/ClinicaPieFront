@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { CalendarioService } from 'src/app/services/calendario.service';
 import { LoginService } from 'src/app/services/login.service';
 import { AgendarCitaComponent } from '../agendar-cita/agendar-cita.component';
+import { RegendarCitasComponent } from '../regendar-citas/regendar-citas.component';
 import * as moment from 'moment';
 
 @Component({
   selector: 'app-calendario-doctor',
   standalone: true,
-  imports: [CommonModule, FormsModule, AgendarCitaComponent],
+  imports: [CommonModule, FormsModule, AgendarCitaComponent, RegendarCitasComponent],
   templateUrl: './calendario-doctor.component.html',
   styleUrls: ['./calendario-doctor.component.scss']
 })
@@ -32,6 +33,9 @@ export class CalendarioDoctorComponent implements OnInit, OnChanges {
 
   mostrarModalAgendar: boolean = false;
   datosParaModal: any = null;
+
+  mostrarModalReagendar: boolean = false;
+  citaSeleccionadaParaReagendar: any = null;
 
   constructor(
     private calendarioService: CalendarioService,
@@ -100,33 +104,50 @@ export class CalendarioDoctorComponent implements OnInit, OnChanges {
       }
     });
   }
-seleccionarBloque(bloque: any): void {
+  seleccionarBloque(bloque: any): void {
     if (bloque.estado === 'disponible') {
       this.datosParaModal = {
         doctorId: this.doctorIdActual,
-        fechaCita: this.fechaSeleccionada, 
-        horaInicio: this.limpiarHora(bloque.inicio), 
-        
+        fechaCita: this.fechaSeleccionada,
+        horaInicio: this.limpiarHora(bloque.inicio),
+
         // 🌟 NUEVO: Le mandamos los límites exactos del bloque libre
         limiteMinimo: this.limpiarHora(bloque.inicio),
         limiteMaximo: this.limpiarHora(bloque.fin),
-        
-        telefono: '' 
+
+        telefono: ''
       };
-      
+
       this.mostrarModalAgendar = true;
     }
   }
- private limpiarHora(horaLegible: string): string {
+
+  abrirReagendarCita(bloque: any): void {
+    this.citaSeleccionadaParaReagendar = {
+      ...bloque,
+      oldDoctorId: this.doctorIdActual,
+      nombreDoctor: this.doctorNombre,
+      fechaCita: this.fechaSeleccionada,
+      horaInicio: this.limpiarHora(bloque.inicio),
+      horaFin: this.limpiarHora(bloque.fin), 
+      
+      nombrePaciente: bloque.titulo
+    };
+
+    this.mostrarModalReagendar = true;
+  }
+
+
+  private limpiarHora(horaLegible: string): string {
     if (!horaLegible) return '';
-    
+
     // Separa "10:00" de "AM"
     const [horaMinutos, modificador] = horaLegible.split(' ');
     let [horas, minutos] = horaMinutos.split(':');
-    
+
     if (horas === '12') horas = '00';
     if (modificador === 'PM') horas = (parseInt(horas, 10) + 12).toString();
-    
+
     return `${horas.padStart(2, '0')}:${minutos}`;
   }
 }

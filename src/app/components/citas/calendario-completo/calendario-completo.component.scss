@@ -197,3 +197,27 @@ $borde: #e0e6ed;
         font-weight: bold;
     }
 }
+
+.btn-reagendar-global {
+  margin-top: 14px;
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  }
+}

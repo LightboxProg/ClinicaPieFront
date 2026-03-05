@@ -30,12 +30,12 @@ export class CalendarioService {
   }
 
   // 2. Obtener la disponibilidad de un doctor en una fecha específica
- getDisponibilidadDoctor(doctorId: string, fecha: string): Observable<any> {
+  getDisponibilidadDoctor(doctorId: string, fecha: string): Observable<any> {
     const params = new HttpParams()
 
-      .set('idUsuario', doctorId) 
+      .set('idUsuario', doctorId)
       .set('fecha', fecha);
-      
+
     return this.http.get<any>(`${this.apiUrl}/disponibilidad-doctor`, { params });
   }
   // 3. Obtener la disponibilidad en un rango de fechas
@@ -63,4 +63,16 @@ export class CalendarioService {
     // datosCita debe incluir: { telefono, doctorId, itemTipo, itemId, fechaCita, horaInicio, etc. }
     return this.http.post<any>(`${this.apiUrl}/agendar`, datosCita);
   }
+
+  // 6. Reagendar cita (Cambio de fecha, hora o doctor)
+  reagendarCita(datosReagenda: any): Observable<any> {
+    // datosReagenda incluye: citaId, tipoContacto, oldDoctorId, newDoctorId, nuevaFecha, nuevaHoraInicio, nuevaHoraFin
+    return this.http.put<any>(`${this.apiUrl}/reagendar-cita`, datosReagenda);
+  }
+
+  
+  getHorarioSemanalDoctor(doctorId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/horario-doctor/${doctorId}`);
+  }
+
 }

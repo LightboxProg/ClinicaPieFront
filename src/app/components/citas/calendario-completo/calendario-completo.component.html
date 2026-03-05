@@ -1,7 +1,7 @@
 <div class="contenedor-calendario">
   
   <header class="cabecera">
-    <h2>📅 Agenda General de Especialistas</h2>
+    <h2>Agenda General de Especialistas</h2>
     
     <div class="filtros-fecha">
       <div class="campo-fecha">
@@ -14,7 +14,7 @@
         <input type="date" [(ngModel)]="fechaFin" (change)="cargarTodosLosEventos()">
       </div>
       <button (click)="cargarTodosLosEventos()" class="btn-recargar">
-        🔄 Recargar
+        Recargar
       </button>
     </div>
   </header>
@@ -25,7 +25,7 @@
   </div>
 
   <div *ngIf="!cargandoEventos && eventos.length === 0" class="estado-mensaje vacio">
-    <p>📭 No hay eventos programados en este rango de fechas.</p>
+    <p>No hay eventos programados en este rango de fechas.</p>
   </div>
 
   <div *ngIf="!cargandoEventos && eventos.length > 0" class="grid-eventos">
@@ -39,20 +39,30 @@
         
         <div class="detalles">
           <p class="fecha">
-            🗓️ <strong>Inicio:</strong> {{ evento.start?.dateTime | date:'medium' }}
+            <strong>Inicio:</strong> {{ evento.start?.dateTime | date:'medium' }}
           </p>
           <p class="fecha">
-            🏁 <strong>Fin:</strong> {{ evento.end?.dateTime | date:'shortTime' }}
+            <strong>Fin:</strong> {{ evento.end?.dateTime | date:'shortTime' }}
           </p>
         </div>
 
         <div class="descripcion" *ngIf="evento.description">
           <p>{{ evento.description }}</p>
         </div>
+
+        <button class="btn-reagendar-global" (click)="abrirReagendar(evento)">
+          Reagendar
+        </button>
+
       </div>
-      
     </div>
 
+    <app-regendar-citas
+      *ngIf="mostrarModalReagendar"
+      [citaOriginal]="citaParaReagendar"
+      (cerrarModal)="mostrarModalReagendar = false"
+      (citaReagendada)="cargarTodosLosEventos()">
+    </app-regendar-citas>
+    
   </div>
-
 </div>

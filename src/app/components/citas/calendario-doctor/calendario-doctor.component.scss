@@ -1,113 +1,215 @@
+/* =========================================
+   CONTENEDOR PRINCIPAL
+   ========================================= */
 .agenda-doctor-container {
-  background: white;
-  border-radius: 12px;
+  background: #f8fafc;
   padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+  border-radius: 20px;
+  min-height: 500px;
 }
 
+/* =========================================
+   HEADER DE LA AGENDA
+   ========================================= */
 .cabecera-agenda {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #f1f5f9;
-  padding-bottom: 16px;
+  background: white;
+  padding: 20px 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
   margin-bottom: 24px;
 
   .info-doctor {
-    h2 { margin: 0; color: #1e293b; font-size: 1.4rem; }
-    .nombre-doc { margin: 4px 0 0 0; color: #0ea5e9; font-weight: 600; }
+    h2 { 
+      margin: 0; 
+      color: #0f172a; 
+      font-size: 1.4rem; 
+      font-weight: 800; 
+      letter-spacing: -0.02em;
+    }
+    .nombre-doc { 
+      margin: 4px 0 0 0; 
+      color: #3b82f6; 
+      font-weight: 600; 
+      font-size: 1rem; 
+    }
   }
 
   .filtro-fecha {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: #f8fafc;
-    padding: 8px 16px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    gap: 12px;
+    
+    label { 
+      font-size: 0.85rem; 
+      font-weight: 700; 
+      color: #64748b; 
+      text-transform: uppercase; 
+    }
+    
+    input[type="date"] {
+      padding: 10px 16px;
+      background-color: #f1f5f9;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      outline: none;
+      font-size: 0.95rem;
+      color: #1e293b;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      cursor: pointer;
 
-    label { font-size: 0.9rem; color: #64748b; font-weight: 600; }
-    input { border: none; background: transparent; color: #334155; font-weight: bold; outline: none; }
+      &:focus, &:hover { 
+        background-color: #ffffff;
+        border-color: #3b82f6; 
+      }
+    }
   }
 }
 
-/* MENSAJES DE ESTADO */
+/* =========================================
+   ESTADOS (VACÍO Y CARGANDO)
+   ========================================= */
 .estado-vacio {
   text-align: center;
-  padding: 40px;
+  padding: 60px 20px;
   color: #64748b;
-  background: #f8fafc;
-  border-radius: 8px;
-  border: 1px dashed #cbd5e1;
-
-  &.inactivo { background: #fff1f2; color: #e11d48; border-color: #fecdd3; }
+  background: white;
+  border-radius: 16px;
+  border: 2px dashed #e2e8f0;
+  font-weight: 500;
   
+  &.inactivo {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+  }
+
   .spinner {
-    width: 30px; height: 30px;
-    border: 3px solid #cbd5e1; border-top-color: #0ea5e9;
-    border-radius: 50%; animation: spin 1s linear infinite;
-    margin: 0 auto 12px auto;
+    width: 36px; height: 36px;
+    border: 4px solid #e2e8f0;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    margin: 0 auto 16px auto;
   }
 }
+
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* LÍNEA DE TIEMPO (TIMELINE) */
+/* =========================================
+   LÍNEA DE TIEMPO (TIMELINE)
+   ========================================= */
 .timeline {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
+/* =========================================
+   BLOQUES DE TURNOS (Disponibles y Ocupados)
+   ========================================= */
 .bloque-turno {
   display: flex;
-  border-radius: 8px;
+  background: white;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid #e2e8f0;
-  
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+  border: 1px solid #f1f5f9;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Columna de la Hora (Izquierda) */
   .hora-col {
-    background: #f8fafc;
-    width: 110px;
-    padding: 16px;
+    padding: 16px 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-right: 1px solid #e2e8f0;
+    min-width: 120px;
+    border-right: 1px solid rgba(0,0,0,0.05);
     
-    .hora { font-weight: 700; color: #334155; font-size: 0.9rem; }
-    .hasta { font-size: 0.75rem; color: #94a3b8; margin: 2px 0; }
+    .hora { font-weight: 800; font-size: 1.05rem; letter-spacing: -0.02em; }
+    .hasta { font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; margin: 2px 0; }
   }
 
+  /* Columna de Detalles (Derecha) */
   .info-col {
-    padding: 16px;
+    padding: 16px 24px;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: flex-start;
 
-    h4 { margin: 0 0 6px 0; font-size: 1.1rem; }
+    h4 { margin: 0 0 6px 0; font-size: 1.1rem; font-weight: 700; }
   }
 
-  /* ESTILOS SEGÚN ESTADO */
+  /* --- ESTILO: DISPONIBLE (Verde) --- */
   &.disponible {
-    border-left: 5px solid #10b981; /* Verde */
+    border-left: 6px solid #10b981;
+    
+    .hora-col { background: #f0fdf4; color: #065f46; }
     .info-col h4 { color: #059669; }
+
     .btn-agendar {
-      align-self: flex-start; margin-top: 8px;
-      background: #10b981; color: white; border: none;
-      padding: 6px 12px; border-radius: 6px; font-weight: bold;
-      cursor: pointer; transition: 0.2s;
-      &:hover { background: #059669; }
+      margin-top: 8px;
+      padding: 8px 16px;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      
+      &:hover { background: #059669; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2); }
     }
   }
 
+  /* --- ESTILO: OCUPADO (Rojo/Rosado) --- */
   &.ocupado {
-    border-left: 5px solid #ef4444; /* Rojo */
-    background: #fef2f2;
-    .info-col h4 { color: #b91c1c; }
-    .detalles-cita { margin: 0; font-size: 0.85rem; color: #7f1d1d; white-space: pre-wrap; }
-    .hora-col { background: #fef2f2; border-color: #fecdd3; }
+    border-left: 6px solid #f43f5e;
+    background: #fffbfa;
+    
+    .hora-col { background: #fff1f2; color: #9f1239; }
+    .info-col h4 { color: #be123c; }
+    
+    .detalles-cita { 
+      margin: 0 0 12px 0; 
+      font-size: 0.9rem; 
+      color: #881337; 
+      opacity: 0.8;
+      line-height: 1.4;
+    }
+
+    /* 🌟 EL NUEVO BOTÓN DE REAGENDAR */
+    .btn-reagendar {
+      padding: 8px 16px;
+      background: white;
+      color: #475569;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      
+      &:hover { 
+        background: #f8fafc; 
+        border-color: #cbd5e1; 
+        color: #0f172a;
+      }
+    }
   }
 }

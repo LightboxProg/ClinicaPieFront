@@ -1,0 +1,81 @@
+<div class="modal-overlay" (click)="cerrar()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    
+    <header class="modal-header">
+      <div class="header-text">
+        <h3>🔄 Reagendar Cita</h3>
+        <p>Mueve la cita a una nueva fecha o cambia de especialista</p>
+      </div>
+      <button class="btn-close" (click)="cerrar()">&times;</button>
+    </header>
+
+    <form [formGroup]="reagendarForm" (ngSubmit)="guardarReagenda()" class="modal-body">
+      
+      <div class="info-cita-actual" *ngIf="citaOriginal">
+        <div class="icono">📅</div>
+        <div class="detalles">
+          <strong>Cita actual de {{ citaOriginal.nombrePaciente || 'Paciente' }}</strong>
+          <span>Con: {{ citaOriginal.nombreDoctor || 'Especialista actual' }}</span>
+          <span>Fecha: {{ citaOriginal.fechaCita }} | Hora: {{ citaOriginal.horaInicio }}</span>
+        </div>
+      </div>
+
+      <div class="grid-form">
+        
+        <div class="campo full">
+          <label>Especialista (Dr.)</label>
+          <select formControlName="newDoctorId">
+            <option value="" disabled>-- Selecciona el doctor --</option>
+            <option *ngFor="let doc of doctores" [value]="doc.id || doc._id">
+              {{ doc.nombre }} {{ doc.apeP || '' }}
+            </option>
+          </select>
+        </div>
+
+        <div class="campo full">
+          <label>Nueva Fecha</label>
+          <input type="date" formControlName="nuevaFecha" [min]="fechaMinima">
+        </div>
+
+        <div class="campo full">
+          <label>Nueva Hora de Inicio</label>
+          
+          <select formControlName="nuevaHoraInicio" 
+                  [class.input-readonly]="reagendarForm.get('nuevaHoraInicio')?.disabled">
+            <option value="" disabled selected>
+              {{ horariosDisponibles.length > 0 ? '-- Elige un horario --' : 'Selecciona una fecha válida primero' }}
+            </option>
+            
+            <option *ngFor="let hora of horariosDisponibles" [value]="hora">
+              {{ hora }} hrs
+            </option>
+          </select>
+
+          <small class="info" style="color: #64748b; font-size: 0.75rem; margin-top: 4px; font-style: italic;">
+            * Solo se muestran los horarios disponibles en el turno del doctor.
+          </small>
+        </div>
+
+      </div>
+
+      <div class="alerta-error" *ngIf="errorHorarioEnVivo" style="background: #fffbeb; border-left-color: #f59e0b; color: #b45309;">
+        <strong>⚠️ Atención:</strong> {{ errorHorarioEnVivo }}
+      </div>
+
+      <div class="alerta-error" *ngIf="mensajeError && !errorHorarioEnVivo">
+        <strong>❌ No se pudo reagendar:</strong> {{ mensajeError }}
+      </div>
+
+      <footer class="modal-footer">
+        <button type="button" class="btn-cancelar" (click)="cerrar()">Cancelar</button>
+        
+        <button type="submit" class="btn-guardar" 
+                [disabled]="reagendarForm.invalid || cargando || errorHorarioEnVivo !== ''">
+          <span *ngIf="!cargando">Confirmar Cambios</span>
+          <span *ngIf="cargando" class="loader"></span>
+        </button>
+      </footer>
+
+    </form>
+  </div>
+</div>

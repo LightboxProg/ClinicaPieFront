@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { CalendarioService } from 'src/app/services/calendario.service'; 
+import * as moment from 'moment';
+import { RegendarCitasComponent } from '../regendar-citas/regendar-citas.component';
 
 @Component({
   selector: 'app-calendario-completo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RegendarCitasComponent],
   templateUrl: './calendario-completo.component.html',
   styleUrls: ['./calendario-completo.component.scss']
 })
@@ -19,6 +21,9 @@ export class CalendarioCompletoComponent implements OnInit {
   // Variables para controlar las fechas en la vista
   fechaInicio: string = '';
   fechaFin: string = '';
+
+  mostrarModalReagendar: boolean = false;
+  citaParaReagendar: any = null;
 
   constructor(private calendarioService: CalendarioService) {}
 
@@ -63,4 +68,25 @@ export class CalendarioCompletoComponent implements OnInit {
       }
     });
   }
+
+  abrirReagendar(evento: any): void {
+    // Extraemos las fechas del formato que manda Google Calendar
+    const fechaInicioMom = moment(evento.start?.dateTime || evento.start?.date);
+    const fechaFinMom = moment(evento.end?.dateTime || evento.end?.date);
+
+    this.citaParaReagendar = {
+      ...evento,
+      oldDoctorId: evento.doctorId, 
+      nombreDoctor: evento.nombreDoctor || 'Especialista',
+      fechaCita: fechaInicioMom.format('YYYY-MM-DD'),
+      horaInicio: fechaInicioMom.format('HH:mm'),
+      horaFin: fechaFinMom.format('HH:mm'),
+      nombrePaciente: evento.summary || 'Cita',
+      _id: evento._id, 
+      tipoContacto: evento.tipoContacto || 'paciente'
+    };
+
+    this.mostrarModalReagendar = true;
+  }
+
 }

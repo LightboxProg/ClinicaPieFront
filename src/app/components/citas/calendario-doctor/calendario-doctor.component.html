@@ -49,6 +49,9 @@
         <ng-container *ngIf="bloque.estado === 'ocupado'">
           <h4>{{ bloque.titulo }}</h4>
           <p class="detalles-cita">{{ bloque.detalles }}</p>
+          <button class="btn-reagendar" (click)="abrirReagendarCita(bloque)">
+            🔄 Reagendar
+          </button>
         </ng-container>
 
       </div>
@@ -62,5 +65,12 @@
     (cerrarModal)="mostrarModalAgendar = false"
     (citaAgendada)="buscarDisponibilidad()">
   </app-agendar-cita>
+
+  <app-regendar-citas
+    *ngIf="mostrarModalReagendar"
+    [citaOriginal]="citaSeleccionadaParaReagendar"
+    (cerrarModal)="mostrarModalReagendar = false"
+    (citaReagendada)="buscarDisponibilidad()">
+  </app-regendar-citas>
 
 </div>
