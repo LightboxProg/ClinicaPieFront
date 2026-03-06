@@ -17,7 +17,7 @@ export class ChatPacienteComponent {
   @Output() cambiarStatusSaludos = new EventEmitter<any>();
 
   filtroEstado: string = 'todos'; // Estado seleccionado para filtrar
-  private readonly UMBRAL_ROJO_HORAS = 48; // 2 días
+  private readonly UMBRAL_ROJO_HORAS = 1; // 1 hora para cambiar a rojo
 
   obtenerEstado(chat: any): string | null {
     if (chat.estado === 'contestado') {

@@ -35,6 +35,7 @@ import { FormularioPromocionComponent } from './components/promociones/formulari
 import { MensajesMasivosComponent } from './components/mensaje/mensajes-masivos/mensajes-masivos.component';
 import { ChatsComponent } from './components/mensaje/chats/chats.component';
 import { CalendarioPageComponent } from './pages/calendario-page/calendario-page.component';
+import { PreguntonesComponent } from './pages/preguntones/preguntones.component';
 
 export const routes: Routes = [
   // Rutas públicas (sin autenticación)
@@ -44,8 +45,8 @@ export const routes: Routes = [
   { path: "checkout/:id", component: CheckoutComponent },
   { path: "pagos/:fecha/:id/:tipo", component: PasarelaComponent },
 
-  { path: "prueba", component: CalendarioPageComponent, canActivate: [authGuard] },
   // Rutas para usuarios autenticados (sin restricción de roles)
+  { path: "prueba", component: CalendarioPageComponent, canActivate: [authGuard] },
   { path: "chats2", component: DebugComponent, canActivate: [authGuard] },
   { path: "messages", component: ChatsComponent, canActivate: [authGuard] },
   { path: "list", component: ListComponent, canActivate: [authGuard] },
@@ -57,11 +58,12 @@ export const routes: Routes = [
   { path: "detallespaciente/:id", component: PacienteDetalleComponent, canActivate: [authGuard] },
   { path: "perfil/:name/:id", component: PerfilComponent, canActivate: [authGuard] },
   { path: "lista-pacientes", component: PacientesComponent, canActivate: [authGuard] },
+  { path: "lista-preguntones", component: PreguntonesComponent, canActivate: [authGuard] },
   { path: "pruebaC", component: AgendarCitaComponent, canActivate: [authGuard] },
   { path: "sucursales-formulario", component: FormularioSucursalesComponent, canActivate: [authGuard] },
   { path: "sucursales-lista", component: ListaSucursalesComponent, canActivate: [authGuard] },
   { path: "mensajes-masivos", component: MensajesMasivosComponent, canActivate: [authGuard] },
-  {path: "chats", component: ChatsComponent, canActivate: [authGuard]},
+  { path: "chats", component: ChatsComponent, canActivate: [authGuard] },
 
   // Rutas solo para Administrador
   {

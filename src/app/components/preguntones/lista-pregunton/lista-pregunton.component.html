@@ -1,0 +1,17 @@
+
+<div class="m-1">
+  <div class="">
+    <div class="lista-container">
+      <div class="paciente-header">
+        <div class="paciente-cell">Lista de Leads</div>
+      </div>
+      <div *ngFor="let pregunton of preguntones">
+        <app-element-pregunton
+          [pregunton]="pregunton">
+        </app-element-pregunton>
+
+      </div>
+    </div>
+
+  </div>
+</div>

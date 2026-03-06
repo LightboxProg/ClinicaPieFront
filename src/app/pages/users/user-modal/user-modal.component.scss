@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap");
 
 // Variables
 $primary-color: #ff5a5f;
@@ -15,7 +15,9 @@ $success: #10b981;
 $warning: #f59e0b;
 $danger: #ef4444;
 $border-radius: 12px;
-$box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$box-shadow:
+  0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
 // Overlay
 .modal-overlay {
@@ -57,12 +59,48 @@ $box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0,
   border-bottom: 2px solid $medium-gray;
   background: linear-gradient(98deg, #ffffff 0%, $light-gray 100%);
 
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
   h2 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: $primary-color;
     margin: 0;
+  }
+
+  .edit-btn {
+    background: $secondary-color;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba($secondary-color, 0.3);
+
+    i {
+      font-size: 0.9rem;
+    }
+
+    &:hover {
+      background: darken($secondary-color, 8%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba($secondary-color, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 
   .close-btn {
@@ -142,9 +180,12 @@ $box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0,
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: $text-light;
-  transition: .4s;
+  transition: 0.4s;
 }
 
 .slider:before {
@@ -155,11 +196,11 @@ $box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0,
   left: 4px;
   bottom: 4px;
   background-color: $light-gray;
-  transition: .4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: $primary-color; 
+  background-color: $primary-color;
 }
 input:focus + .slider {
   box-shadow: 0 0 1px $primary-color;
@@ -195,7 +236,7 @@ input:checked + .slider:before {
     gap: 0.5rem;
 
     &::before {
-      content: '';
+      content: "";
       display: inline-block;
       width: 4px;
       height: 24px;
@@ -337,7 +378,7 @@ input:checked + .slider:before {
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 
       .section-title {
-        font-family: 'Montserrat', sans-serif;
+        font-family: "Montserrat", sans-serif;
         font-size: 1.1rem;
         font-weight: 600;
         color: $text-dark;
@@ -555,7 +596,8 @@ input:checked + .slider:before {
       gap: 1rem;
       margin-top: 0.5rem;
 
-      .btn-cancel, .btn-save {
+      .btn-cancel,
+      .btn-save {
         padding: 0.7rem 1.5rem;
         border: none;
         border-radius: 30px;
@@ -602,8 +644,12 @@ input:checked + .slider:before {
 
 // Animaciones
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
@@ -687,7 +733,8 @@ input:checked + .slider:before {
       .form-actions {
         flex-direction: column-reverse;
 
-        .btn-cancel, .btn-save {
+        .btn-cancel,
+        .btn-save {
           width: 100%;
           justify-content: center;
         }

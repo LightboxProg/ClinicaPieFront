@@ -48,11 +48,8 @@
           Citas <i class="fas fa-chevron-down dropdown-icon"></i>
         </button>
         <div class="dropdown-menu">
-          <button class="dropdown-item" (click)="navigate('/calendario')">
+          <button class="dropdown-item" (click)="navigate('/prueba')">
             <i class="fas fa-calendar"></i> Calendario
-          </button>
-          <button class="dropdown-item" (click)="navigate('/agenda-doctor')">
-            <i class="fas fa-calendar"></i> Agenda
           </button>
         </div>
       </div>
@@ -88,6 +85,9 @@
         <div class="dropdown-menu">
           <button class="dropdown-item" (click)="navigate('/lista-pacientes')">
             <i class="fas fa-list"></i> Lista de Pacientes
+          </button>
+          <button class="dropdown-item" (click)="navigate('/lista-preguntones')">
+            <i class="fas fa-list"></i> Lista de Leads
           </button>
           <button class="dropdown-item" (click)="navigate('/lista-negra')">
             <i class="fas fa-user-slash"></i> Black List
