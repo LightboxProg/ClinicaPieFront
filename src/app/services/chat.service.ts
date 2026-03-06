@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { GlobalApiService } from './global-api.service';
-import { LoginService } from './login.service'; // 👈 Inyectamos tu LoginService
+import { LoginService } from './login.service'; //  Inyectamos tu LoginService
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
-  // 🌟 Aplicamos tu mismo patrón para mantener las plantillas en memoria global
+  //  Aplicamos patrón para mantener las plantillas en memoria global
   private plantillasSubject = new BehaviorSubject<any[]>([]);
   plantillas$: Observable<any[]> = this.plantillasSubject.asObservable();
 

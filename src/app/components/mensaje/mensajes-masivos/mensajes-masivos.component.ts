@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChatService } from 'src/app/services/chat.service';  // Ajusta tu ruta
-import { PlantillasMetaComponent } from '../plantillas-meta/plantillas-meta.component'; // 👈 Importamos el hijo
+import { ChatService } from 'src/app/services/chat.service';  
+import { PlantillasMetaComponent } from '../plantillas-meta/plantillas-meta.component'; //  Importamos el hijo
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -54,7 +54,7 @@ export class MensajesMasivosComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  // 🌟 Se ejecuta al cambiar el Dropdown de plantillas
+  // Se ejecuta al cambiar el Dropdown de plantillas
   onPlantillaSeleccionada(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const idPlantilla = selectElement.value;
@@ -90,7 +90,7 @@ export class MensajesMasivosComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  // 🚀 Enviar la campaña al Backend
+  // Enviar la campaña al Backend
   lanzarCampana(): void {
     if (!this.plantillaSeleccionada) {
       this.error = "Por favor selecciona una plantilla primero.";
