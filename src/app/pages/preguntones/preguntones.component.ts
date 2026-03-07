@@ -13,11 +13,17 @@ import { FiltrosPreguntonComponent } from 'src/app/components/preguntones/filtro
   styleUrls: ['./preguntones.component.scss']
 })
 export class PreguntonesComponent {
+  filtroTerm: string = '';
+
   constructor(private loginService: LoginService, private router: Router) {
     if (!this.loginService.existeUsuario()) {
       // Si no está autenticado, redirigir al login
       this.router.navigate(['/login']);
     }
+  }
+
+  onFiltroChange(value: string) {
+    this.filtroTerm = value;
   }
 }
 

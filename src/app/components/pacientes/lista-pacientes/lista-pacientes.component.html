@@ -5,14 +5,21 @@
       <div class="paciente-header">
         <div class="paciente-cell">Lista de pacientes</div>
       </div>
-      <div *ngFor="let paciente of pacientes">
-        <app-element-paciente
-          [paciente]="paciente">
-        </app-element-paciente>
+      <div  *ngIf="pacientesFiltrados.length > 0; else noResultados">
+        <div *ngFor="let paciente of pacientesFiltrados">
+          <app-element-paciente
+            [paciente]="paciente">
+          </app-element-paciente>
 
+        </div>
       </div>
+      <!-- Template para cuando no hay resultados -->
+      <ng-template #noResultados>
+        <div class="no-resultados">
+          No se encontraron coincidencias con la búsqueda
+        </div>
+      </ng-template>
     </div>
-
   </div>
 </div>
 

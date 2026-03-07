@@ -15,7 +15,10 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class FiltrosPacientesComponent implements OnInit {
   filterForm!: FormGroup;
-  @Output() pacientesFiltrados = new EventEmitter<any[]>();
+  // @Output() pacientesFiltrados = new EventEmitter<any[]>();
+  @Output() searchChange = new EventEmitter<string>();
+
+  searchTerm: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -23,35 +26,40 @@ export class FiltrosPacientesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
+    // this.initForm();
   }
 
-  initForm(): void {
-    this.filterForm = this.fb.group({
-      search: ['']
-    });
+  onSearchChange(value: string) {
+    this.searchTerm = value;
+    this.searchChange.emit(value);
   }
 
-  obtenerFiltrosPacientes(): void {
-    const telefono = this.filterForm.get('search')?.value;
+  // initForm(): void {
+  //   this.filterForm = this.fb.group({
+  //     search: ['']
+  //   });
+  // }
 
-    if (telefono && telefono.trim() !== '') {
-      this.pacientesService.buscarPorTelefono(telefono).subscribe({
-        next: (response) => {
-          console.log('Respuesta del backend:', response); // Agrega esto para confirmar
-          const pacientesArray = Array.isArray(response)
-            ? response
-            : response.pacientes || [response]; // Asegura que sea array
-          this.pacientesService.actualizarLista(pacientesArray);
-        },
-        error: (error) => {
-          console.error('Error al buscar pacientes:', error);
-          this.pacientesService.actualizarLista([]);
-        }
-      })
-    } else {
-      this.pacientesService.obtenerPacientes(); // Ya actualiza la lista en el servicio
-    }
-  }
+  // obtenerFiltrosPacientes(): void {
+  //   const telefono = this.filterForm.get('search')?.value;
+
+  //   if (telefono && telefono.trim() !== '') {
+  //     this.pacientesService.buscarPorTelefono(telefono).subscribe({
+  //       next: (response) => {
+  //         console.log('Respuesta del backend:', response); // Agrega esto para confirmar
+  //         const pacientesArray = Array.isArray(response)
+  //           ? response
+  //           : response.pacientes || [response]; // Asegura que sea array
+  //         this.pacientesService.actualizarLista(pacientesArray);
+  //       },
+  //       error: (error) => {
+  //         console.error('Error al buscar pacientes:', error);
+  //         this.pacientesService.actualizarLista([]);
+  //       }
+  //     })
+  //   } else {
+  //     this.pacientesService.obtenerPacientes(); // Ya actualiza la lista en el servicio
+  //   }
+  // }
 
 }

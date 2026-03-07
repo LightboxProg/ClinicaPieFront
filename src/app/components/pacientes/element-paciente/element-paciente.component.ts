@@ -41,7 +41,7 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.cargarPacientesListaNegra();
-    this.cargarUsuario();
+    //this.cargarUsuario();
   }
 
   ngOnDestroy(): void {
@@ -61,30 +61,30 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
     });
   }
 
-  private cargarUsuario(): void {
-    // Obtener usuario directamente del LoginService
-    const usuarioData = this.loginService.obtenerUsuario();
-    console.log('Usuario desde LoginService:', usuarioData);
+  // private cargarUsuario(): void {
+  //   // Obtener usuario directamente del LoginService
+  //   const usuarioData = this.loginService.obtenerUsuario();
+  //   console.log('Usuario desde LoginService:', usuarioData);
 
-    if (usuarioData && usuarioData.id) {
-      this.user = usuarioData;
-      console.log('Usuario cargado exitosamente:', this.user);
-      console.log('ID del usuario:', this.user.id);
-    } else {
-      console.error('No se pudo cargar la información del usuario');
-      console.log('Datos recibidos:', usuarioData);
-    }
+  //   if (usuarioData && usuarioData.id) {
+  //     this.user = usuarioData;
+  //     console.log('Usuario cargado exitosamente:', this.user);
+  //     console.log('ID del usuario:', this.user.id);
+  //   } else {
+  //     console.error('No se pudo cargar la información del usuario');
+  //     console.log('Datos recibidos:', usuarioData);
+  //   }
 
-    // Suscribirse a cambios en el usuario por si hay actualizaciones
-    this.usuarioSubscription = this.loginService.usuario$.subscribe(usuario => {
-      if (usuario && usuario.id) {
-        console.log('Usuario actualizado via observable:', usuario);
-        this.user = usuario;
-      } else {
-        console.warn('Usuario recibido via observable pero sin ID:', usuario);
-      }
-    });
-  }
+  //   // Suscribirse a cambios en el usuario por si hay actualizaciones
+  //   this.usuarioSubscription = this.loginService.usuario$.subscribe(usuario => {
+  //     if (usuario && usuario.id) {
+  //       console.log('Usuario actualizado via observable:', usuario);
+  //       this.user = usuario;
+  //     } else {
+  //       console.warn('Usuario recibido via observable pero sin ID:', usuario);
+  //     }
+  //   });
+  // }
 
   estaEnListaNegra(pacienteId: string): boolean {
     if (!this.pacientesEnListaNegra || this.pacientesEnListaNegra.length === 0) {

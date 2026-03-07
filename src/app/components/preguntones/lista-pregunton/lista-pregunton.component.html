@@ -1,17 +1,21 @@
-
 <div class="m-1">
   <div class="">
     <div class="lista-container">
       <div class="paciente-header">
         <div class="paciente-cell">Lista de Leads</div>
       </div>
-      <div *ngFor="let pregunton of preguntones">
-        <app-element-pregunton
-          [pregunton]="pregunton">
-        </app-element-pregunton>
-
+      <!-- Mostrar la lista si hay elementos filtrados -->
+      <div *ngIf="preguntonesFiltrados.length > 0; else noResultados">
+        <div *ngFor="let pregunton of preguntonesFiltrados">
+          <app-element-pregunton [pregunton]="pregunton"></app-element-pregunton>
+        </div>
       </div>
+      <!-- Template para cuando no hay resultados -->
+      <ng-template #noResultados>
+        <div class="no-resultados">
+          No se encontraron coincidencias con la búsqueda
+        </div>
+      </ng-template>
     </div>
-
   </div>
 </div>
