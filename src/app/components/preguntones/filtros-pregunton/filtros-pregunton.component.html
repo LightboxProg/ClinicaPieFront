@@ -4,19 +4,17 @@
         <div class="title">
             <p><strong>Filtros</strong></p>
         </div>
-
         <div class="p-1 filter-opt-container">
-          <!-- <form [formGroup]="filterForm" (ngSubmit)="obtenerFiltrosPacientes()"> -->
-          <form>
-                <div class="filter-opt">
-                    <p>Buscar por numero</p>
-                    <input formControlName="search" type="text" class="w-100">
-                </div>
-
-                <button class="btn mt-1" type="submit">
-                    Aplicar
-                </button>
-            </form>
+            <div class="filter-opt">
+                <p>Buscar por número</p>
+                <input
+                [ngModel]="searchTerm"
+                (ngModelChange)="onSearchChange($event)"
+                type="text"
+                class="w-100"
+                placeholder="Número de teléfono..."
+                >
+            </div>
         </div>
     </div>
 </div>

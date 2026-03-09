@@ -15,10 +15,16 @@ import { Router } from '@angular/router';
 })
 
 export class PacientesComponent {
+  filtroTerm: string = '';
+
   constructor(private loginService: LoginService, private router: Router) {
     if (!this.loginService.existeUsuario()) {
       // Si no está autenticado, redirigir al login
       this.router.navigate(['/login']);
     }
+  }
+
+  onFiltroChange(value: string) {
+    this.filtroTerm = value;
   }
 }

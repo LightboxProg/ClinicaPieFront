@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -16,34 +16,37 @@ import { ElementPreguntonComponent } from '../element-pregunton/element-pregunto
 })
 export class ListaPreguntonComponent {
   preguntones: any[]=[];
+  preguntonesFiltrados: any[] = [];
+  @Input() filtro: string = '';
   @ViewChild(FormComponent) formComponent!: FormComponent;
 
   constructor(private router: Router, private swalService: SwalService,private pacienteService:PacientesService) {}
 
   ngOnInit() {
-    this.pacienteService.preguntone$.subscribe((pregunton:any[])=>{
-      this.preguntones=pregunton;
-      console.log("Preguntones desde el subscribe: ", this.preguntones);
-    })
+    this.pacienteService.preguntone$.subscribe((data) => {
+      this.preguntones = data;
+      this.aplicarFiltro();
+    });
     this.pacienteService.obtenerPreguntones();
-    console.log(this.preguntones);
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['filtro']) {
+      this.aplicarFiltro();
+    }
+  }
 
-  // eliminarPaciente(paciente: any) {
-  //   console.log("Entro a eliminar al paciente: ", paciente.nombre)
-  //   const pacientesGuardados = localStorage.getItem('pacientes');
-  //   if (pacientesGuardados) {
-  //     this.pacientes = JSON.parse(pacientesGuardados);
-  //     const pacientesActualizados = this.pacientes.filter(p => p.nombre !== paciente.nombre);
-  //     localStorage.setItem('pacientes', JSON.stringify(pacientesActualizados));
-  //     this.swalService.success('Paciente eliminado correctamente');
-  //   }
-  // }
-
-  // editarPaciente(paciente: any) {
-  //   this.formComponent.editarPacienteDesdeLista(paciente);
-  // }
+  aplicarFiltro() {
+    if (!this.filtro) {
+      this.preguntonesFiltrados = [...this.preguntones];
+    } else {
+      const term = this.filtro.toString();
+      this.preguntonesFiltrados = this.preguntones.filter(p => 
+        (p.numeroTelefono && p.numeroTelefono.toString().includes(term)) ||
+        (p.telefonoWhatsapp && p.telefonoWhatsapp.toString().includes(term))
+      );
+    }
+  }
 
 }
 

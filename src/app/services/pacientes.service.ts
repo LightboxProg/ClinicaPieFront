@@ -15,7 +15,6 @@ export class PacientesService {
   private preguntonesSubject = new BehaviorSubject<any[]>([]);
   preguntone$: Observable<any[]> = this.preguntonesSubject.asObservable();
 
-
   constructor(private api: GlobalApiService, private http: HttpClient) { }
 
   obtenerPacientes() {
