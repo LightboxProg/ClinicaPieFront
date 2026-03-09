@@ -1,1 +1,37 @@
-<p>lista-horarios works!</p>
+<div class="contenedor-principal">
+
+    <div class="vista-lista" *ngIf="!horarioSeleccionado">
+
+        <header class="cabecera">
+            <h2>Horarios Generales de Especialistas</h2>
+            <button class="btn-recargar" (click)="cargarTodosLosHorarios()">Recargar</button>
+        </header>
+
+        <div *ngIf="cargando" class="cargando">Cargando especialistas...</div>
+
+        <div *ngIf="!cargando && listaHorarios.length === 0" class="vacio">
+            No hay horarios configurados en el sistema.
+        </div>
+
+        <div class="grid-especialistas" *ngIf="!cargando && listaHorarios.length > 0">
+
+            <div *ngFor="let item of listaHorarios" class="tarjeta-especialista">
+                <div class="info">
+                    <h3>{{ item.doctor?.nombre }} {{ item.doctor?.apeP }}</h3>
+                    <p>Días laborables: <strong>{{ contarDiasActivos(item.diasConfigurados) }} de 7</strong></p>
+                    <p class="sucursal">{{ item.doctor?.sucursal?.nombre || 'Sin sucursal' }}</p>
+                </div>
+
+                <button class="btn-editar" (click)="abrirEditor(item)">
+                    Ver / Editar
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <app-horarios-doctor *ngIf="horarioSeleccionado" [datosHorario]="horarioSeleccionado"
+        (cerrarVista)="cerrarEditor()">
+    </app-horarios-doctor>
+
+</div>

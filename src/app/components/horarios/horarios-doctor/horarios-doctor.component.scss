@@ -1,0 +1,91 @@
+/* Agrega esto al final de tus estilos actuales */
+
+.alerta-mensaje {
+  background: #dcfce7;
+  color: #166534;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  text-align: center;
+  
+  &.error {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  input { cursor: pointer; width: 16px; height: 16px; }
+  label { cursor: pointer; margin: 0; h4 { margin: 0; } }
+}
+
+.btn-add-turno {
+  background: #eff6ff;
+  color: #2563eb;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  &:hover { background: #dbeafe; }
+}
+
+.turno-item-edit {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+
+  .campo-hora {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    label { font-size: 0.75rem; color: #64748b; font-weight: 600; margin-bottom: 4px; }
+    input { padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; outline: none; }
+  }
+
+  .btn-delete {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    &:hover { background: #fecaca; }
+  }
+}
+
+.pie-detalle {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 16px;
+
+  .btn-guardar {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    
+    &:disabled { background: #94a3b8; cursor: not-allowed; }
+    &:hover:not(:disabled) { background: #059669; }
+  }
+}

@@ -36,6 +36,8 @@ import { MensajesMasivosComponent } from './components/mensaje/mensajes-masivos/
 import { ChatsComponent } from './components/mensaje/chats/chats.component';
 import { CalendarioPageComponent } from './pages/calendario-page/calendario-page.component';
 import { PreguntonesComponent } from './pages/preguntones/preguntones.component';
+import { FormHorariosComponent } from './components/horarios/form-horarios/form-horarios.component';
+import { ListaHorariosComponent } from './components/horarios/lista-horarios/lista-horarios.component';
 
 export const routes: Routes = [
   // Rutas públicas (sin autenticación)
@@ -44,9 +46,11 @@ export const routes: Routes = [
   { path: "return", component: ReturnComponent },
   { path: "checkout/:id", component: CheckoutComponent },
   { path: "pagos/:fecha/:id/:tipo", component: PasarelaComponent },
+  {path: "prueba",component: ListaHorariosComponent}, /// SOLO PARA PRUEBAS, QUITAR DESPUÉS
+  {path: "horarios", component: FormHorariosComponent},/// SOLO PARA PRUEBAS, QUITAR DESPUÉS
 
   // Rutas para usuarios autenticados (sin restricción de roles)
-  { path: "prueba", component: CalendarioPageComponent, canActivate: [authGuard] },
+  { path: "prueba", component: CalendarioPageComponent, canActivate: [authGuard] },// SOLO PARA PRUEBAS, QUITAR DESPUÉS
   { path: "chats2", component: DebugComponent, canActivate: [authGuard] },
   { path: "messages", component: ChatsComponent, canActivate: [authGuard] },
   { path: "list", component: ListComponent, canActivate: [authGuard] },
