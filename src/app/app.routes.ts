@@ -38,6 +38,7 @@ import { CalendarioPageComponent } from './pages/calendario-page/calendario-page
 import { PreguntonesComponent } from './pages/preguntones/preguntones.component';
 import { FormHorariosComponent } from './components/horarios/form-horarios/form-horarios.component';
 import { ListaHorariosComponent } from './components/horarios/lista-horarios/lista-horarios.component';
+import { HorariosDoctorComponent } from './components/horarios/horarios-doctor/horarios-doctor.component';
 
 export const routes: Routes = [
   // Rutas públicas (sin autenticación)
@@ -46,11 +47,11 @@ export const routes: Routes = [
   { path: "return", component: ReturnComponent },
   { path: "checkout/:id", component: CheckoutComponent },
   { path: "pagos/:fecha/:id/:tipo", component: PasarelaComponent },
-  {path: "prueba",component: ListaHorariosComponent}, /// SOLO PARA PRUEBAS, QUITAR DESPUÉS
-  {path: "horarios", component: FormHorariosComponent},/// SOLO PARA PRUEBAS, QUITAR DESPUÉS
+  { path: "prueba",component: ListaHorariosComponent }, /// SOLO PARA PRUEBAS, QUITAR DESPUÉS
+  { path: "horarios", component: FormHorariosComponent },/// SOLO PARA PRUEBAS, QUITAR DESPUÉS
 
   // Rutas para usuarios autenticados (sin restricción de roles)
-  { path: "prueba", component: CalendarioPageComponent, canActivate: [authGuard] },// SOLO PARA PRUEBAS, QUITAR DESPUÉS
+  { path: "calendario", component: CalendarioPageComponent, canActivate: [authGuard] },
   { path: "chats2", component: DebugComponent, canActivate: [authGuard] },
   { path: "messages", component: ChatsComponent, canActivate: [authGuard] },
   { path: "list", component: ListComponent, canActivate: [authGuard] },
@@ -97,7 +98,7 @@ export const routes: Routes = [
 
   // Rutas para Administrador y Recepcionista
   {
-    path: "calendario",
+    path: "calendario_antiguo",
     component: CitasComponent,
     canActivate: [authGuard],
     data: { roles: ['Administrador', 'Recepcionista'] }
