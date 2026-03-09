@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatService } from 'src/app/services/chat.service';
 
@@ -14,18 +14,31 @@ import { MandarMensajeComponent } from '../mandar-mensaje/mandar-mensaje.compone
   templateUrl: './chats.component.html',
   styleUrls: ['./chats.component.scss']
 })
-export class ChatsComponent implements OnInit {
+export class ChatsComponent implements OnInit, OnDestroy {
+  @ViewChild('chatBurbujas') chatBurbujas!: ContenedorChatComponent;
+
   chatsPacientes: any[] = [];
   chatsPreguntones: any[] = [];
 
   usuarioActivo: any = null;
-  // 🌟 CORRECCIÓN: Le quitamos la 'ñ'
   pestanaActiva: 'pacientes' | 'preguntones' = 'preguntones';
+
+  private intervalo: any;
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
     this.cargarBandeja();
+    // Actualizar cada 5 segundos
+    this.intervalo = setInterval(() => {
+      this.actualizarPeriodicamente();
+    }, 5000);
+  }
+
+  ngOnDestroy() {
+    if (this.intervalo) {
+      clearInterval(this.intervalo);
+    }
   }
 
   cargarBandeja() {
@@ -36,14 +49,21 @@ export class ChatsComponent implements OnInit {
           this.chatsPreguntones = res.chats.filter((c: any) => c.tipo === 'pregunton');
         }
       },
-      error: (err: any) => console.error(err) // 🌟 Le agregué ': any' para que no marque error estricto
+      error: (err: any) => console.error(err)
     });
+  }
+
+  actualizarPeriodicamente() {
+    this.cargarBandeja();
+    // Si hay un chat activo, recargamos sus mensajes
+    if (this.usuarioActivo && this.chatBurbujas) {
+      this.chatBurbujas.cargarHistorial(this.usuarioActivo.idUsuario);
+    }
   }
 
   abrirChat(usuario: any) {
     this.usuarioActivo = usuario;
   }
-
 
   cambiarStatusSaludos(usuario: any) {
     if (!usuario || !usuario.idUsuario) return;
@@ -51,15 +71,12 @@ export class ChatsComponent implements OnInit {
     this.chatService.cambiarStatusSaludos(usuario.idUsuario).subscribe({
       next: (res) => {
         if (res.success) {
-          // Opcional: mostrar notificación de éxito
           console.log('Status cambiado a saludos');
-          // Recargar la bandeja para actualizar (si el status afectara la lista)
           this.cargarBandeja();
         }
       },
       error: (err) => {
         console.error('Error al cambiar status', err);
-        // Manejar error (mostrar mensaje al usuario)
       }
     });
   }
