@@ -1,48 +1,100 @@
+:host {
+  --modal-overlay-bg: rgba(0, 0, 0, 0.5);
+  --modal-content-bg: #ffffff;
+  --modal-border-radius: 16px;
+  --modal-max-width: 550px;
+  --modal-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --modal-header-border: #e8ecef;
+  --modal-close-bg: #f1f3f4;
+  --modal-close-color: #5f6368;
+  --modal-close-hover-bg: #e8eaed;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--modal-overlay-bg);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .modal-content {
-  background-color: #ffffff;
-  padding: 24px;                      /* Aumentado de 20px a 24px */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--modal-content-bg);
+  border-radius: var(--modal-border-radius);
+  box-shadow: var(--modal-shadow);
   width: 90%;
-  max-width: 900px;                    /* Antes 500px */
+  max-width: var(--modal-max-width);
+  overflow: hidden;
+  animation: scaleIn 0.3s ease-out;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #eeeeee;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--modal-header-border);
+  background: #fafbfc;
+
+  .modal-title {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .close {
+    background: var(--modal-close-bg);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--modal-close-color);
+    transition: background 0.2s;
+
+    &:hover {
+      background: var(--modal-close-hover-bg);
+    }
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
 }
 
 .modal-body {
+  max-height: calc(80vh - 80px);
   overflow-y: auto;
-  max-height: calc(80vh - 120px);       /* Ajustado para nuevo padding/header */
+
+  &.no-header {
+    max-height: 80vh;
+  }
 }
 
-.close {
-  border: none;
-  border-radius: 5px;
-  background-color: #e74c3c;
-  color: white;
-  padding: 8px 12px;
-  cursor: pointer;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.close:hover {
-  background-color: #c0392b;
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

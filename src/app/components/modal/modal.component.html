@@ -1,10 +1,12 @@
-<div *ngIf="isVisible" class="modal-overlay" (click)="close.emit()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
+<div *ngIf="isVisible" class="modal-overlay">
+  <div class="modal-content" (click)="stopPropagation($event)">
+    <div class="modal-header" *ngIf="title">
       <h2 class="modal-title">{{ title }}</h2>
-      <button class="close" (click)="close.emit()">X</button>
+      <button class="close" (click)="close.emit()" aria-label="Cerrar">
+        <span class="material-icons">close</span>
+      </button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" [class.no-header]="!title">
       <ng-content></ng-content>
     </div>
   </div>

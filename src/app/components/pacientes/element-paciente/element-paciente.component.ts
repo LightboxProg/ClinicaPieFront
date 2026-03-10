@@ -41,7 +41,7 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.cargarPacientesListaNegra();
-    //this.cargarUsuario();
+    this.cargarUsuario();
   }
 
   ngOnDestroy(): void {
@@ -61,30 +61,23 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
     });
   }
 
-  // private cargarUsuario(): void {
-  //   // Obtener usuario directamente del LoginService
-  //   const usuarioData = this.loginService.obtenerUsuario();
-  //   console.log('Usuario desde LoginService:', usuarioData);
+  private cargarUsuario(): void {
+    const usuarioData = this.loginService.obtenerUsuario();
+    console.log('Usuario desde LoginService:', usuarioData);
 
-  //   if (usuarioData && usuarioData.id) {
-  //     this.user = usuarioData;
-  //     console.log('Usuario cargado exitosamente:', this.user);
-  //     console.log('ID del usuario:', this.user.id);
-  //   } else {
-  //     console.error('No se pudo cargar la información del usuario');
-  //     console.log('Datos recibidos:', usuarioData);
-  //   }
+    if (usuarioData && usuarioData.id) {
+      this.user = usuarioData;
+      console.log('Usuario cargado exitosamente:', this.user);
+    } else {
+      console.error('No se pudo cargar la información del usuario');
+    }
 
-  //   // Suscribirse a cambios en el usuario por si hay actualizaciones
-  //   this.usuarioSubscription = this.loginService.usuario$.subscribe(usuario => {
-  //     if (usuario && usuario.id) {
-  //       console.log('Usuario actualizado via observable:', usuario);
-  //       this.user = usuario;
-  //     } else {
-  //       console.warn('Usuario recibido via observable pero sin ID:', usuario);
-  //     }
-  //   });
-  // }
+    this.usuarioSubscription = this.loginService.usuario$.subscribe(usuario => {
+      if (usuario && usuario.id) {
+        this.user = usuario;
+      }
+    });
+  }
 
   estaEnListaNegra(pacienteId: string): boolean {
     if (!this.pacientesEnListaNegra || this.pacientesEnListaNegra.length === 0) {
@@ -94,7 +87,6 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
   }
 
   abrirListaNegra(paciente: any) {
-    // Verificar que tenemos usuario antes de abrir el modal
     if (!this.user || !this.user.id) {
       Swal.fire({
         icon: 'error',
@@ -108,8 +100,6 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
     this.paciente = paciente;
     this.showListaNegraModal = true;
     this.limpiarFormulario();
-    
-    console.log('Modal abierto - Usuario actual:', this.user);
   }
 
   onCloseListaNegraModal() {
@@ -129,7 +119,6 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
   }
 
   agregarListaNegra() {
-    // Validación de campos
     if (!this.razon || !this.tipo) {
       Swal.fire({
         icon: 'warning',
@@ -140,7 +129,6 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Validación de usuario - USANDO LA ESTRUCTURA CORRECTA
     if (!this.user) {
       Swal.fire({
         icon: 'error',
@@ -151,7 +139,7 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const usuarioId = this.user.id; // ← CORREGIDO: usar this.user.id directamente
+    const usuarioId = this.user.id;
     if (!usuarioId) {
       Swal.fire({
         icon: 'error',
@@ -168,7 +156,7 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
       detalles: this.detalles,
       tipo: this.tipo,
       evidencia: [],
-      agregadoPor: usuarioId // ← ESTE debería ser un ObjectId válido de MongoDB
+      agregadoPor: usuarioId
     };
 
     console.log('Enviando a lista negra:', datos);
@@ -177,10 +165,7 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
       next: (res) => {
         console.log('Paciente agregado a lista negra:', res);
         this.showListaNegraModal = false;
-        
-        // Actualizar la lista local
         this.cargarPacientesListaNegra();
-
         Swal.fire({
           icon: 'success',
           title: 'Paciente agregado a lista negra',
@@ -190,9 +175,7 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error completo al agregar a lista negra:', err);
-        
         let mensajeError = 'Ocurrió un problema al intentar agregar al paciente.';
-        
         if (err.status === 400) {
           if (err.error && err.error.error === 'El paciente ya está en la lista negra') {
             mensajeError = 'Este paciente ya está en la lista negra.';
@@ -202,7 +185,6 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
             mensajeError = err.error?.error || 'Datos inválidos. Verifique la información.';
           }
         }
-
         Swal.fire({
           icon: 'error',
           title: 'Error al agregar paciente',
@@ -213,7 +195,6 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Método para debug
   debugUsuario(): void {
     const usuarioData = this.loginService.obtenerUsuario();
     console.log('=== DEBUG USUARIO ===');
