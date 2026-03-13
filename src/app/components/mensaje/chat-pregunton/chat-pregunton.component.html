@@ -6,6 +6,11 @@
   <button (click)="setFiltro('rojo')" [class.active]="filtroEstado === 'rojo'">🔴 Rojo</button>
 </div>
 
+<div class="buscador">
+  <input type="text" placeholder="Buscar por nombre o teléfono..."
+    (input)="busquedaTexto = $any($event.target).value" />
+</div>
+
 <!-- Lista de chats filtrados -->
 <div class="lista-chats">
   <div class="chat-item" *ngFor="let chat of chatsFiltrados" (click)="clickChat(chat)">
@@ -13,7 +18,7 @@
       <strong>
         <!-- Indicador de estado (semáforo) -->
         <span class="estado-indicador" [ngClass]="obtenerClaseEstado(chat)"></span>
-        {{ chat.nombre }} 
+        {{ chat.nombre }}
       </strong>
       <span class="fecha">{{ chat.fecha | date:'shortTime' }}</span>
     </div>

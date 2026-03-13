@@ -6,22 +6,25 @@ import { LoginService } from 'src/app/services/login.service';
 import * as moment from 'moment';
 import { AgendarCitaComponent } from '../agendar-cita/agendar-cita.component';
 import { RegendarCitasComponent } from '../regendar-citas/regendar-citas.component';
+import { BloqueoSucursalComponent } from '../bloqueo-sucursal/bloqueo-sucursal.component';
 
 @Component({
   selector: 'app-agenda-sucursales',
   standalone: true,
-  imports: [CommonModule, FormsModule, AgendarCitaComponent, RegendarCitasComponent],
+  imports: [CommonModule, FormsModule, AgendarCitaComponent, RegendarCitasComponent, BloqueoSucursalComponent],
   templateUrl: './agenda-sucursales.component.html',
   styleUrls: ['./agenda-sucursales.component.scss']
 })
 export class AgendaSucursalesComponent implements OnInit, OnChanges {
 
-  @Input() sucursalIdExterno?: string; 
+  @Input() sucursalIdExterno?: string;
+  mostrarModalBloqueo: boolean = false;
+  sucursalParaBloqueo: string = '';
 
   sucursalIdActiva: string = '';
   fechaInicio: string = '';
   fechaFin: string = '';
-  
+
   sucursalesData: any[] = [];
   cargando: boolean = false;
   usuarioLogueado: any = null;
@@ -36,7 +39,7 @@ export class AgendaSucursalesComponent implements OnInit, OnChanges {
   constructor(
     private calendarioService: CalendarioService,
     private loginService: LoginService
-  ) {}
+  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sucursalIdExterno'] && !changes['sucursalIdExterno'].firstChange) {
@@ -53,8 +56,8 @@ export class AgendaSucursalesComponent implements OnInit, OnChanges {
   establecerSemanaActual(): void {
     const hoy = new Date();
     const diaSemana = hoy.getDay();
-    const diffLunes = hoy.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1); 
-    
+    const diffLunes = hoy.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1);
+
     const lunes = new Date(hoy.setDate(diffLunes));
     const domingo = new Date(lunes.getTime());
     domingo.setDate(lunes.getDate() + 6);
@@ -72,7 +75,7 @@ export class AgendaSucursalesComponent implements OnInit, OnChanges {
 
   determinarSucursalYBuscar(): void {
     if (this.usuarioLogueado && this.usuarioLogueado.tipo === 'Recepcionista') {
-      this.sucursalIdActiva = this.usuarioLogueado.sucursal || this.usuarioLogueado.sucursalId || ''; 
+      this.sucursalIdActiva = this.usuarioLogueado.sucursal || this.usuarioLogueado.sucursalId || '';
     } else if (this.sucursalIdExterno) {
       this.sucursalIdActiva = this.sucursalIdExterno;
     }
@@ -82,7 +85,7 @@ export class AgendaSucursalesComponent implements OnInit, OnChanges {
 
   cargarAgenda(): void {
     this.cargando = true;
-    
+
     this.calendarioService.getCitasPorSucursalSemana(this.sucursalIdActiva, this.fechaInicio, this.fechaFin).subscribe({
       next: (res: any) => {
         this.sucursalesData = res.data || [];
@@ -115,11 +118,11 @@ export class AgendaSucursalesComponent implements OnInit, OnChanges {
   abrirReagendar(cita: any, doctor: any, fechaDia: string): void {
     this.citaParaReagendar = {
       ...cita,
-      oldDoctorId: doctor.idUsuario || doctor.doctorId || doctor._id || cita.doctorId, 
+      oldDoctorId: doctor.idUsuario || doctor.doctorId || doctor._id || cita.doctorId,
       nombreDoctor: doctor.nombreDoctor,
       fechaCita: fechaDia,
       horaInicio: this.limpiarHora(cita.inicio),
-      horaFin: this.limpiarHora(cita.fin), 
+      horaFin: this.limpiarHora(cita.fin),
       nombrePaciente: cita.titulo,
       _id: cita._id,
       tipoContacto: cita.tipoContacto || 'paciente'
@@ -137,4 +140,11 @@ export class AgendaSucursalesComponent implements OnInit, OnChanges {
     if (modificador === 'PM') horas = (parseInt(horas, 10) + 12).toString();
     return `${horas.padStart(2, '0')}:${minutos}`;
   }
+
+  abrirBloqueoSucursal(sucursalId: string) {
+    this.sucursalParaBloqueo = sucursalId;
+    this.mostrarModalBloqueo = true;
+  }
+
+
 }

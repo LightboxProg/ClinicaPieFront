@@ -70,9 +70,13 @@ export class CalendarioService {
     return this.http.put<any>(`${this.apiUrl}/reagendar-cita`, datosReagenda);
   }
 
-  
+
   getHorarioSemanalDoctor(doctorId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/horario-doctor/${doctorId}`);
+  }
+
+  crearBloqueo(datos: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/bloqueos/crear-desde-seleccion`, datos);
   }
 
 }

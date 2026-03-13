@@ -29,7 +29,6 @@ export const routes: Routes = [
 
   // Rutas para usuarios autenticados (sin restricción de roles)
   { path: "calendario", component: CalendarioPageComponent, canActivate: [authGuard] },
-  { path: "messages", component: ChatsComponent, canActivate: [authGuard] },
   { path: "chats", component: ChatsComponent, canActivate: [authGuard] },
   { path: "perfil/:name/:id", component: PerfilComponent, canActivate: [authGuard] },
   { path: "lista-pacientes", component: PacientesComponent, canActivate: [authGuard] },
