@@ -60,6 +60,12 @@ export class PacientesService {
   obtenerPacientesEnListaNegra(): Observable<any[]> {
     return this.http.get<any[]>(this.api.getApiUrl() + "/pacientes/lista-negra");
   }
+  obtenerPreguntonesEnListaNegra(): Observable<any[]> {
+    return this.http.get<any[]>(this.api.getApiUrl() + "/preguntones/lista-negra");
+  }
+  esPreguntonEnListaNegra(preguntonId: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.api.getApiUrl()}/preguntones/${preguntonId}/en-lista-negra`);
+  }
   actualizarPaciente(id: string, data: any): Observable<any> {
     return this.http.put(this.api.getApiUrl() + `/paciente/${id}`, data);
   }

@@ -8,6 +8,7 @@ $light-color: #f8f9fa;
 $text-dark: #333333;
 $text-med: #666666;
 $border-radius: 12px;
+$hover-color: #fd9699;
 
 .blacklist-container {
   min-height: 100vh;
@@ -53,6 +54,69 @@ $border-radius: 12px;
 
 .blacklist-item-wrapper {
   animation: slideInUp 0.4s ease-out;
+}
+
+//Estilos de los botones de selección
+.tipo-selector {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1.5rem 0 2rem;
+}
+
+.tipo-btn {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 30px;
+  background-color: white;
+  color: $text-med;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: lighten($hover-color, 35%);
+    color: $hover-color;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &.active {
+    background-color: $hover-color;
+    color: white;
+    box-shadow: 0 4px 12px rgba($hover-color, 0.3);
+
+    &:hover {
+      background-color: darken($hover-color, 5%);
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .tipo-selector {
+    margin: 1rem 0 1.5rem;
+  }
+
+  .tipo-btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tipo-selector {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tipo-btn {
+    width: 80%;
+    max-width: 300px;
+  }
 }
 
 .empty-state {
