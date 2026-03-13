@@ -12,30 +12,49 @@
   background: white;
   padding: 16px 24px;
   border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 
-  h2 { margin: 0; color: #1e293b; font-size: 1.4rem; }
+  h2 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.4rem;
+  }
 
   .filtros-semana {
-    display: flex; gap: 16px;
-    
+    display: flex;
+    gap: 16px;
+
     .campo {
-      display: flex; align-items: center; gap: 8px;
-      label { font-size: 0.85rem; font-weight: bold; color: #64748b; }
-      input { padding: 6px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; }
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      label {
+        font-size: 0.85rem;
+        font-weight: bold;
+        color: #64748b;
+      }
+      input {
+        padding: 6px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        outline: none;
+      }
     }
   }
 }
 
 .bloque-sucursal {
   margin-bottom: 40px;
-  
+
   .titulo-sucursal {
     background: #0ea5e9;
     color: white;
     padding: 12px 20px;
     border-radius: 12px 12px 0 0;
-    h3 { margin: 0; font-size: 1.2rem; }
+    h3 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
   }
 }
 
@@ -45,8 +64,11 @@
   border-top: none;
   display: flex;
   flex-direction: column;
-  
-  &:last-child { border-radius: 0 0 12px 12px; overflow: hidden; }
+
+  &:last-child {
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+  }
 
   .info-doctor {
     padding: 16px;
@@ -57,8 +79,19 @@
     justify-content: space-between;
     align-items: center;
 
-    h4 { margin: 0; color: #334155; font-size: 1.1rem; }
-    .badge-citas { background: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: #64748b; }
+    h4 {
+      margin: 0;
+      color: #334155;
+      font-size: 1.1rem;
+    }
+    .badge-citas {
+      background: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #64748b;
+    }
   }
 }
 
@@ -71,37 +104,146 @@
     flex: 1;
     min-width: 150px;
     border-right: 1px solid #e2e8f0;
-    
-    &:last-child { border-right: none; }
+
+    &:last-child {
+      border-right: none;
+    }
 
     .cabecera-dia {
-      text-align: center; padding: 8px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;
-      font-weight: bold; font-size: 0.85rem; color: #475569;
-      display: flex; justify-content: center; align-items: center; gap: 6px;
+      text-align: center;
+      padding: 8px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      font-weight: bold;
+      font-size: 0.85rem;
+      color: #475569;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
 
-      .contador { background: #ef4444; color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem; }
+      .contador {
+        background: #ef4444;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+      }
     }
 
     .lista-citas {
       padding: 10px;
-      display: flex; flex-direction: column; gap: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
 
-      .sin-citas { text-align: center; color: #cbd5e1; font-size: 1.2rem; }
+      .sin-citas {
+        text-align: center;
+        color: #cbd5e1;
+        font-size: 1.2rem;
+      }
 
       .cita-tarjeta {
         background: #f8fafc;
         border-left: 4px solid #3788d8;
         padding: 8px;
         border-radius: 6px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
-        .hora { font-size: 0.75rem; font-weight: bold; color: #64748b; }
-        .titulo { margin: 4px 0 0 0; font-size: 0.8rem; color: #1e293b; line-height: 1.2; }
+        .hora {
+          font-size: 0.75rem;
+          font-weight: bold;
+          color: #64748b;
+        }
+        .titulo {
+          margin: 4px 0 0 0;
+          font-size: 0.8rem;
+          color: #1e293b;
+          line-height: 1.2;
+        }
       }
     }
   }
 }
 
-.estado-cargando, .estado-vacio { text-align: center; padding: 40px; color: #64748b; }
-.spinner { width: 30px; height: 30px; border: 3px solid #cbd5e1; border-top-color: #0ea5e9; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 12px auto; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.cita-tarjeta.bloqueo {
+  background: #f1f5f9; // Fondo gris claro
+  border-left-color: #64748b !important; // Borde gris
+  opacity: 0.8;
+
+  .titulo {
+    color: #475569;
+    font-style: italic;
+  }
+
+  button {
+    display: none; // Oculta cualquier botón dentro del bloqueo
+  }
+}
+
+/* Estilo para el botón de reagendar (opcional, para que se vea mejor) */
+.btn-reagendar-mini {
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #475569;
+  width: 100%;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+  }
+}
+
+.titulo-sucursal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0ea5e9;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px 12px 0 0;
+
+  .btn-bloquear {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    &:hover {
+      background: white;
+      color: #0ea5e9;
+      border-color: white;
+    }
+  }
+}
+
+.estado-cargando,
+.estado-vacio {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+}
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #cbd5e1;
+  border-top-color: #0ea5e9;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 12px auto;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

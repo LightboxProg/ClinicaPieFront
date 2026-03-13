@@ -1,8 +1,8 @@
 <div class="agenda-semanal-container">
-  
+
   <header class="cabecera-semanal">
     <h2>Agenda Semanal de Sucursales</h2>
-    
+
     <div class="filtros-semana">
       <div class="campo">
         <label>Del (Lunes):</label>
@@ -12,8 +12,9 @@
         <label>Al (Domingo):</label>
         <input type="date" [(ngModel)]="fechaFin" (change)="cargarAgenda()">
       </div>
-      
-      <button class="btn-agendar-global" (click)="abrirAgendarGlobal()" style="background: #10b981; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 18px;">
+
+      <button class="btn-agendar-global" (click)="abrirAgendarGlobal()"
+        style="background: #10b981; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 18px;">
         + Agendar Cita
       </button>
     </div>
@@ -28,13 +29,16 @@
     <p>No se encontraron especialistas activos para esta búsqueda.</p>
   </div>
 
-  <div *ngFor="let sucursal of sucursalesData" class="bloque-sucursal">
+  <div class="bloque-sucursal" *ngFor="let sucursal of sucursalesData">
     <div class="titulo-sucursal">
       <h3>{{ sucursal.nombreSucursal }}</h3>
+      <button class="btn-bloquear" (click)="abrirBloqueoSucursal(sucursal.idSucursal)">
+        🔒 Bloquear horas
+      </button>
     </div>
 
     <div *ngFor="let doctor of sucursal.doctores" class="fila-doctor">
-      
+
       <div class="info-doctor" [style.borderLeftColor]="doctor.colorCalendario">
         <h4>{{ doctor.nombreDoctor }}</h4>
         <span class="badge-citas">Citas totales: {{ totalCitasSemana(doctor.dias) || 0 }}</span>
@@ -46,15 +50,17 @@
             {{ dia.fecha | date:'EE, MMM d' }}
             <span class="contador" *ngIf="dia.totalCitas > 0">{{ dia.totalCitas }}</span>
           </div>
-          
+
           <div class="lista-citas">
             <div *ngIf="dia.citas.length === 0" class="sin-citas">-</div>
-            
-            <div *ngFor="let cita of dia.citas" class="cita-tarjeta" [style.borderLeftColor]="doctor.colorCalendario">
+
+            <div *ngFor="let cita of dia.citas" class="cita-tarjeta" [style.borderLeftColor]="doctor.colorCalendario"
+              [class.bloqueo]="cita.esBloqueo">
               <span class="hora">{{ cita.inicio }}</span>
               <p class="titulo">{{ cita.titulo }}</p>
-              
-              <button *ngIf="cita._id" (click)="abrirReagendar(cita, doctor, dia.fecha)" style="margin-top: 8px; padding: 4px 8px; background: white; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; font-size: 0.75rem; color: #475569; width: 100%;">
+              <!-- Solo mostrar botón si NO es bloqueo y tiene _id -->
+              <button *ngIf="cita._id && !cita.esBloqueo" (click)="abrirReagendar(cita, doctor, dia.fecha)"
+                class="btn-reagendar-mini">
                 Reagendar
               </button>
             </div>
@@ -65,18 +71,15 @@
     </div>
   </div>
 
-  <app-agendar-cita 
-    *ngIf="mostrarModalAgendar" 
-    [datosPreconfigurados]="datosParaAgendar"
-    (cerrarModal)="mostrarModalAgendar = false"
-    (citaAgendada)="cargarAgenda()">
+  <app-agendar-cita *ngIf="mostrarModalAgendar" [datosPreconfigurados]="datosParaAgendar"
+    (cerrarModal)="mostrarModalAgendar = false" (citaAgendada)="cargarAgenda()">
   </app-agendar-cita>
 
-  <app-regendar-citas
-    *ngIf="mostrarModalReagendar"
-    [citaOriginal]="citaParaReagendar"
-    (cerrarModal)="mostrarModalReagendar = false"
-    (citaReagendada)="cargarAgenda()">
+  <app-regendar-citas *ngIf="mostrarModalReagendar" [citaOriginal]="citaParaReagendar"
+    (cerrarModal)="mostrarModalReagendar = false" (citaReagendada)="cargarAgenda()">
   </app-regendar-citas>
 
+  <app-bloqueo-sucursal *ngIf="mostrarModalBloqueo" [sucursalId]="sucursalParaBloqueo"
+    (cerrarModal)="mostrarModalBloqueo = false" (bloqueoCreado)="cargarAgenda()">
+  </app-bloqueo-sucursal>
 </div>
