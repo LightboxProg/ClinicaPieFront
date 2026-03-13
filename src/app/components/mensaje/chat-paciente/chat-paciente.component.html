@@ -1,9 +1,14 @@
 <!-- Filtro por estado -->
 <div class="filtro-estado">
-  <button (click)="setFiltro('todos')" [class.active]="filtroEstado === 'todos'">Todos</button>
-  <button (click)="setFiltro('verde')" [class.active]="filtroEstado === 'verde'">🟢 Verde</button>
-  <button (click)="setFiltro('amarillo')" [class.active]="filtroEstado === 'amarillo'">🟡 Amarillo</button>
-  <button (click)="setFiltro('rojo')" [class.active]="filtroEstado === 'rojo'">🔴 Rojo</button>
+    <button (click)="setFiltro('todos')" [class.active]="filtroEstado === 'todos'">Todos</button>
+    <button (click)="setFiltro('verde')" [class.active]="filtroEstado === 'verde'">🟢 Verde</button>
+    <button (click)="setFiltro('amarillo')" [class.active]="filtroEstado === 'amarillo'">🟡 Amarillo</button>
+    <button (click)="setFiltro('rojo')" [class.active]="filtroEstado === 'rojo'">🔴 Rojo</button>
+</div>
+
+<div class="buscador">
+    <input type="text" placeholder="Buscar por nombre o teléfono..."
+        (input)="busquedaTexto = $any($event.target).value" />
 </div>
 
 <!-- Lista de chats filtrados -->
@@ -13,7 +18,7 @@
             <strong>
                 <!-- Indicador de estado (semáforo) -->
                 <span class="estado-indicador" [ngClass]="obtenerClaseEstado(chat)"></span>
-                {{ chat.nombre }} 
+                {{ chat.nombre }}
             </strong>
             <span class="fecha">{{ chat.fecha | date:'shortTime' }}</span>
         </div>

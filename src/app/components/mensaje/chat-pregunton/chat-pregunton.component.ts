@@ -19,6 +19,8 @@ export class ChatPreguntonComponent {
   filtroEstado: string = 'todos'; // Estado seleccionado para filtrar
   private readonly UMBRAL_ROJO_HORAS = 1; // 1 hora para cambiar a rojo
 
+  busquedaTexto: string = '';
+
   obtenerEstado(chat: any): string | null {
     if (chat.estado === 'contestado') {
       return 'verde';
@@ -38,10 +40,22 @@ export class ChatPreguntonComponent {
   }
 
   get chatsFiltrados(): any[] {
-    if (this.filtroEstado === 'todos') {
-      return this.chats;
+    // Primero filtramos por estado
+    const filtradosPorEstado = this.filtroEstado === 'todos'
+      ? this.chats
+      : this.chats.filter(chat => this.obtenerEstado(chat) === this.filtroEstado);
+
+    // Luego, si hay texto de búsqueda, filtramos por nombre o teléfono
+    if (!this.busquedaTexto.trim()) {
+      return filtradosPorEstado;
     }
-    return this.chats.filter(chat => this.obtenerEstado(chat) === this.filtroEstado);
+
+    const texto = this.busquedaTexto.toLowerCase().trim();
+    return filtradosPorEstado.filter(chat => {
+      const nombre = chat.nombre?.toLowerCase() || '';
+      const telefono = chat.telefono?.toString() || '';
+      return nombre.includes(texto) || telefono.includes(texto);
+    });
   }
 
   setFiltro(estado: string): void {

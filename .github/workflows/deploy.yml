@@ -1,0 +1,34 @@
+name: Deploy CRM a cPanel
+
+on:
+  push:
+    branches:
+      - main #se ejecuta cuando se hace push a la rama main
+
+jobs:
+  web-deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Obtener código 
+      uses: actions/checkout@v4
+
+    - name: Preparar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Instalar dependencias
+      run: npm ci
+
+    - name: Construir (Build)
+      run: npm run build --prod
+
+    - name: Subir a cPanel
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER2 }}
+        username: ${{ secrets.FTP_USERNAME2 }}
+        password: ${{ secrets.FTP_PASSWORD2 }}
+        local-dir: ./dist/app/
+        server-dir: ./
