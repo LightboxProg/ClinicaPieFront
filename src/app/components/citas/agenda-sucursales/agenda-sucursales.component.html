@@ -54,12 +54,13 @@
           <div class="lista-citas">
             <div *ngIf="dia.citas.length === 0" class="sin-citas">-</div>
 
-            <div *ngFor="let cita of dia.citas" class="cita-tarjeta" [style.borderLeftColor]="doctor.colorCalendario">
+            <div *ngFor="let cita of dia.citas" class="cita-tarjeta" [style.borderLeftColor]="doctor.colorCalendario"
+              [class.bloqueo]="cita.esBloqueo">
               <span class="hora">{{ cita.inicio }}</span>
               <p class="titulo">{{ cita.titulo }}</p>
-
-              <button *ngIf="cita._id" (click)="abrirReagendar(cita, doctor, dia.fecha)"
-                style="margin-top: 8px; padding: 4px 8px; background: white; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; font-size: 0.75rem; color: #475569; width: 100%;">
+              <!-- Solo mostrar botón si NO es bloqueo y tiene _id -->
+              <button *ngIf="cita._id && !cita.esBloqueo" (click)="abrirReagendar(cita, doctor, dia.fecha)"
+                class="btn-reagendar-mini">
                 Reagendar
               </button>
             </div>
