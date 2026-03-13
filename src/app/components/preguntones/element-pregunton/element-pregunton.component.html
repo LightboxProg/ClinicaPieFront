@@ -1,7 +1,6 @@
 <div class="patient-profile" *ngIf="pregunton; else cargando">
-  <!-- <div class="list-element" *ngIf="!estaEnListaNegra(pregunton._id)"> -->
-  <div class="list-element">
-    <!-- <div class="list-info" (click)="verPerfil(pregunton._id)" [ngClass]="{'finado': pregunton.finado}"> -->
+  <div class="list-element" *ngIf="!estaEnListaNegra(pregunton._id)">
+  <!-- <div class="list-element"> -->
     <div class="list-info">
       <div class="paciente-card">
         <figure class="paciente-avatar">
@@ -16,7 +15,7 @@
       </div>
     </div>
 
-    <!-- <div class="list-options">
+    <div class="list-options">
       <button class="Lista-negra" (click)="abrirListaNegra(pregunton)">
         <span>Lista Negra</span>
         <span>
@@ -29,12 +28,13 @@
         </span>
       </button>
 
-    </div> -->
+    </div>
 
 
   </div>
-  <!--<app-modal [title]="''" [isVisible]="showListaNegraModal" (close)="onCloseListaNegraModal()">
+  <app-modal [title]="''" [isVisible]="showListaNegraModal" (close)="onCloseListaNegraModal()">
     <form (ngSubmit)="agregarListaNegra()" class="blacklist-form clean-theme">
+    <!-- <form class="blacklist-form clean-theme"> -->
       <div class="modal-banner">
         <span class="material-icons icon-alert">block</span>
         <div>
@@ -74,7 +74,7 @@
         </button>
       </div>
     </form>
-  </app-modal> -->
+  </app-modal>
 </div>
 
 <ng-template #cargando>
