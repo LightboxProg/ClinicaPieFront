@@ -77,11 +77,7 @@
                     <td>{{ p.descripcion | slice:0:50 }}...</td>
                     <td>
                         <span *ngIf="p.tipoAnclaje === 'servicio'">
-                            Servicios:
-                            <ng-container *ngIf="p.servicios && p.servicios[0]?.nombre; else ids">
-                                {{ nombresServicios(p.servicios) }}
-                            </ng-container>
-                            <ng-template #ids>{{ p.servicios?.join(', ') }}</ng-template>
+                            Servicios
                         </span>
                         <span *ngIf="p.tipoAnclaje === 'categoria'">Categoría: {{ p.categoria?.nombre || p.categoria
                             }}</span>

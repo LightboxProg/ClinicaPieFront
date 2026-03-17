@@ -43,13 +43,23 @@
             </select>
         </div>
 
-        <!-- Selección de servicio (si aplica) -->
-        <div class="form-group" *ngIf="promocionForm.get('tipoAnclaje')?.value === 'servicio'">
-            <label>Servicio *</label>
-            <select formControlName="servicio" class="form-control">
-                <option value="">Seleccione un servicio</option>
-                <option *ngFor="let s of servicios" [value]="s._id">{{ s.nombre }}</option>
-            </select>
+        <!-- Sección de servicios (si aplica) -->
+        <div *ngIf="promocionForm.get('tipoAnclaje')?.value === 'servicio'" class="servicios-section">
+            <h4>Servicios incluidos</h4>
+            <div formArrayName="servicios">
+                <div *ngFor="let servicioGroup of serviciosFormArray.controls; let i = index" 
+                     [formGroupName]="i" class="servicio-row">
+                    <select formControlName="servicio" class="form-control" [class.is-invalid]="servicioGroup.get('servicio')?.invalid && servicioGroup.get('servicio')?.touched">
+                        <option value="">Seleccione servicio</option>
+                        <option *ngFor="let s of servicios" [value]="s._id">{{ s.nombre }}</option>
+                    </select>
+                    <input type="number" formControlName="sesionesIncluidas" min="1" class="form-control" 
+                           placeholder="Sesiones" [class.is-invalid]="servicioGroup.get('sesionesIncluidas')?.invalid && servicioGroup.get('sesionesIncluidas')?.touched">
+                    <button type="button" class="btn-remove" (click)="eliminarServicio(i)" title="Eliminar servicio">✖</button>
+                </div>
+            </div>
+            <button type="button" class="btn-agregar" (click)="agregarServicio()">Agregar servicio</button>
+            <small class="text-muted">Cada servicio tendrá su propio número de sesiones incluidas.</small>
         </div>
 
         <!-- Sucursales -->
@@ -153,7 +163,7 @@
 
         <div class="form-actions">
             <button type="button" class="btn-secondary" (click)="cancelar()">Cancelar</button>
-            <button type="submit" class="btn-primary" [disabled]="promocionForm.invalid">
+            <button type="submit" class="btn-primary" [disabled]="promocionForm.invalid || subiendoImagen">
                 {{ editando ? 'Actualizar' : 'Guardar' }}
             </button>
         </div>

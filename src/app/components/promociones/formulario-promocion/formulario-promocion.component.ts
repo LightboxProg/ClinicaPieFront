@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PromocionService } from 'src/app/services/promocion.service';
 import { CategoriasService } from 'src/app/services/categorias.service';
@@ -42,7 +42,8 @@ export class FormularioPromocionComponent implements OnInit {
       nombre: ['', Validators.required],
       descripcion: [''],
       tipoAnclaje: ['global', Validators.required],
-      servicio: [''],
+      // Array de servicios (solo se usa cuando tipoAnclaje = 'servicio')
+      servicios: this.fb.array([]),
       categoria: [''],
       sucursales: [[]],
       fechaInicio: ['', Validators.required],
@@ -56,6 +57,11 @@ export class FormularioPromocionComponent implements OnInit {
       palabrasClaveInput: [''],
       activa: [true]
     });
+  }
+
+  // Getter para acceder al FormArray de servicios
+  get serviciosFormArray(): FormArray {
+    return this.promocionForm.get('servicios') as FormArray;
   }
 
   ngOnInit(): void {
@@ -82,27 +88,33 @@ export class FormularioPromocionComponent implements OnInit {
   cargarPromocion(id: string): void {
     this.promocionService.obtenerPromocionPorId(id).subscribe({
       next: (res) => {
-        const p = res.data; // p is now of type Promocion with backend fields
+        const p = res.data;
         // Convertir fechas a formato YYYY-MM-DD
         const fechaInicio = new Date(p.fechaInicio).toISOString().split('T')[0];
         const fechaFin = new Date(p.fechaFin).toISOString().split('T')[0];
-        // Convertir array de palabras clave a string separado por comas
         const palabrasClaveString = p.palabrasClave ? p.palabrasClave.join(', ') : '';
 
-        // Mapear campos del backend al formulario
+        // Limpiar el FormArray de servicios antes de cargar
+        this.serviciosFormArray.clear();
+
+        // Si hay servicios, agregar cada uno al FormArray
+        if (p.servicios && Array.isArray(p.servicios)) {
+          p.servicios.forEach((item: any) => {
+            const servicioId = item.servicio?._id || item.servicio;
+            this.agregarServicio(servicioId, item.sesionesIncluidas);
+          });
+        }
+
         this.promocionForm.patchValue({
           nombre: p.nombre,
           descripcion: p.descripcion,
           tipoAnclaje: p.tipoAnclaje,
-          servicio: p.servicios && p.servicios.length > 0
-            ? (p.servicios[0]._id || p.servicios[0])
-            : '',
           categoria: p.categoria?._id || p.categoria,
           sucursales: p.sucursales?.map((s: any) => s._id || s) || [],
           fechaInicio,
           fechaFin,
           imagenUrl: p.imagenUrl,
-          tipoDescuento: p.tipoDescuento === 'monto_fijo' ? 'fijo' : p.tipoDescuento, // map backend to form
+          tipoDescuento: p.tipoDescuento === 'monto_fijo' ? 'fijo' : p.tipoDescuento,
           valorDescuento: p.valorDescuento,
           codigoPromocional: p.codigo,
           usoMaximo: p.usosMaximos,
@@ -115,13 +127,38 @@ export class FormularioPromocionComponent implements OnInit {
     });
   }
 
+  // Crear un nuevo FormGroup para un servicio
+  private crearServicioGroup(servicioId: string = '', sesiones: number = 1): FormGroup {
+    return this.fb.group({
+      servicio: [servicioId, Validators.required],
+      sesionesIncluidas: [sesiones, [Validators.required, Validators.min(1)]]
+    });
+  }
+
+  // Agregar una fila de servicio al FormArray
+  agregarServicio(servicioId: string = '', sesiones: number = 1): void {
+    this.serviciosFormArray.push(this.crearServicioGroup(servicioId, sesiones));
+  }
+
+  // Eliminar una fila de servicio
+  eliminarServicio(index: number): void {
+    this.serviciosFormArray.removeAt(index);
+  }
+
   onTipoAnclajeChange(): void {
     const tipo = this.promocionForm.get('tipoAnclaje')?.value;
+    // Limpiar campos que no correspondan
     if (tipo !== 'categoria') {
       this.promocionForm.get('categoria')?.setValue('');
     }
     if (tipo !== 'servicio') {
-      this.promocionForm.get('servicio')?.setValue('');
+      // Si se cambia a otro tipo, limpiar el array de servicios
+      this.serviciosFormArray.clear();
+    } else {
+      // Si se cambia a servicio y no hay ningún servicio agregado, agregar uno por defecto
+      if (this.serviciosFormArray.length === 0) {
+        this.agregarServicio();
+      }
     }
   }
 
@@ -165,6 +202,7 @@ export class FormularioPromocionComponent implements OnInit {
     try {
       const formValue = this.promocionForm.value;
 
+      // Procesar palabras clave
       let palabrasClave: string[] | undefined;
       if (formValue.palabrasClaveInput && formValue.palabrasClaveInput.trim() !== '') {
         palabrasClave = formValue.palabrasClaveInput
@@ -173,12 +211,13 @@ export class FormularioPromocionComponent implements OnInit {
           .filter((item: string) => item !== '');
       }
 
-      // Construir objeto para enviar al backend usando los nombres de campo del backend
+      // Construir el objeto para el backend
       const promocion: any = {
         nombre: formValue.nombre,
         descripcion: formValue.descripcion,
         tipoAnclaje: formValue.tipoAnclaje,
-        servicios: formValue.servicio ? [formValue.servicio] : undefined,
+        // Si es servicio, tomar el array de servicios tal cual (ya es array de objetos)
+        servicios: formValue.tipoAnclaje === 'servicio' ? formValue.servicios : undefined,
         categoria: formValue.categoria || undefined,
         sucursales: formValue.sucursales?.length ? formValue.sucursales : undefined,
         fechaInicio: new Date(formValue.fechaInicio),
@@ -192,29 +231,23 @@ export class FormularioPromocionComponent implements OnInit {
         palabrasClave: palabrasClave,
       };
 
-      // Si se ha seleccionado una imagen nueva, no enviar imagenUrl (se subirá después)
+      // Si hay imagen seleccionada, no enviar imagenUrl (se subirá después)
       if (this.imagenSeleccionada) {
         delete promocion.imagenUrl;
       } else {
         promocion.imagenUrl = formValue.imagenUrl || undefined;
       }
 
-      // Eliminar campos según tipo de anclaje
-      if (promocion.tipoAnclaje !== 'categoria') delete promocion.categoria;
-      if (promocion.tipoAnclaje !== 'servicio') delete promocion.servicio;
-
-      // Eliminar propiedades undefined
+      // Limpiar propiedades undefined
       Object.keys(promocion).forEach(key => promocion[key] === undefined && delete promocion[key]);
 
       let promocionId: string;
 
       if (this.editando) {
-        // Actualizar promoción existente
         await lastValueFrom(this.promocionService.actualizarPromocion(this.promocionId!, promocion));
         promocionId = this.promocionId!;
         this.swal.success('Promoción actualizada');
       } else {
-        // Crear nueva promoción
         const createRes = await lastValueFrom(this.promocionService.crearPromocion(promocion));
         if (!createRes?.data?._id) {
           throw new Error('No se pudo obtener el ID de la promoción');

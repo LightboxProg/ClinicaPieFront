@@ -156,4 +156,9 @@ export class ListaPromocionesComponent implements OnInit {
     });
   }
 
+  obtenerNombreServicio(servicio: any): string {
+    if (!servicio) return '';
+    return typeof servicio === 'object' ? servicio.nombre : this.servicios.find(s => s._id === servicio)?.nombre || servicio;
+  }
+
 }
