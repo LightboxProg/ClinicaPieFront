@@ -7,6 +7,8 @@ import * as moment from 'moment';
 import { AgendarCitaComponent } from '../agendar-cita/agendar-cita.component';
 import { RegendarCitasComponent } from '../regendar-citas/regendar-citas.component';
 import { BloqueoSucursalComponent } from '../bloqueo-sucursal/bloqueo-sucursal.component';
+import { CalendarService } from 'src/app/services/calendar.service';
+import { SwalService } from 'src/app/services/swal.service';
 
 @Component({
   selector: 'app-agenda-sucursales',
@@ -37,8 +39,10 @@ export class AgendaSucursalesComponent implements OnInit, OnChanges {
   citaParaReagendar: any = null;
 
   constructor(
+    private calendarService: CalendarService,
     private calendarioService: CalendarioService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private swalService: SwalService
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -144,6 +148,42 @@ export class AgendaSucursalesComponent implements OnInit, OnChanges {
   abrirBloqueoSucursal(sucursalId: string) {
     this.sucursalParaBloqueo = sucursalId;
     this.mostrarModalBloqueo = true;
+  }
+
+  eliminarBloqueo(cita: any, doctor: any, fechaDia: string): void {
+    // Mostrar confirmación
+    this.swalService.confirm(
+      '¿Eliminar bloqueo?',
+      `¿Estás seguro de eliminar el bloqueo "${cita.titulo}" del ${fechaDia} a las ${cita.inicio}?`,
+      'Sí, eliminar'
+    ).then((confirmado) => {
+      if (!confirmado) return;
+
+      this.cargando = true; // activamos indicador de carga (opcional, puedes usar un spinner local)
+
+      const motivo = `Eliminado por ${this.usuarioLogueado?.usuario}`;
+      const eliminadoPor = this.usuarioLogueado?.id;
+
+      this.calendarService.eliminarBloqueo(cita.idEvento, motivo, eliminadoPor).subscribe({
+        next: () => {
+          this.swalService.success('Bloqueo eliminado', 'El bloqueo se ha eliminado correctamente');
+          this.cargarAgenda(); // Recargar la agenda para que desaparezca
+        },
+        error: (err) => {
+          this.cargando = false;
+          this.swalService.error('Error', err.error?.error || 'No se pudo eliminar el bloqueo');
+          console.error(err);
+        }
+      });
+    });
+  }
+
+
+
+  puedeEliminarBloqueos(): boolean {
+    return this.usuarioLogueado &&
+      (this.usuarioLogueado.tipo === 'Administrador' ||
+        this.usuarioLogueado.tipo === 'Recepcionista');
   }
 
 

@@ -161,5 +161,6 @@ export class CalendarService {
     const params = new HttpParams().set('fecha', fecha);
     return this.http.get<any[]>(`${this.apiUrl}/bloqueos/por-fecha`, { params });
   }
+
 }
 

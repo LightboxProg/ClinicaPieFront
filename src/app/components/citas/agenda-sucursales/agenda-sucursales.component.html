@@ -58,6 +58,14 @@
               [class.bloqueo]="cita.esBloqueo">
               <span class="hora">{{ cita.inicio }}</span>
               <p class="titulo">{{ cita.titulo }}</p>
+              
+              <!-- Botón de eliminar solo para bloqueos y usuarios autorizados -->
+              <button *ngIf="cita.esBloqueo && puedeEliminarBloqueos()"
+                (click)="eliminarBloqueo(cita, doctor, dia.fecha)" class="btn-eliminar-bloqueo"
+                title="Eliminar bloqueo">
+                🗑️ Eliminar
+              </button>
+
               <!-- Solo mostrar botón si NO es bloqueo y tiene _id -->
               <button *ngIf="cita._id && !cita.esBloqueo" (click)="abrirReagendar(cita, doctor, dia.fecha)"
                 class="btn-reagendar-mini">

@@ -167,8 +167,8 @@
 }
 
 .cita-tarjeta.bloqueo {
-  background: #f1f5f9; // Fondo gris claro
-  border-left-color: #64748b !important; // Borde gris
+  background: #f1f5f9;
+  border-left-color: #64748b !important;
   opacity: 0.8;
 
   .titulo {
@@ -176,8 +176,8 @@
     font-style: italic;
   }
 
-  button {
-    display: none; // Oculta cualquier botón dentro del bloqueo
+  .btn-reagendar-mini {
+    display: none; 
   }
 }
 
@@ -224,6 +224,33 @@
       color: #0ea5e9;
       border-color: white;
     }
+  }
+}
+
+.btn-eliminar-bloqueo {
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #b91c1c;
+  width: 100%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  &:hover {
+    background: #fecaca;
+    border-color: #fca5a5;
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 }
 
