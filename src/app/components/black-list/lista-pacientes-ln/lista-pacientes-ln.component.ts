@@ -50,4 +50,8 @@ export class ListaPacientesLnComponent implements OnInit {
     this.tipoSeleccionado = tipo;
   }
 
+  recargarPreguntones(): void {
+    this.cargarPreguntones(); // Llama al método que ya tienes
+  }
+
 }

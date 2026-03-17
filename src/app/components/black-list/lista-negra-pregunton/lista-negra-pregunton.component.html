@@ -64,7 +64,12 @@
         <i class="fas fa-calendar"></i>
         <span>Agregado el {{ formatearFecha(entrada.fechaAgregado) }}</span>
       </div>
-      
+
+      <div class="footer-item click-hint">
+        <button class="btn-remove-blacklist" (click)="eliminarDeListaNegra()">
+          <i class="fas fa-user-check"></i> Remover de Lista Negra
+        </button>
+      </div>
     </div>
   </div>
 </div>

@@ -9,6 +9,40 @@ $text-dark: #333333;
 $text-med: #666666;
 $border-radius: 12px;
 
+$success-color: #28a745;
+
+$transition-base: 0.25s ease;
+
+@mixin gradient-success {
+  background: linear-gradient(135deg, $secondary-color 0%, #00ccb4 100%);
+}
+
+@mixin btn-base {
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all $transition-base;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+}
+
+
+
 .blacklist-card {
   background: white;
   border-radius: $border-radius;
@@ -199,6 +233,19 @@ $border-radius: 12px;
     padding: 0.6rem;
     border-radius: 6px;
     border-left: 2px solid $primary-color;
+  }
+}
+
+// Botón remover de lista negra
+.btn-remove-blacklist {
+  @include btn-base;
+  @include gradient-success;
+  color: white;
+  width: 100%;
+  margin-top: 1rem;
+  
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, darken($success-color, 5%) 0%, darken(#28a745, 5%) 100%);
   }
 }
 
