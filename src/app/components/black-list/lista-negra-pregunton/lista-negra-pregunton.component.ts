@@ -1,7 +1,8 @@
-import { Component, Input ,OnInit } from '@angular/core';
+import { Component, EventEmitter, Input ,OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListaNegraPreguntonService } from 'src/app/services/lista-negra-pregunton.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-lista-negra-pregunton',
@@ -15,6 +16,7 @@ export class ListaNegraPreguntonComponent implements OnInit {
   @Input()entrada: any;
   pregunton: any;
   showDetails = false; 
+  @Output() eliminado = new EventEmitter<string>();
 
   constructor(
       private router: Router,
@@ -46,6 +48,33 @@ export class ListaNegraPreguntonComponent implements OnInit {
   toggleDetails(): void {
     this.showDetails = !this.showDetails;
   }
+
+  eliminarDeListaNegra(): void {
+      if (!this.entrada || !this.entrada.pregunton._id) return;
+  
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción eliminará al paciente de la lista negra',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.listaNegraPreguntonService.removerPreguntonYActualizar(this.entrada.pregunton._id).subscribe({
+            next: () => {
+              Swal.fire('¡Eliminado!', 'El paciente ha sido eliminado de la lista negra.', 'success');
+              this.entrada.pregunton.enListaNegra = false;
+              this.eliminado.emit();
+            },
+            error: (err) => {
+              console.error('Error al eliminar de lista negra:', err);
+              Swal.fire('Error', 'No se pudo eliminar al paciente de la lista negra.', 'error');
+            }
+          });
+        }
+      });
+    }
 
 
 

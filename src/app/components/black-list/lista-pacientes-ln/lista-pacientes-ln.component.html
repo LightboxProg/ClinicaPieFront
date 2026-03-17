@@ -69,7 +69,7 @@
     <div class="lista-container" *ngIf="tipoSeleccionado === 'preguntones'">
       <div *ngFor="let entrada of preguntonesListaNegra" class="blacklist-item-wrapper">
         <!-- Aquí necesitas un componente similar para preguntones, o reutilizar app-lista-negra si es compatible -->
-        <app-lista-negra-pregunton [entrada]="entrada"></app-lista-negra-pregunton>
+        <app-lista-negra-pregunton [entrada]="entrada" (eliminado)="recargarPreguntones()"></app-lista-negra-pregunton>
       </div>
       
       <!-- Estado vacío para preguntones -->
