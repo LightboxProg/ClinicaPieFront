@@ -36,8 +36,8 @@ export class FormHorariosComponent implements OnInit {
 
   // Cierra el desplegable al hacer clic fuera del componente
   @HostListener('document:click', ['$event.target'])
-  onClickOutside(target: HTMLElement) {
-    if (!target.closest('.doctor-autocomplete')) {
+  onClickOutside(target: any) {
+    if (target && !target.closest?.('.doctor-autocomplete')) {
       this.showSuggestions = false;
     }
   }
