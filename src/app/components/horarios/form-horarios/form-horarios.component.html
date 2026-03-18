@@ -1,81 +1,183 @@
 <div class="horarios-container">
 
-    <header class="header-horarios">
-        <h2>Configuracion de Horarios</h2>
-        <p>Establece los dias y turnos laborales para cada especialista.</p>
-    </header>
+  <header class="header-horarios">
+    <h2>Configuración de Horarios</h2>
+    <p>Establece los días y turnos laborales para cada especialista.</p>
+  </header>
 
-    <div class="panel-control">
-        <div class="campo-doctor">
-            <label>Seleccionar Especialista:</label>
-            <select [(ngModel)]="doctorSeleccionado" (change)="onDoctorChange()">
-                <option value="" disabled>-- Elige un especialista --</option>
-                <option *ngFor="let doc of doctores" [value]="doc.id || doc._id">
-                    {{ doc.nombre }} {{ doc.apeP }}
-                </option>
-            </select>
-        </div>
-    </div>
+  <!-- Selector de especialista: autocomplete personalizado -->
+  <div class="panel-control">
 
-    <div *ngIf="cargando" class="estado-cargando">
-        <div class="spinner"></div>
-        <p>Cargando horario actual...</p>
-    </div>
+    <div class="campo-doctor">
+      <label><i class="fas fa-user-md"></i> Seleccionar Especialista:</label>
 
-    <div class="semana-grid" *ngIf="doctorSeleccionado && !cargando">
-
-        <div *ngFor="let dia of semana" class="dia-card" [class.inactivo]="!dia.activo">
-
-            <div class="dia-header">
-                <div class="toggle-container">
-                    <input type="checkbox" [id]="'toggle-' + dia.diaSemana" [(ngModel)]="dia.activo">
-                    <label [for]="'toggle-' + dia.diaSemana">{{ dia.nombreDia }}</label>
-                </div>
-
-                <button *ngIf="dia.activo" type="button" class="btn-add" (click)="agregarTurno(dia)">
-                    + Agregar Turno
-                </button>
-            </div>
-
-            <div class="turnos-lista" *ngIf="dia.activo">
-
-                <p *ngIf="dia.turnos.length === 0" class="texto-vacio">
-                    No hay turnos configurados. Haz clic en "Agregar Turno".
-                </p>
-
-                <div *ngFor="let turno of dia.turnos; let i = index" class="turno-fila">
-                    <div class="campo-hora">
-                        <label>Entrada</label>
-                        <input type="time" [(ngModel)]="turno.horaInicio">
-                    </div>
-
-                    <div class="campo-hora">
-                        <label>Salida</label>
-                        <input type="time" [(ngModel)]="turno.horaFin">
-                    </div>
-
-                    <button class="btn-delete" (click)="eliminarTurno(dia, i)" title="Eliminar turno">
-                        X
-                    </button>
-                </div>
-
-            </div>
-
+      <div class="doctor-autocomplete">
+        <!-- Input de búsqueda -->
+        <div class="autocomplete-input" [class.open]="showSuggestions">
+          <i class="fas fa-search prefix-icon"></i>
+          <input
+            type="text"
+            placeholder="Escribe el nombre del doctor..."
+            [(ngModel)]="busquedaDoctor"
+            (input)="showSuggestions = true; doctorSeleccionado = ''"
+            (focus)="showSuggestions = true"
+            autocomplete="off"
+          />
+          <button class="clear-btn" *ngIf="busquedaDoctor" (click)="busquedaDoctor = ''; doctorSeleccionado = ''; inicializarSemanaVacia()">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
 
+        <!-- Lista de sugerencias -->
+        <ul class="autocomplete-list" *ngIf="showSuggestions && doctoresFiltrados.length > 0">
+          <li
+            *ngFor="let doc of doctoresFiltrados"
+            (click)="selectDoctor(doc)"
+            [class.selected]="(doc.id || doc._id) === doctorSeleccionado"
+          >
+            <i class="fas fa-user-circle"></i>
+            <span>Dr. {{ doc.nombre }} {{ doc.apeP }}</span>
+          </li>
+        </ul>
+
+        <!-- Sin resultados -->
+        <div class="no-results" *ngIf="showSuggestions && busquedaDoctor && doctoresFiltrados.length === 0">
+          <i class="fas fa-user-slash"></i> Sin resultados para "{{ busquedaDoctor }}"
+        </div>
+      </div>
     </div>
 
-    <div class="footer-acciones" *ngIf="doctorSeleccionado && !cargando">
+    <!-- Badge del doctor seleccionado -->
+    <div class="doctor-badge" *ngIf="nombreDoctorSeleccionado">
+      <i class="fas fa-user-md"></i>
+      <span class="doc-name">{{ nombreDoctorSeleccionado }}</span>
+      <span class="badge-dias" *ngIf="!cargando">
+        <span class="activos">{{ totalDiasActivos }} días activos</span>
+        <span class="sep">·</span>
+        <span class="inactivos">{{ totalDiasInactivos }} libres</span>
+      </span>
+    </div>
 
-        <div class="alertas">
-            <div class="alerta exito" *ngIf="mensajeExito">{{ mensajeExito }}</div>
-            <div class="alerta error" *ngIf="mensajeError">{{ mensajeError }}</div>
+  </div>
+
+
+  <!-- Spinner de carga -->
+  <div *ngIf="cargando" class="estado-cargando">
+    <div class="spinner"></div>
+    <p>Cargando horario actual...</p>
+  </div>
+
+  <!-- Sección de días: filtros -->
+  <div class="filtros-dias" *ngIf="doctorSeleccionado && !cargando">
+
+    <!-- Búsqueda por nombre de día -->
+    <div class="search-dia-box">
+      <i class="fas fa-calendar-day"></i>
+      <input
+        type="text"
+        placeholder="Buscar día (ej. Lunes)..."
+        [(ngModel)]="busquedaDia"
+      />
+      <button class="clear-search" *ngIf="busquedaDia" (click)="busquedaDia = ''">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Tabs de estado de días -->
+    <div class="tabs-estado">
+      <button
+        class="tab"
+        [class.activo]="filtroEstadoDia === 'todos'"
+        (click)="setFiltroEstadoDia('todos')"
+      >Todos ({{ semana.length }})</button>
+      <button
+        class="tab tab-verde"
+        [class.activo]="filtroEstadoDia === 'con-turno'"
+        (click)="setFiltroEstadoDia('con-turno')"
+      >
+        <span class="dot verde"></span> Con turno ({{ totalDiasActivos }})
+      </button>
+      <button
+        class="tab tab-gris"
+        [class.activo]="filtroEstadoDia === 'sin-turno'"
+        (click)="setFiltroEstadoDia('sin-turno')"
+      >
+        <span class="dot gris"></span> Sin turno ({{ totalDiasInactivos }})
+      </button>
+
+      <button class="btn-limpiar-filtro" *ngIf="busquedaDia || filtroEstadoDia !== 'todos'" (click)="limpiarFiltrosDias()">
+        <i class="fas fa-filter-circle-xmark"></i> Limpiar
+      </button>
+    </div>
+
+    <!-- Aviso sin resultados de filtro -->
+    <p class="sin-resultados-dias" *ngIf="diasFiltrados.length === 0">
+      <i class="fas fa-calendar-xmark"></i>
+      No hay días que coincidan con los filtros aplicados.
+    </p>
+
+  </div>
+
+  <!-- Grid de días -->
+  <div class="semana-grid" *ngIf="doctorSeleccionado && !cargando && diasFiltrados.length > 0">
+
+    <div *ngFor="let dia of diasFiltrados" class="dia-card" [class.inactivo]="!dia.activo">
+
+      <div class="dia-header">
+        <div class="toggle-container">
+          <input type="checkbox" [id]="'toggle-' + dia.diaSemana" [(ngModel)]="dia.activo">
+          <label [for]="'toggle-' + dia.diaSemana">{{ dia.nombreDia }}</label>
         </div>
 
-        <button class="btn-guardar" (click)="guardarConfiguracion()" [disabled]="guardando">
-            <span *ngIf="!guardando">Guardar Horario</span>
-            <span *ngIf="guardando">Guardando...</span>
+        <button *ngIf="dia.activo" type="button" class="btn-add" (click)="agregarTurno(dia)">
+          + Agregar Turno
         </button>
+      </div>
+
+      <div class="turnos-lista" *ngIf="dia.activo">
+
+        <p *ngIf="dia.turnos.length === 0" class="texto-vacio">
+          No hay turnos configurados. Haz clic en "Agregar Turno".
+        </p>
+
+        <div *ngFor="let turno of dia.turnos; let i = index" class="turno-fila">
+          <div class="campo-hora">
+            <label>Entrada</label>
+            <input type="time" [(ngModel)]="turno.horaInicio">
+          </div>
+
+          <div class="campo-hora">
+            <label>Salida</label>
+            <input type="time" [(ngModel)]="turno.horaFin">
+          </div>
+
+          <button class="btn-delete" (click)="eliminarTurno(dia, i)" title="Eliminar turno">
+            X
+          </button>
+        </div>
+
+      </div>
+
     </div>
+
+  </div>
+
+  <!-- Footer: mensajes + botón guardar -->
+  <div class="footer-acciones" *ngIf="doctorSeleccionado && !cargando">
+
+    <div class="alertas">
+      <div class="alerta exito" *ngIf="mensajeExito">
+        <i class="fas fa-check-circle"></i> {{ mensajeExito }}
+      </div>
+      <div class="alerta error" *ngIf="mensajeError">
+        <i class="fas fa-triangle-exclamation"></i> {{ mensajeError }}
+      </div>
+    </div>
+
+    <button class="btn-guardar" (click)="guardarConfiguracion()" [disabled]="guardando">
+      <span *ngIf="!guardando"><i class="fas fa-save"></i> Guardar Horario</span>
+      <span *ngIf="guardando"><i class="fas fa-spinner fa-spin"></i> Guardando...</span>
+    </button>
+  </div>
 
 </div>
