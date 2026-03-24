@@ -12,6 +12,7 @@ import { ViewChild, ElementRef } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ServicioContratadoService } from 'src/app/services/servicio-contratado.service';
 import { ServiciosService } from 'src/app/services/servicios.service';
+import { PromocionService, Promocion } from 'src/app/services/promocion.service';
 
 @Component({
   selector: 'app-perfil',
@@ -42,6 +43,8 @@ export class PerfilComponent {
   imagenSeleccionada: any = null;
   mostrarModalGaleria: boolean = false;
   indiceImagenActual: number = 0;
+  promocionesDisponibles: Promocion[] = [];
+  mostrarModalPromocion: boolean = false;
 
   serviciosContratados: any[] = [];
   serviciosDisponibles: any[] = [];
@@ -73,6 +76,7 @@ export class PerfilComponent {
     private listaNegraService: ListaNegraService,
     private servicioContratadoService: ServicioContratadoService,
     private serviciosService: ServiciosService,
+    private promocionService: PromocionService,
     private citaService: CitaService) {
     if (!this.loginService.existeUsuario()) {
       // Si no está autenticado, redirigir al login
@@ -733,6 +737,57 @@ export class PerfilComponent {
 
   isObservacionesArray(observaciones: any): boolean {
     return Array.isArray(observaciones) && observaciones.length > 0;
+  }
+
+  abrirModalContratarPromocion() {
+    this.cargarPromocionesDisponibles();
+    this.mostrarModalPromocion = true;
+  }
+
+  cargarPromocionesDisponibles() {
+    this.promocionService.obtenerPromociones({ activa: true, vigente: true }).subscribe({
+      next: (res: any) => {  // o mejor (res: { success: boolean; data: Promocion[] })
+        this.promocionesDisponibles = res.data.filter((p: Promocion) =>
+          p.tipoAnclaje === 'servicio' &&
+          p.servicios &&
+          p.servicios.length > 0
+        );
+      },
+      error: (err: any) => {
+        console.error('Error al cargar promociones', err);
+        Swal.fire('Error', 'No se pudieron cargar las promociones', 'error');
+      }
+    });
+  }
+
+  contratarPromocion(promocion: Promocion) {
+    Swal.fire({
+      title: 'Confirmar contratación',
+      html: `¿Deseas contratar la promoción <strong>${promocion.nombre}</strong>?<br>
+           Se agregarán las sesiones correspondientes a los servicios incluidos.`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, contratar',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        const payload = {
+          pacienteId: this.paciente._id,
+          sucursalId: null
+        };
+        this.promocionService.contratarPromocion(promocion._id!, payload).subscribe({
+          next: (res: any) => {
+            Swal.fire('¡Éxito!', 'Promoción contratada correctamente', 'success');
+            this.mostrarModalPromocion = false;
+            this.cargarServiciosContratados();
+          },
+          error: (err: any) => {
+            console.error('Error al contratar promoción', err);
+            Swal.fire('Error', err.error?.message || 'No se pudo contratar la promoción', 'error');
+          }
+        });
+      }
+    });
   }
 
 }
