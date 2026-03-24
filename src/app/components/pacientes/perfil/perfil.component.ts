@@ -344,8 +344,8 @@ export class PerfilComponent {
       showCancelButton: true,
       confirmButtonText: 'Eliminar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#6e7881',
       preConfirm: (password) => {
         if (!password) {
           Swal.showValidationMessage('Debes ingresar tu contraseña');
@@ -437,9 +437,9 @@ export class PerfilComponent {
 
 
 
-  cerrarModalImagen() {
-    this.imagenModal = null;
-  }
+  // cerrarModalImagen() {
+  //   this.imagenModal = null;
+  // }
 
   zoomLevel = 1;
 
@@ -460,6 +460,7 @@ export class PerfilComponent {
   }
 
   abrirModalImagen(foto: any, index: number) {
+    console.log('Abriendo modal con foto:', foto); // Para debugging
     this.imagenSeleccionada = foto;
     this.indiceImagenActual = index;
     this.mostrarModalGaleria = true;
@@ -469,6 +470,7 @@ export class PerfilComponent {
     if (this.fotosPaciente.length > 0) {
       this.indiceImagenActual = (this.indiceImagenActual - 1 + this.fotosPaciente.length) % this.fotosPaciente.length;
       this.imagenSeleccionada = this.fotosPaciente[this.indiceImagenActual];
+      console.log("Foto actual:", this.imagenSeleccionada)
     }
   }
 
@@ -476,6 +478,7 @@ export class PerfilComponent {
     if (this.fotosPaciente.length > 0) {
       this.indiceImagenActual = (this.indiceImagenActual + 1) % this.fotosPaciente.length;
       this.imagenSeleccionada = this.fotosPaciente[this.indiceImagenActual];
+      console.log("Foto actual:", this.imagenSeleccionada)
     }
   }
 
@@ -484,6 +487,115 @@ export class PerfilComponent {
     this.imagenSeleccionada = null;
     this.indiceImagenActual = 0;
   }
+
+  // Método para descargar la imagen con una URL firmada
+  descargarImagen() {
+    if (!this.imagenSeleccionada) return;
+
+    const fotoId = this.imagenSeleccionada._id || this.imagenSeleccionada.id;
+    const nombreArchivo = this.obtenerNombreArchivo();
+    
+    this.pacienteService.descargarImagen(this.paciente._id, fotoId).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = nombreArchivo;
+        
+        document.body.appendChild(enlace);
+        enlace.click();
+        
+        setTimeout(() => {
+          document.body.removeChild(enlace);
+          window.URL.revokeObjectURL(url);
+        }, 100);
+        
+        this.cerrarModalGaleria();
+        Swal.close();
+        Swal.fire('¡Descarga completa!', '', 'success');
+      },
+      error: (error) => {
+        console.error('Error:', error);
+        Swal.close();
+        Swal.fire('Error', 'No se pudo descargar', 'error');
+      }
+    });
+  }
+
+  // Método auxiliar para obtener el nombre del archivo
+  obtenerNombreArchivo(): string {
+    if (this.imagenSeleccionada?.nombre) {
+      return this.imagenSeleccionada.nombre;
+    }
+    
+    // Extraer nombre de la URL
+    const url = this.imagenSeleccionada?.url;
+    if (url) {
+      const partes = url.split('/');
+      let nombreArchivo = partes[partes.length - 1];
+      
+      nombreArchivo = nombreArchivo.split('?')[0];
+      
+      if (!nombreArchivo.includes('.')) {
+        nombreArchivo += '.jpg';
+      }
+      
+      return nombreArchivo;
+    }
+    
+    // Nombre por defecto
+    return `imagen_paciente_${Date.now()}.jpg`;
+  }
+
+
+  // Método para eliminar la imagen
+  eliminarImagen() {
+    if (!this.imagenSeleccionada) return;
+  
+    this.cerrarModalGaleria();
+    Swal.fire({
+      title: '¿Eliminar imagen?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //this.confirmarEliminarImagen();
+      }
+    });
+  }
+
+  // confirmarEliminarImagen() {
+  //   if (!this.paciente?._id || !this.imagenSeleccionada) return;
+
+  //   // Mostrar loading
+  //   Swal.fire({
+  //     title: 'Eliminando...',
+  //     text: 'Por favor espere',
+  //     allowOutsideClick: false,
+  //     didOpen: () => {
+  //       Swal.showLoading();
+  //     }
+  //   });
+
+  //   const imagenId = this.imagenSeleccionada._id || this.imagenSeleccionada.id;
+    
+  //   this.pacienteService.eliminarImagenAlbum(this.paciente._id, imagenId).subscribe({
+  //     next: () => {
+  //       this.cerrarModalGaleria();
+  //       this.cargarFotosPaciente(this.paciente._id);
+  //       Swal.fire('Eliminada', 'La imagen se eliminó correctamente', 'success');
+  //     },
+  //     error: (err) => {
+  //       console.error('Error al eliminar imagen:', err);
+  //       Swal.fire('Error', 'No se pudo eliminar la imagen', 'error');
+  //     }
+  //   });
+  // }
 
 
   // Métodos para servicios contratados
