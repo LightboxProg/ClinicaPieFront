@@ -488,8 +488,8 @@
 
         <div class="gallery-grid">
           <div class="gallery-item" *ngFor="let foto of fotosPaciente; let i = index">
-            <img [src]="foto.url" (click)="abrirModalImagen(foto, i)" alt="Foto paciente" />
-            <div class="gallery-overlay">
+            <img [src]="foto.url" alt="Foto paciente" />
+            <div class="gallery-overlay" (click)="abrirModalImagen(foto, i)" >
               <i class="fas fa-search-plus"></i>
             </div>
           </div>
@@ -530,6 +530,18 @@
       <div class="gallery-modal-info" *ngIf="imagenSeleccionada?.fecha">
         <p><i class="fas fa-calendar"></i> Subida: {{ imagenSeleccionada.fecha | date: 'dd/MM/yyyy HH:mm' }}</p>
       </div>
+
+      <!-- NUEVO: Botones de acciones -->
+      <div class="gallery-modal-actions">
+        <button class="gallery-action-btn btn-download" (click)="descargarImagen()">
+          <i class="fas fa-download"></i> Descargar
+        </button>
+        <button class="gallery-action-btn btn-delete-gallery" (click)="eliminarImagen()">
+          <i class="fas fa-trash-alt"></i> Eliminar
+        </button>
+      </div>
+
+
     </div>
   </div>
 </div>

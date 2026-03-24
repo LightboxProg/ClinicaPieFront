@@ -88,6 +88,11 @@ export class PacientesService {
   obtenerFotosDelPaciente(pacienteId: string): Observable<any> {
     return this.http.get(`${this.api.getApiUrl()}/album/paciente/${pacienteId}`);
   }
+  descargarImagen(pacienteId: string, fotoId: string): Observable<Blob> {
+    return this.http.get(`${this.api.getApiUrl()}/album/descargar/${pacienteId}/${fotoId}`, {
+      responseType: 'blob'
+    });
+  }
 
   subirImagenAlbum(pacienteId: string, formData: FormData) {
     return this.http.post(`${this.api.getApiUrl()}/subirImagenAlbum/${pacienteId}`, formData);
