@@ -93,6 +93,9 @@ export class PacientesService {
       responseType: 'blob'
     });
   }
+  eliminarImagenAlbum(pacienteId: string, fotoId: string): Observable<any> {
+    return this.http.delete(`${this.api.getApiUrl()}/album/eliminar/${pacienteId}/${fotoId}`);
+  }
 
   subirImagenAlbum(pacienteId: string, formData: FormData) {
     return this.http.post(`${this.api.getApiUrl()}/subirImagenAlbum/${pacienteId}`, formData);

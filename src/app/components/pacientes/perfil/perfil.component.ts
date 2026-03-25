@@ -551,51 +551,72 @@ export class PerfilComponent {
   // Método para eliminar la imagen
   eliminarImagen() {
     if (!this.imagenSeleccionada) return;
-  
+
+    // Obtener el ID de la foto (ajusta según tu estructura)
+    const fotoId = this.imagenSeleccionada._id || this.imagenSeleccionada.id;
+    
     this.cerrarModalGaleria();
     Swal.fire({
       title: '¿Eliminar imagen?',
-      text: 'Esta acción no se puede deshacer',
+      text: 'Esta acción no se puede deshacer. La imagen se eliminará permanentemente.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#6e7881',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+      allowOutsideClick: false
     }).then((result) => {
       if (result.isConfirmed) {
-        //this.confirmarEliminarImagen();
+        this.confirmarEliminarImagen(fotoId);
       }
     });
   }
 
-  // confirmarEliminarImagen() {
-  //   if (!this.paciente?._id || !this.imagenSeleccionada) return;
+  confirmarEliminarImagen(fotoId: string) {
+    if (!this.paciente?._id) return;
 
-  //   // Mostrar loading
-  //   Swal.fire({
-  //     title: 'Eliminando...',
-  //     text: 'Por favor espere',
-  //     allowOutsideClick: false,
-  //     didOpen: () => {
-  //       Swal.showLoading();
-  //     }
-  //   });
+    // Mostrar loading
+    Swal.fire({
+      title: 'Eliminando...',
+      text: 'Por favor espere',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
 
-  //   const imagenId = this.imagenSeleccionada._id || this.imagenSeleccionada.id;
-    
-  //   this.pacienteService.eliminarImagenAlbum(this.paciente._id, imagenId).subscribe({
-  //     next: () => {
-  //       this.cerrarModalGaleria();
-  //       this.cargarFotosPaciente(this.paciente._id);
-  //       Swal.fire('Eliminada', 'La imagen se eliminó correctamente', 'success');
-  //     },
-  //     error: (err) => {
-  //       console.error('Error al eliminar imagen:', err);
-  //       Swal.fire('Error', 'No se pudo eliminar la imagen', 'error');
-  //     }
-  //   });
-  // }
+    // Llamar al servicio para eliminar la imagen
+    this.pacienteService.eliminarImagenAlbum(this.paciente._id, fotoId).subscribe({
+      next: (response) => {
+        // Cerrar modal
+        this.cerrarModalGaleria();
+        
+        // Recargar las fotos
+        this.cargarFotosPaciente(this.paciente._id);
+        
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          title: '¡Eliminada!',
+          text: 'La imagen se eliminó correctamente',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      },
+      error: (error) => {
+        console.error('Error al eliminar imagen:', error);
+        Swal.fire({
+          title: 'Error',
+          text: error.error?.error || 'No se pudo eliminar la imagen',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
+  }
+
 
 
   // Métodos para servicios contratados
