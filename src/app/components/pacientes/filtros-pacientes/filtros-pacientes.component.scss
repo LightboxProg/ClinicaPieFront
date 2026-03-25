@@ -10,7 +10,6 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.1),
     0 0 0 1px rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
   overflow: hidden;
@@ -23,10 +22,11 @@
 }
 
 .title {
-  background: linear-gradient(135deg, 0%, #ff7e5f 100%);
+  background: linear-gradient(135deg, #ff5a5f 0%, #ff7e5f 100%);
   padding: 20px 24px;
   position: relative;
   overflow: hidden;
+  color: white;
   
   &::before {
     content: '';
@@ -49,7 +49,6 @@
     letter-spacing: -0.02em;
     position: relative;
     z-index: 1;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -68,10 +67,26 @@
     font-size: 0.95rem;
     font-weight: 500;
     margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    
+    // Optional: add a little icon before each label
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      background: #ff5a5f;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
   }
 }
 
-input {
+// Unified styling for input and select
+input,
+select {
   width: 100%;
   padding: 12px 16px;
   border: 2px solid #e8ecef;
@@ -79,10 +94,13 @@ input {
   font-family: 'Inter', sans-serif;
   font-size: 0.95rem;
   background: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+  cursor: pointer;
   
   &:focus {
     outline: none;
     background: white;
+    border-color: #ff5a5f;
     box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1);
   }
   
@@ -91,8 +109,18 @@ input {
   }
 }
 
+// Specific select styling
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.2rem;
+  padding-right: 2.5rem;
+}
+
 .btn {
-  background: linear-gradient(135deg, 0%, #ff7e5f 100%);
+  background: linear-gradient(135deg, #ff5a5f 0%, #ff7e5f 100%);
   border: none;
   padding: 14px 24px;
   border-radius: 12px;
@@ -135,6 +163,34 @@ input {
 
 .mt-1 {
   margin-top: 16px;
+}
+
+.btn-reset {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 12px;
+  background: #6c757d;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  &:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+  }
+
+  i {
+    font-size: 1rem;
+  }
 }
 
 /* Responsive */

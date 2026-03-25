@@ -1,19 +1,47 @@
-<div class="w-100 ">
-    <div class="m-1 filtros">
-        <div class="title">
-            <p><strong>Filtros</strong></p>
-        </div>
-        <div class="p-1 filter-opt-container">
-            <div class="filter-opt">
-                <p>Buscar por número</p>
-                <input
-                [ngModel]="searchTerm"
-                (ngModelChange)="onSearchChange($event)"
-                type="text"
-                class="w-100"
-                placeholder="Número de teléfono..."
-                >
-            </div>
-        </div>
+<div class="w-100">
+  <div class="m-1 filtros">
+    <div class="title">
+      <p><strong>Filtros</strong></p>
     </div>
+    <div class="p-1 filter-opt-container">
+      <!-- Búsqueda por nombre o teléfono -->
+      <div class="filter-opt">
+        <p>Buscar por nombre o número</p>
+        <input
+          [(ngModel)]="filters.searchTerm"
+          (ngModelChange)="onFilterChange()"
+          type="text"
+          class="w-100"
+          placeholder="Nombre o teléfono..."
+        />
+      </div>
+
+      <!-- Género -->
+      <div class="filter-opt">
+        <p>Género</p>
+        <select [(ngModel)]="filters.genero" (change)="onFilterChange()">
+          <option value="">Todos</option>
+          <option value="H">Hombre</option>
+          <option value="M">Mujer</option>
+        </select>
+      </div>
+
+      <!-- Estado (Finado) -->
+      <div class="filter-opt">
+        <p>Estado</p>
+        <select [(ngModel)]="filters.finado" (change)="onFilterChange()">
+          <option [ngValue]="null">Todos</option>
+          <option [ngValue]="true">Finado</option>
+          <option [ngValue]="false">Activo</option>
+        </select>
+      </div>
+
+      <!-- Botón Reset -->
+      <div class="filter-opt">
+        <button class="btn-reset" (click)="resetFilters()">
+          <i class="fas fa-undo-alt"></i> Restablecer filtros
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
