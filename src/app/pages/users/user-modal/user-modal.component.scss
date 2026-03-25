@@ -40,7 +40,7 @@ $box-shadow:
 .modal-content {
   background: white;
   border-radius: $border-radius;
-  width: 95%;
+  width: 80%;
   max-width: 700px;
   max-height: 90vh;
   box-shadow: $box-shadow;
@@ -57,7 +57,7 @@ $box-shadow:
   align-items: center;
   padding: 1.25rem 1.5rem;
   border-bottom: 2px solid $medium-gray;
-  background: linear-gradient(98deg, #ffffff 0%, $light-gray 100%);
+  background: linear-gradient(98deg, #ffffff 0%, $light-gray 80%);
 
   .header-actions {
     display: flex;
@@ -419,7 +419,7 @@ input:checked + .slider:before {
       }
 
       .form-control {
-        width: 100%;
+        width: 80%;
         padding: 0.6rem 0.75rem;
         font-size: 0.95rem;
         border: 2px solid $border-color;
@@ -563,7 +563,7 @@ input:checked + .slider:before {
     // Sección de seguridad
     .security-section {
       .btn-password {
-        width: 100%;
+        width: 80%;
         padding: 0.75rem;
         background: $warning;
         color: white;
@@ -685,7 +685,7 @@ input:checked + .slider:before {
 // Responsive
 @media (max-width: 640px) {
   .modal-content {
-    width: 100%;
+    width: 80%;
     max-height: 100vh;
     border-radius: 0;
   }
@@ -725,7 +725,7 @@ input:checked + .slider:before {
         flex-direction: column;
 
         .btn-assign {
-          width: 100%;
+          width: 80%;
           padding: 0.6rem;
         }
       }
@@ -735,7 +735,7 @@ input:checked + .slider:before {
 
         .btn-cancel,
         .btn-save {
-          width: 100%;
+          width: 80%;
           justify-content: center;
         }
       }
