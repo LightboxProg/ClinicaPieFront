@@ -13,53 +13,37 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './filtros-pacientes.component.html',
   styleUrls: ['./filtros-pacientes.component.scss']
 })
-export class FiltrosPacientesComponent implements OnInit {
-  filterForm!: FormGroup;
-  // @Output() pacientesFiltrados = new EventEmitter<any[]>();
-  @Output() searchChange = new EventEmitter<string>();
+export class FiltrosPacientesComponent {
+  private _filters = {
+    searchTerm: '',
+    genero: '',
+    finado: null as boolean | null
+  };
 
-  searchTerm: string = '';
-
-  constructor(
-    private fb: FormBuilder,
-    private pacientesService: PacientesService
-  ) {}
-
-  ngOnInit(): void {
-    // this.initForm();
+  get filters() {
+    return this._filters;
   }
 
-  onSearchChange(value: string) {
-    this.searchTerm = value;
-    this.searchChange.emit(value);
+  set filters(value) {
+    this._filters = value;
+    this.emitChange();
   }
 
-  // initForm(): void {
-  //   this.filterForm = this.fb.group({
-  //     search: ['']
-  //   });
-  // }
+  @Output() filterChange = new EventEmitter<any>();
 
-  // obtenerFiltrosPacientes(): void {
-  //   const telefono = this.filterForm.get('search')?.value;
+  onFilterChange() {
+    this.emitChange();
+  }
 
-  //   if (telefono && telefono.trim() !== '') {
-  //     this.pacientesService.buscarPorTelefono(telefono).subscribe({
-  //       next: (response) => {
-  //         console.log('Respuesta del backend:', response); // Agrega esto para confirmar
-  //         const pacientesArray = Array.isArray(response)
-  //           ? response
-  //           : response.pacientes || [response]; // Asegura que sea array
-  //         this.pacientesService.actualizarLista(pacientesArray);
-  //       },
-  //       error: (error) => {
-  //         console.error('Error al buscar pacientes:', error);
-  //         this.pacientesService.actualizarLista([]);
-  //       }
-  //     })
-  //   } else {
-  //     this.pacientesService.obtenerPacientes(); // Ya actualiza la lista en el servicio
-  //   }
-  // }
+  resetFilters() {
+    this.filters = {
+      searchTerm: '',
+      genero: '',
+      finado: null
+    };
+  }
 
+  private emitChange() {
+    this.filterChange.emit({ ...this._filters });
+  }
 }

@@ -77,7 +77,7 @@ export class PromocionService {
     }
     return this.http.delete<any>(`${this.apiUrl}/promocion/${id}`, { params });
   }
-  
+
   // Reactivar promoción
   activarPromocion(id: string): Observable<{ success: boolean; data: Promocion }> {
     return this.http.patch<any>(`${this.apiUrl}/promocion/${id}/activar`, {});
@@ -110,5 +110,9 @@ export class PromocionService {
 
   importarPromocionesIniciales(): Observable<{ success: boolean; count: number; data: Promocion[] }> {
     return this.http.post<any>(`${this.apiUrl}/promociones/importar-iniciales`, {});
+  }
+
+  contratarPromocion(promocionId: string, datos: { pacienteId: string; sucursalId?: string | null }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/promocion/${promocionId}/contratar`, datos);
   }
 }

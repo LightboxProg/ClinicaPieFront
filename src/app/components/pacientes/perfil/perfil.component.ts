@@ -12,6 +12,7 @@ import { ViewChild, ElementRef } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ServicioContratadoService } from 'src/app/services/servicio-contratado.service';
 import { ServiciosService } from 'src/app/services/servicios.service';
+import { PromocionService, Promocion } from 'src/app/services/promocion.service';
 
 @Component({
   selector: 'app-perfil',
@@ -42,6 +43,8 @@ export class PerfilComponent {
   imagenSeleccionada: any = null;
   mostrarModalGaleria: boolean = false;
   indiceImagenActual: number = 0;
+  promocionesDisponibles: Promocion[] = [];
+  mostrarModalPromocion: boolean = false;
 
   serviciosContratados: any[] = [];
   serviciosDisponibles: any[] = [];
@@ -73,6 +76,7 @@ export class PerfilComponent {
     private listaNegraService: ListaNegraService,
     private servicioContratadoService: ServicioContratadoService,
     private serviciosService: ServiciosService,
+    private promocionService: PromocionService,
     private citaService: CitaService) {
     if (!this.loginService.existeUsuario()) {
       // Si no está autenticado, redirigir al login
@@ -340,8 +344,8 @@ export class PerfilComponent {
       showCancelButton: true,
       confirmButtonText: 'Eliminar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#6e7881',
       preConfirm: (password) => {
         if (!password) {
           Swal.showValidationMessage('Debes ingresar tu contraseña');
@@ -433,9 +437,9 @@ export class PerfilComponent {
 
 
 
-  cerrarModalImagen() {
-    this.imagenModal = null;
-  }
+  // cerrarModalImagen() {
+  //   this.imagenModal = null;
+  // }
 
   zoomLevel = 1;
 
@@ -456,6 +460,7 @@ export class PerfilComponent {
   }
 
   abrirModalImagen(foto: any, index: number) {
+    console.log('Abriendo modal con foto:', foto); // Para debugging
     this.imagenSeleccionada = foto;
     this.indiceImagenActual = index;
     this.mostrarModalGaleria = true;
@@ -465,6 +470,7 @@ export class PerfilComponent {
     if (this.fotosPaciente.length > 0) {
       this.indiceImagenActual = (this.indiceImagenActual - 1 + this.fotosPaciente.length) % this.fotosPaciente.length;
       this.imagenSeleccionada = this.fotosPaciente[this.indiceImagenActual];
+      console.log("Foto actual:", this.imagenSeleccionada)
     }
   }
 
@@ -472,6 +478,7 @@ export class PerfilComponent {
     if (this.fotosPaciente.length > 0) {
       this.indiceImagenActual = (this.indiceImagenActual + 1) % this.fotosPaciente.length;
       this.imagenSeleccionada = this.fotosPaciente[this.indiceImagenActual];
+      console.log("Foto actual:", this.imagenSeleccionada)
     }
   }
 
@@ -480,6 +487,136 @@ export class PerfilComponent {
     this.imagenSeleccionada = null;
     this.indiceImagenActual = 0;
   }
+
+  // Método para descargar la imagen con una URL firmada
+  descargarImagen() {
+    if (!this.imagenSeleccionada) return;
+
+    const fotoId = this.imagenSeleccionada._id || this.imagenSeleccionada.id;
+    const nombreArchivo = this.obtenerNombreArchivo();
+    
+    this.pacienteService.descargarImagen(this.paciente._id, fotoId).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = nombreArchivo;
+        
+        document.body.appendChild(enlace);
+        enlace.click();
+        
+        setTimeout(() => {
+          document.body.removeChild(enlace);
+          window.URL.revokeObjectURL(url);
+        }, 100);
+        
+        this.cerrarModalGaleria();
+        Swal.close();
+        Swal.fire('¡Descarga completa!', '', 'success');
+      },
+      error: (error) => {
+        console.error('Error:', error);
+        Swal.close();
+        Swal.fire('Error', 'No se pudo descargar', 'error');
+      }
+    });
+  }
+
+  // Método auxiliar para obtener el nombre del archivo
+  obtenerNombreArchivo(): string {
+    if (this.imagenSeleccionada?.nombre) {
+      return this.imagenSeleccionada.nombre;
+    }
+    
+    // Extraer nombre de la URL
+    const url = this.imagenSeleccionada?.url;
+    if (url) {
+      const partes = url.split('/');
+      let nombreArchivo = partes[partes.length - 1];
+      
+      nombreArchivo = nombreArchivo.split('?')[0];
+      
+      if (!nombreArchivo.includes('.')) {
+        nombreArchivo += '.jpg';
+      }
+      
+      return nombreArchivo;
+    }
+    
+    // Nombre por defecto
+    return `imagen_paciente_${Date.now()}.jpg`;
+  }
+
+
+  // Método para eliminar la imagen
+  eliminarImagen() {
+    if (!this.imagenSeleccionada) return;
+
+    // Obtener el ID de la foto (ajusta según tu estructura)
+    const fotoId = this.imagenSeleccionada._id || this.imagenSeleccionada.id;
+    
+    this.cerrarModalGaleria();
+    Swal.fire({
+      title: '¿Eliminar imagen?',
+      text: 'Esta acción no se puede deshacer. La imagen se eliminará permanentemente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7066e0',
+      cancelButtonColor: '#6e7881',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.confirmarEliminarImagen(fotoId);
+      }
+    });
+  }
+
+  confirmarEliminarImagen(fotoId: string) {
+    if (!this.paciente?._id) return;
+
+    // Mostrar loading
+    Swal.fire({
+      title: 'Eliminando...',
+      text: 'Por favor espere',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Llamar al servicio para eliminar la imagen
+    this.pacienteService.eliminarImagenAlbum(this.paciente._id, fotoId).subscribe({
+      next: (response) => {
+        // Cerrar modal
+        this.cerrarModalGaleria();
+        
+        // Recargar las fotos
+        this.cargarFotosPaciente(this.paciente._id);
+        
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          title: '¡Eliminada!',
+          text: 'La imagen se eliminó correctamente',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      },
+      error: (error) => {
+        console.error('Error al eliminar imagen:', error);
+        Swal.fire({
+          title: 'Error',
+          text: error.error?.error || 'No se pudo eliminar la imagen',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
+  }
+
 
 
   // Métodos para servicios contratados
@@ -733,6 +870,57 @@ export class PerfilComponent {
 
   isObservacionesArray(observaciones: any): boolean {
     return Array.isArray(observaciones) && observaciones.length > 0;
+  }
+
+  abrirModalContratarPromocion() {
+    this.cargarPromocionesDisponibles();
+    this.mostrarModalPromocion = true;
+  }
+
+  cargarPromocionesDisponibles() {
+    this.promocionService.obtenerPromociones({ activa: true, vigente: true }).subscribe({
+      next: (res: any) => {  // o mejor (res: { success: boolean; data: Promocion[] })
+        this.promocionesDisponibles = res.data.filter((p: Promocion) =>
+          p.tipoAnclaje === 'servicio' &&
+          p.servicios &&
+          p.servicios.length > 0
+        );
+      },
+      error: (err: any) => {
+        console.error('Error al cargar promociones', err);
+        Swal.fire('Error', 'No se pudieron cargar las promociones', 'error');
+      }
+    });
+  }
+
+  contratarPromocion(promocion: Promocion) {
+    Swal.fire({
+      title: 'Confirmar contratación',
+      html: `¿Deseas contratar la promoción <strong>${promocion.nombre}</strong>?<br>
+           Se agregarán las sesiones correspondientes a los servicios incluidos.`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, contratar',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        const payload = {
+          pacienteId: this.paciente._id,
+          sucursalId: null
+        };
+        this.promocionService.contratarPromocion(promocion._id!, payload).subscribe({
+          next: (res: any) => {
+            Swal.fire('¡Éxito!', 'Promoción contratada correctamente', 'success');
+            this.mostrarModalPromocion = false;
+            this.cargarServiciosContratados();
+          },
+          error: (err: any) => {
+            console.error('Error al contratar promoción', err);
+            Swal.fire('Error', err.error?.message || 'No se pudo contratar la promoción', 'error');
+          }
+        });
+      }
+    });
   }
 
 }

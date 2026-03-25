@@ -133,28 +133,265 @@ $transition-default: all 0.3s ease;
     color: $text-dark;
     font-size: 0.95rem;
   }
+}
 
-  select {
-    padding: 0.75rem;
-    border: 1px solid $border-color;
-    border-radius: $border-radius-small;
+// Autocomplete personalizado de doctor
+.doctor-autocomplete {
+  position: relative;
+}
+
+.autocomplete-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1.5px solid $border-color;
+  border-radius: $border-radius-small;
+  padding: 0.65rem 0.85rem;
+  transition: $transition-default;
+  cursor: text;
+
+  &:focus-within,
+  &.open {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.12);
+    border-radius: $border-radius-small $border-radius-small 0 0;
+  }
+
+  .prefix-icon { color: #aaa; font-size: 0.9rem; flex-shrink: 0; }
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
     font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
     color: $text-dark;
-    background: $text-light;
+    background: transparent;
+    min-width: 0;
+    &::placeholder { color: #ccc; }
+  }
+
+  .clear-btn {
+    background: none;
+    border: none;
+    color: #bbb;
     cursor: pointer;
-    transition: $transition-default;
+    padding: 0;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    &:hover { color: $primary-color; }
+  }
+}
 
-    &:focus {
-      outline: none;
-      border-color: $primary-color;
-      box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
-    }
+// Lista flotante de sugerencias
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1.5px solid $primary-color;
+  border-top: none;
+  border-radius: 0 0 $border-radius-small $border-radius-small;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  z-index: 100;
+  max-height: 260px;
+  overflow-y: auto;
 
-    option {
-      padding: 0.5rem;
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    color: $text-dark;
+    transition: background 0.12s;
+
+    i { color: #ccc; font-size: 1.1rem; flex-shrink: 0; }
+
+    &:hover { background: rgba($primary-color, 0.06); i { color: $primary-color; } }
+
+    &.selected {
+      background: rgba($primary-color, 0.1);
+      font-weight: 600;
+      i { color: $primary-color; }
     }
   }
+}
+
+// Sin resultados del autocomplete
+.no-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1.5px solid $border-color;
+  border-top: none;
+  border-radius: 0 0 $border-radius-small $border-radius-small;
+  padding: 12px 14px;
+  font-size: 0.85rem;
+  color: $text-med;
+  z-index: 100;
+  i { margin-right: 6px; }
+}
+
+
+
+// Badge resumen del doctor seleccionado
+.doctor-badge {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba($primary-color, 0.07);
+  border: 1px solid rgba($primary-color, 0.15);
+  border-radius: 30px;
+  padding: 8px 16px;
+
+  i { color: $primary-color; }
+
+  .doc-name {
+    font-weight: 700;
+    color: $text-dark;
+    font-size: 0.95rem;
+  }
+
+  .badge-dias {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+  }
+
+  .activos  { color: $success-color; font-weight: 600; }
+  .inactivos{ color: $text-med; }
+  .sep      { color: $border-color; }
+}
+
+// =========================================
+// FILTROS DE DÍAS
+// =========================================
+.filtros-dias {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border-radius: $border-radius-large;
+  padding: 14px 18px;
+  margin-bottom: 1.2rem;
+  border: 1px solid $border-color;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.search-dia-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: $background-light;
+  border: 1.5px solid $border-color;
+  border-radius: $border-radius-small;
+  padding: 7px 12px;
+  flex: 1;
+  min-width: 180px;
+  transition: $transition-default;
+
+  &:focus-within {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+  }
+
+  i { color: #bbb; font-size: 0.9rem; }
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.88rem;
+    font-family: 'Inter', sans-serif;
+    color: $text-dark;
+    &::placeholder { color: #ccc; }
+  }
+
+  .clear-search {
+    background: none;
+    border: none;
+    color: #bbb;
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.8rem;
+    &:hover { color: $primary-color; }
+  }
+}
+
+.tabs-estado {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid $border-color;
+    background: transparent;
+    color: $text-med;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+
+    &:hover { border-color: $primary-color; color: $primary-color; }
+
+    &.activo {
+      background: rgba($primary-color, 0.08);
+      border-color: $primary-color;
+      color: $primary-color;
+      font-weight: 700;
+    }
+
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      &.verde { background: $success-color; }
+      &.gris  { background: #bbb; }
+    }
+  }
+}
+
+.btn-limpiar-filtro {
+  background: none;
+  border: 1.5px solid $border-color;
+  color: $text-med;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: $transition-default;
+
+  i { margin-right: 4px; }
+  &:hover { border-color: $error-color; color: $error-color; }
+}
+
+.sin-resultados-dias {
+  width: 100%;
+  text-align: center;
+  color: $text-med;
+  font-size: 0.9rem;
+  padding: 8px;
+  i { margin-right: 6px; color: $primary-color; }
 }
 
 // =========================================

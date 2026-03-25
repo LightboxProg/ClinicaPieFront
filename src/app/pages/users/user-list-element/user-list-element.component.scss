@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
 
-// Variables mejoradas
 $primary-color: #ff5a5f;
 $secondary-color: #00a699;
 $accent-color: #ffb400;
@@ -11,14 +10,136 @@ $text-dark: #333333;
 $text-med: #666666;
 $border-radius: 12px;
 
-.m-2 {
+.users-container {
   padding: 1.5rem;
+  font-family: "Inter", sans-serif;
 }
 
-.list {
+/* --- Tarjeta de filtros --- */
+.filters-card {
+  background-color: white;
+  border-radius: $border-radius;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #f3f4f6;
+}
+
+.filters-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  align-items: center;
+}
+
+.filter-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ff5a5f'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.filters-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-end;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 250px;
+}
+
+.filter-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+  margin-left: 0.25rem;
+}
+
+.input-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon-svg {
+  position: absolute;
+  left: 0.75rem;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+
+  &.search-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  &.user-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+.filter-input,
+.filter-select {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  color: #374151;
+  outline: none;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-size: 0.95rem;
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+    background-color: white;
+  }
+}
+
+.filter-select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 2.5rem;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 0.75rem;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* --- Tarjeta de usuario --- */
+.user-card {
   display: grid;
-  grid-template-columns: 1fr 130px;
-  margin: 18px 0 0 0;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  margin: 1rem 0 0 0;
   background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
   border: 1px solid #e8ecef;
   border-radius: $border-radius;
@@ -41,7 +162,7 @@ $border-radius: 12px;
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    border-color: rgba(255, 90, 95, 0.3);
+    border-color: rgba($primary-color, 0.3);
   }
 
   &:nth-child(odd) {
@@ -49,131 +170,114 @@ $border-radius: 12px;
   }
 }
 
-.usuario {
-  display: grid;
-  grid-template-areas: "imagen info";
-  grid-template-columns: 160px 1fr;
-  cursor: pointer;
+.user-info-area {
+  display: flex;
   gap: 1.5rem;
   align-items: center;
+  cursor: pointer;
+  flex: 1;
 }
 
-p {
-  grid-area: info;
-  padding-left: 5%;
-  margin: 0;
-  font-family: "Inter", sans-serif;
-  font-size: 0.95rem;
-  color: $text-dark;
-  line-height: 1.6;
+.user-avatar {
+  flex-shrink: 0;
 
-  // Mejorar la presentación de cada línea
-  br {
-    display: block;
-    margin-bottom: 0.5rem;
-    content: "";
-  }
-}
+  img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid transparent;
+    background: linear-gradient(45deg, $primary-color, $secondary-color) border-box;
+    transition: transform 0.3s ease;
 
-// Estilos para resaltar las etiquetas
-.usuario-info {
-  grid-area: info;
-  padding-left: 5%;
-
-  .info-line {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.6rem;
-    font-family: "Inter", sans-serif;
-    font-size: 0.95rem;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    .label {
-      font-weight: 600;
-      color: $dark-color;
-      min-width: 120px;
-      font-size: 0.9rem;
-    }
-
-    .value {
-      color: $text-med;
-      flex: 1;
-
-      &.username {
-        color: $primary-color;
-        font-weight: 500;
-      }
-
-      &.specialty {
-        color: $secondary-color;
-        font-weight: 500;
-      }
-
-      &.type {
-        background: rgba(255, 90, 95, 0.1);
-        color: $primary-color;
-        padding: 0.2rem 0.6rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 500;
-      }
+    .user-card:hover & {
+      transform: scale(1.05);
     }
   }
 }
 
-figure {
-  grid-area: imagen;
-  justify-self: center;
-  border-right: 2px solid;
-  border-image: linear-gradient(
-      to bottom,
-      rgba(255, 90, 95, 0.2),
-      rgba(0, 166, 153, 0.2),
-      rgba(255, 180, 0, 0.2)
-    )
-    1 100%;
-  padding: 0 1.5rem 0 0;
-  margin: 0;
+.user-details {
+  flex: 1;
+}
+
+.detail-row {
   display: flex;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.detail-label {
+  font-weight: 600;
+  color: $dark-color;
+  min-width: 120px;
+  font-size: 0.9rem;
+}
+
+.detail-value {
+  color: $text-med;
+
+  &.username {
+    color: $primary-color;
+    font-weight: 500;
+  }
+
+  &.specialty {
+    color: $secondary-color;
+    font-weight: 500;
+  }
+
+  &.type {
+    background: rgba($primary-color, 0.1);
+    color: $primary-color;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-block;
+  }
+}
+
+.user-actions {
+  display: flex;
+  gap: 0.5rem;
   align-items: center;
+  justify-content: flex-end;
+
+  button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
 }
 
-.boton {
-  height: auto;
-  align-self: center;
-  justify-self: center;
-  margin-right: 12px;
-}
+.btn-edit {
+  background: linear-gradient(135deg, $secondary-color, darken($secondary-color, 10%));
+  color: white;
+  box-shadow: 0 3px 10px rgba($secondary-color, 0.3);
 
-img {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid transparent;
-  background: linear-gradient(45deg, $primary-color, $secondary-color)
-    border-box;
-  transition: transform 0.3s ease;
-
-  .list:hover & {
-    transform: scale(1.05);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba($secondary-color, 0.4);
   }
 }
 
 .btn-danger {
-  color: #fff;
   background: linear-gradient(135deg, #ff4757, #e84118);
-  border: none;
-  padding: 10px 18px;
-  cursor: pointer;
-  border-radius: 8px;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
+  color: white;
   box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
   position: relative;
   overflow: hidden;
@@ -200,46 +304,17 @@ img {
       height: 120px;
     }
   }
-
-  &:active {
-    transform: translateY(0);
-  }
 }
 
-.btn-edit {
-  color: #fff;
-  background: linear-gradient(
-    135deg,
-    $secondary-color,
-    darken($secondary-color, 10%)
-  );
-  border: none;
-  padding: 10px 18px;
-  cursor: pointer;
-  border-radius: 8px;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba($secondary-color, 0.3);
-  margin-right: 8px;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba($secondary-color, 0.4);
-  }
-}
-
-// Responsive mejorado
+/* --- Responsive --- */
 @media (max-width: 768px) {
-  .m-2 {
+  .users-container {
     padding: 1rem;
   }
 
-  .list {
+  .user-card {
     grid-template-columns: 1fr;
     gap: 1.2rem;
-    margin: 15px 0 0 0;
     padding: 1.2rem;
 
     &::before {
@@ -249,74 +324,54 @@ img {
     }
   }
 
-  .usuario {
-    grid-template-columns: 120px 1fr;
+  .user-info-area {
     gap: 1.2rem;
   }
 
-  figure {
-    padding: 0 1.2rem 0 0;
-  }
-
-  img {
+  .user-avatar img {
     width: 100px;
     height: 100px;
   }
 
-  .usuario-info {
-    padding-left: 0;
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
 
-    .info-line {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.2rem;
-
-      .label {
-        min-width: auto;
-        font-size: 0.85rem;
-      }
+    .detail-label {
+      min-width: auto;
+      font-size: 0.85rem;
     }
   }
 
-  .boton {
-    margin-right: 0;
+  .user-actions {
+    justify-content: center;
+    margin-top: 0.5rem;
 
-    .btn-danger {
-      width: 100%;
-      padding: 12px;
+    button {
+      flex: 1;
+      text-align: center;
     }
   }
 }
 
 @media (max-width: 480px) {
-  .usuario {
-    grid-template-columns: 1fr;
+  .user-info-area {
+    flex-direction: column;
     text-align: center;
-    gap: 1rem;
   }
 
-  figure {
-    border-right: none;
-    border-bottom: 2px solid;
-    border-image: linear-gradient(
-        to right,
-        rgba(255, 90, 95, 0.2),
-        rgba(0, 166, 153, 0.2)
-      )
-      1 100%;
-    padding: 0 0 1rem 0;
-  }
-
-  .usuario-info {
-    text-align: center;
-
-    .info-line {
-      align-items: center;
-    }
-  }
-
-  img {
+  .user-avatar img {
     width: 90px;
     height: 90px;
+  }
+
+  .detail-row {
+    align-items: center;
+    text-align: center;
+  }
+
+  .detail-value.type {
+    display: inline-block;
   }
 }
