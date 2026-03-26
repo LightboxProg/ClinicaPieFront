@@ -333,6 +333,8 @@ export class PerfilComponent {
   eliminarPaciente(): void {
     Swal.fire({
       title: `Eliminar a ${this.paciente.nombre}`,
+      text: 'Esta acción eliminará al paciente y TODOS sus archivos (fotos, documentos, etc.) de forma permanente.',
+      icon: 'warning',
       input: 'password',
       inputLabel: 'Por favor, ingresa tu contraseña para confirmar',
       inputPlaceholder: 'Contraseña',
@@ -342,7 +344,7 @@ export class PerfilComponent {
         type: 'password'
       },
       showCancelButton: true,
-      confirmButtonText: 'Eliminar',
+      confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#7066e0',
       cancelButtonColor: '#6e7881',
