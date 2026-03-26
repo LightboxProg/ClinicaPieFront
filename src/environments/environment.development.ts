@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://webhook.lightbox.mx/ProPigment'
+    apiUrl: 'http://localhost:5000/ProPigment'
 };

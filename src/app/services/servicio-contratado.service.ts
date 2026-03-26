@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ServicioContratadoService  {
+export class ServicioContratadoService {
   constructor(private http: HttpClient, private api: GlobalApiService) { }
 
   // Contratar un nuevo servicio
@@ -51,5 +51,9 @@ export class ServicioContratadoService  {
   // Obtener estadísticas
   obtenerEstadisticas(pacienteId: string): Observable<any> {
     return this.http.get(`${this.api.getApiUrl()}/paciente/${pacienteId}/estadisticas-servicios`);
+  }
+
+  eliminarTodosServicios(pacienteId: string): Observable<any> {
+    return this.http.delete(`${this.api.getApiUrl()}/paciente/${pacienteId}/servicios-contratados`);
   }
 }

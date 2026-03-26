@@ -1676,6 +1676,35 @@ textarea {
   }
 }
 
+.btn-delete-all {
+    @include btn-base;
+    @include gradient-danger;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    background: linear-gradient(135deg, $danger-color 0%, darken($danger-color, 10%) 100%);
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba($danger-color, 0.3);
+    }
+}
+
+// Estilo para el botón "Eliminar" dentro de cada tarjeta
+.btn-delete-service {
+    @include btn-base;
+    background: $danger-color;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+
+    &:hover:not(:disabled) {
+        background: darken($danger-color, 10%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba($danger-color, 0.2);
+    }
+}
+
 .button-group {
   display: flex;
   gap: 0.75rem;

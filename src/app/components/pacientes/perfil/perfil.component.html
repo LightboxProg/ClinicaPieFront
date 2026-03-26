@@ -209,6 +209,11 @@
             <button class="btn-new-promotion" (click)="abrirModalContratarPromocion()" *ngIf="!paciente?.finado">
               <i class="fas fa-tags"></i> Contratar Promo
             </button>
+            <button class="btn-delete-all" (click)="eliminarTodosServiciosContratados()"
+              *ngIf="serviciosContratados.length > 0 && !paciente?.finado"
+              [disabled]="serviciosContratados.length === 0">
+              <i class="fas fa-trash-alt"></i> Eliminar todos
+            </button>
           </div>
         </div>
 
@@ -323,6 +328,9 @@
                 </button>
                 <button class="btn-add-sessions" (click)="abrirModalAgregarSesiones(servicio)">
                   <i class="fas fa-plus-circle"></i> Agregar
+                </button>
+                <button class="btn-delete-service" (click)="eliminarServicioContratado(servicio)">
+                  <i class="fas fa-trash-alt"></i> Eliminar
                 </button>
               </div>
             </div>
@@ -489,7 +497,7 @@
         <div class="gallery-grid">
           <div class="gallery-item" *ngFor="let foto of fotosPaciente; let i = index">
             <img [src]="foto.url" alt="Foto paciente" />
-            <div class="gallery-overlay" (click)="abrirModalImagen(foto, i)" >
+            <div class="gallery-overlay" (click)="abrirModalImagen(foto, i)">
               <i class="fas fa-search-plus"></i>
             </div>
           </div>

@@ -494,22 +494,22 @@ export class PerfilComponent {
 
     const fotoId = this.imagenSeleccionada._id || this.imagenSeleccionada.id;
     const nombreArchivo = this.obtenerNombreArchivo();
-    
+
     this.pacienteService.descargarImagen(this.paciente._id, fotoId).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const enlace = document.createElement('a');
         enlace.href = url;
         enlace.download = nombreArchivo;
-        
+
         document.body.appendChild(enlace);
         enlace.click();
-        
+
         setTimeout(() => {
           document.body.removeChild(enlace);
           window.URL.revokeObjectURL(url);
         }, 100);
-        
+
         this.cerrarModalGaleria();
         Swal.close();
         Swal.fire('¡Descarga completa!', '', 'success');
@@ -527,22 +527,22 @@ export class PerfilComponent {
     if (this.imagenSeleccionada?.nombre) {
       return this.imagenSeleccionada.nombre;
     }
-    
+
     // Extraer nombre de la URL
     const url = this.imagenSeleccionada?.url;
     if (url) {
       const partes = url.split('/');
       let nombreArchivo = partes[partes.length - 1];
-      
+
       nombreArchivo = nombreArchivo.split('?')[0];
-      
+
       if (!nombreArchivo.includes('.')) {
         nombreArchivo += '.jpg';
       }
-      
+
       return nombreArchivo;
     }
-    
+
     // Nombre por defecto
     return `imagen_paciente_${Date.now()}.jpg`;
   }
@@ -554,7 +554,7 @@ export class PerfilComponent {
 
     // Obtener el ID de la foto (ajusta según tu estructura)
     const fotoId = this.imagenSeleccionada._id || this.imagenSeleccionada.id;
-    
+
     this.cerrarModalGaleria();
     Swal.fire({
       title: '¿Eliminar imagen?',
@@ -592,10 +592,10 @@ export class PerfilComponent {
       next: (response) => {
         // Cerrar modal
         this.cerrarModalGaleria();
-        
+
         // Recargar las fotos
         this.cargarFotosPaciente(this.paciente._id);
-        
+
         // Mostrar mensaje de éxito
         Swal.fire({
           title: '¡Eliminada!',
@@ -923,6 +923,59 @@ export class PerfilComponent {
     });
   }
 
+
+  eliminarServicioContratado(servicio: any) {
+    Swal.fire({
+      title: '¿Eliminar servicio?',
+      text: `¿Estás seguro de eliminar "${servicio.servicio?.nombre}"? Esta acción no se puede deshacer.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.servicioContratadoService.eliminarServicioContratado(servicio._id).subscribe({
+          next: () => {
+            Swal.fire('¡Eliminado!', 'El servicio ha sido eliminado.', 'success');
+            this.cargarServiciosContratados(); // recargar lista
+          },
+          error: (err) => {
+            console.error('Error al eliminar servicio contratado:', err);
+            Swal.fire('Error', 'No se pudo eliminar el servicio.', 'error');
+          }
+        });
+      }
+    });
+  }
+
+  // Eliminar todos los servicios contratados del paciente
+  eliminarTodosServiciosContratados() {
+    Swal.fire({
+      title: '¿Eliminar todos los servicios?',
+      text: `Esta acción eliminará TODOS los servicios contratados de ${this.paciente.nombre}. No se puede deshacer.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar todos',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.servicioContratadoService.eliminarTodosServicios(this.paciente._id).subscribe({
+          next: (res) => {
+            Swal.fire('¡Eliminados!', `Se eliminaron ${res.deletedCount} servicios.`, 'success');
+            this.cargarServiciosContratados(); // recargar lista (vacía)
+          },
+          error: (err) => {
+            console.error('Error al eliminar todos los servicios:', err);
+            Swal.fire('Error', 'No se pudieron eliminar los servicios.', 'error');
+          }
+        });
+      }
+    });
+  }
 }
 
 
