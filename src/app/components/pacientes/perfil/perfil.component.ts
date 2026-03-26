@@ -665,6 +665,11 @@ export class PerfilComponent {
   abrirModalContratarServicio() {
     this.mostrarModalServicio = true;
     this.cargarServiciosDisponibles();
+
+    // Calcular fecha por defecto (4 meses desde hoy)
+    const hoy = new Date();
+    const fechaExp = new Date(hoy.setMonth(hoy.getMonth() + 4));
+    this.nuevoServicio.fechaExpiracion = fechaExp.toISOString().split('T')[0]; // formato YYYY-MM-DD
   }
 
   contratarServicio() {

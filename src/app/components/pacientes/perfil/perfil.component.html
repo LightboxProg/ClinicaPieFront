@@ -384,6 +384,11 @@
                   </ul>
                 </div>
 
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> Al contratar esta promoción, los servicios tendrán una fecha de
+                  expiración de 4 meses a partir de hoy.
+                </div>
+
                 <div class="promocion-footer">
                   <button class="btn-contratar" (click)="contratarPromocion(promocion)">
                     <i class="fas fa-cart-plus"></i> Contratar
@@ -429,6 +434,7 @@
             <div class="form-group">
               <label>Fecha de Expiración (opcional)</label>
               <input type="date" [(ngModel)]="nuevoServicio.fechaExpiracion" class="form-input">
+              <small class="form-text text-muted">Si no se especifica, se asignarán 4 meses desde hoy.</small>
             </div>
 
             <div class="form-group">
