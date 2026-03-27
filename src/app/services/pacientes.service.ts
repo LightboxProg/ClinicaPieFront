@@ -108,5 +108,10 @@ export class PacientesService {
     });
   }
 
+  // Obtener Citas por Paciente utilizando el ID (Modelo de PacienteCita)
+  obtenerCitasPorPaciente(pacienteId: string): Observable<any> {
+    return this.http.get(`${this.api.getApiUrl()}/citas/paciente/${pacienteId}`);
+}
+
 }
 

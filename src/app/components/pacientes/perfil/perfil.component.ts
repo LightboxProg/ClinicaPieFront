@@ -34,7 +34,7 @@ export class PerfilComponent {
   horaFin: string = '';
   fechaCita: Date = new Date();
   listaNegra: any = null;
-  citas: Cita[] = []; // Arreglo para almacenar las citas
+  citas: any[] = []; 
   editando: boolean = false;
   esAdmin: boolean = false;
   fotosPaciente: any[] = [];
@@ -104,15 +104,61 @@ export class PerfilComponent {
     this.esAdmin = usuario?.tipo === 'Administrador';
   }
 
+  // obtenerCitasPorPaciente(id: string) {
+  //   this.citaService.getCitasPorPaciente(id).subscribe(
+  //     (response: Cita[]) => {
+  //       this.citas = response;
+  //     },
+  //     (error) => {
+  //       console.error('Error al obtener citas del paciente:', error);
+  //     }
+  //   );
+  // }
+
   obtenerCitasPorPaciente(id: string) {
-    this.citaService.getCitasPorPaciente(id).subscribe(
-      (response: Cita[]) => {
-        this.citas = response;
+    this.pacienteService.obtenerCitasPorPaciente(id).subscribe({
+      next: (response: any) => {
+        if (response.success && response.data) {
+          this.citas = this.formatearCitas(response.data);
+        }
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al obtener citas del paciente:', error);
       }
-    );
+    });
+  }
+
+  formatearCitas(citasData: any[]): any[] {
+    return citasData.map(cita => {
+      // Nombre del servicio
+      const nombreServicio = cita.servicioId?.nombre || 'Servicio no especificado';
+      
+      // Número de sesiones
+      const sesiones = cita.servicioId?.sesiones?.numero || 
+                      (cita.servicioId?.tieneSesiones ? 'Por definir' : 'No aplica');
+      
+      // Doctor (creadoPor)
+      let doctorNombre = 'Doctor no asignado';
+      if (cita.servicioContratadoId?.creadoPor) {
+        const doctor = cita.servicioContratadoId.creadoPor;
+        // Construir el nombre completo del doctor
+        doctorNombre = doctor.nombre || '';
+        if (doctor.apeP) doctorNombre += ` ${doctor.apeP}`;
+        if (doctor.apeM) doctorNombre += ` ${doctor.apeM}`;
+        doctorNombre = doctorNombre.trim() || 'Doctor no asignado';
+      }
+      
+      return {
+        tratamiento: nombreServicio,
+        sesiones: sesiones,
+        tipoCita: cita.tipoCita || 'No especificado',
+        observaciones: cita.observaciones || '',
+        fecha: cita.fechaCita,
+        hora: cita.horaCita || '--:--',
+        ampm: cita.ampm || '',
+        doctor: doctorNombre
+      };
+    });
   }
 
   register() {
