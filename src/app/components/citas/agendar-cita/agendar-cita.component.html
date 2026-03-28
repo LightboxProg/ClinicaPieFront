@@ -39,6 +39,18 @@
                         Formato de teléfono inválido (10-12 dígitos).
                     </small>
                 </div>
+                <div class="campo">
+                    <label>Doctor / Especialista</label>
+                    <select formControlName="doctorId">
+                        <option value="" disabled selected>-- Selecciona un Doctor --</option>
+                        <option *ngFor="let doc of doctoresDisponibles" [value]="doc._id">
+                            {{ doc.nombre }}
+                        </option>
+                    </select>
+                    <small class="error" *ngIf="citaForm.get('doctorId')?.invalid && citaForm.get('doctorId')?.touched">
+                        Debes seleccionar un doctor.
+                    </small>
+                </div>
 
                 <div class="campo full" *ngIf="citaForm.get('telefono')?.valid">
                     <div class="alerta-paciente" [ngClass]="tipoContacto">

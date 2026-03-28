@@ -37,7 +37,7 @@ export class AgendaSucursalesComponent implements OnInit, OnChanges {
 
   mostrarModalReagendar: boolean = false;
   citaParaReagendar: any = null;
-
+  doctoresDisponibles: any[] = [];
   constructor(
     private calendarService: CalendarService,
     private calendarioService: CalendarioService,
@@ -107,13 +107,31 @@ export class AgendaSucursalesComponent implements OnInit, OnChanges {
     return dias.reduce((total, dia) => total + (dia.totalCitas || 0), 0);
   }
 
-  // Prepara el formulario vacio para agendar un nuevo paciente
+  /// Prepara el formulario vacio extrayendo los doctores de la sucursal activa
   abrirAgendarGlobal(): void {
+    let doctoresDeSucursal: any[] = [];
+
+    // Recorre las sucursales cargadas para extraer sus doctores sin duplicarlos
+    this.sucursalesData.forEach(sucursal => {
+      if (sucursal.doctores) {
+        sucursal.doctores.forEach((doc: any) => {
+          const idDoc = doc.idUsuario || doc.doctorId || doc._id;
+          if (!doctoresDeSucursal.some(d => d._id === idDoc)) {
+            doctoresDeSucursal.push({
+              _id: idDoc,
+              nombre: doc.nombreDoctor
+            });
+          }
+        });
+      }
+    });
+
     this.datosParaAgendar = {
       doctorId: '',
       fechaCita: this.fechaInicio,
       horaInicio: '',
-      telefono: ''
+      telefono: '',
+      doctoresDisponibles: doctoresDeSucursal 
     };
     this.mostrarModalAgendar = true;
   }

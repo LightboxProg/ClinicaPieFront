@@ -45,4 +45,7 @@ export class LoginService {
   existeUsuario(): boolean {
     return localStorage.getItem(this.usuarioKey) !== null;
   }
+  obtenerDoctoresPorSucursal(sucursalId: string): Observable<any> {
+    return this.http.get<any>((`${this.api.getApiUrl()}/doctores-sucursal/${sucursalId}`));
+  }
 }

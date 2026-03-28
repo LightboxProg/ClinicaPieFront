@@ -1,5 +1,4 @@
 <div class="patient-profile">
-  <!-- Header con gradiente -->
   <div class="profile-header">
     <div class="header-background"></div>
     <div class="header-content">
@@ -23,7 +22,6 @@
   </div>
 
   <div class="profile-content">
-    <!-- Columna izquierda - Información personal -->
     <div class="profile-column personal-info">
       <div class="info-card" [class.finado]="paciente?.finado">
         <div class="card-header">
@@ -34,7 +32,6 @@
         </div>
 
         <div class="info-grid">
-          <!-- Nombre -->
           <div class="info-item">
             <label>Nombre Completo</label>
             <div *ngIf="!editando" class="info-value">{{paciente.nombre}} {{paciente.apeP}} {{paciente.apeM}}</div>
@@ -45,7 +42,6 @@
             </div>
           </div>
 
-          <!-- Contacto -->
           <div class="info-item">
             <label>Contacto</label>
             <div *ngIf="!editando" class="contact-info">
@@ -64,14 +60,12 @@
             </div>
           </div>
 
-          <!-- Dirección -->
           <div class="info-item">
             <label>Dirección</label>
             <div *ngIf="!editando" class="info-value">{{paciente.direccion || 'No proporcionada'}}</div>
             <textarea *ngIf="editando" [(ngModel)]="paciente.direccion" placeholder="Dirección"></textarea>
           </div>
 
-          <!-- Estado -->
           <div class="info-item">
             <label>Estado</label>
             <div class="status-control">
@@ -83,7 +77,6 @@
             </div>
           </div>
 
-          <!-- Botones de acción -->
           <div class="action-buttons" *ngIf="editando">
             <button class="btn-save" (click)="guardarCambiosGenerales()">
               <i class="fas fa-save"></i> Guardar
@@ -95,9 +88,7 @@
         </div>
       </div>
 
-      <!-- Alergias y Medicamentos -->
       <div class="medical-cards">
-        <!-- Alergias -->
         <div class="medical-card">
           <div class="card-header">
             <h3><i class="fas fa-allergies"></i> Alergias</h3>
@@ -109,7 +100,6 @@
           </button>
         </div>
 
-        <!-- Medicamentos -->
         <div class="medical-card">
           <div class="card-header">
             <h3><i class="fas fa-pills"></i> Medicamentos</h3>
@@ -122,7 +112,6 @@
         </div>
       </div>
 
-      <!-- Botón eliminar -->
       <div class="delete-section" *ngIf="listaNegra && esAdmin && !paciente?.finado">
         <button class="btn-delete" (click)="eliminarPaciente()">
           <i class="fas fa-trash"></i> Eliminar Paciente
@@ -130,9 +119,7 @@
       </div>
     </div>
 
-    <!-- Columna derecha - Citas y Galería -->
     <div class="profile-column appointments-gallery">
-      <!-- Lista Negra -->
       <div *ngIf="listaNegra" class="blacklist-card">
         <div class="blacklist-header">
           <i class="fas fa-ban"></i>
@@ -157,7 +144,6 @@
         </div>
       </div>
 
-      <!-- Citas -->
       <div class="appointments-section">
         <div class="section-header">
           <h3><i class="fas fa-calendar-alt"></i> Citas y Tratamientos</h3>
@@ -198,7 +184,6 @@
         </div>
       </div>
 
-      <!-- Servicios Contratados -->
       <div class="servicios-contratados-section">
         <div class="section-header">
           <h3><i class="fas fa-boxes"></i> Servicios Contratados</h3>
@@ -268,7 +253,6 @@
                 </div>
               </div>
 
-              <!-- Acordeón de Observaciones -->
               <div class="observaciones-section" *ngIf="servicio.observaciones && servicio.observaciones.length > 0">
                 <div class="observaciones-header" (click)="toggleObservaciones(servicio)">
                   <h5>
@@ -283,7 +267,6 @@
 
                 <div class="observaciones-content" [class.expanded]="servicio.mostrarObservaciones">
                   <div class="observaciones-timeline">
-                    <!-- Agrupar observaciones por fecha -->
                     <div *ngFor="let group of getObservationsGroupedByDate(servicio.observaciones)"
                       class="observacion-group">
                       <div class="observacion-date">
@@ -307,7 +290,6 @@
                       </div>
                     </div>
 
-                    <!-- Si no hay observaciones agrupadas por fecha (formato antiguo) -->
                     <div *ngIf="!isObservacionesArray(servicio.observaciones)" class="observacion-item legacy">
                       <div class="observacion-text">{{ servicio.observaciones }}</div>
                       <div class="observacion-meta">
@@ -320,7 +302,6 @@
                 </div>
               </div>
 
-              <!-- Acciones del servicio -->
               <div class="servicio-actions" *ngIf="servicio.estado === 'activo'">
                 <button class="btn-use-session" (click)="usarSesion(servicio)"
                   [disabled]="servicio.sesionesRestantes <= 0">
@@ -348,7 +329,6 @@
         </ng-template>
       </div>
 
-      <!-- Modal Contratar Promo -->
       <div class="modal-overlay" *ngIf="mostrarModalPromocion" (click)="mostrarModalPromocion = false">
         <div class="modal-content modal-large" (click)="$event.stopPropagation()">
           <div class="modal-header">
@@ -405,7 +385,6 @@
       </div>
 
 
-      <!-- Modal Contratar Servicio -->
       <div class="modal-overlay" *ngIf="mostrarModalServicio" (click)="mostrarModalServicio = false">
         <div class="modal-content" (click)="$event.stopPropagation()">
           <div class="modal-header">
@@ -451,7 +430,6 @@
       </div>
 
 
-      <!-- Modal Agregar Sesiones -->
       <div class="modal-overlay" *ngIf="mostrarModalAgregarSesiones" (click)="mostrarModalAgregarSesiones = false">
         <div class="modal-content" (click)="$event.stopPropagation()">
           <div class="modal-header">
@@ -487,7 +465,6 @@
         </div>
       </div>
 
-      <!-- Galería -->
       <div class="gallery-section">
         <div class="section-header">
           <h3><i class="fas fa-images"></i> Galería del Paciente</h3>
@@ -513,7 +490,6 @@
   </div>
 </div>
 
-<!-- Modal para Galería de Imágenes -->
 <div class="gallery-modal-overlay" *ngIf="mostrarModalGaleria" (click)="cerrarModalGaleria()">
   <div class="gallery-modal-container" (click)="$event.stopPropagation()">
     <button class="gallery-modal-close" (click)="cerrarModalGaleria()">
@@ -524,7 +500,6 @@
       <div class="gallery-modal-image-container">
         <img [src]="imagenSeleccionada?.url" class="gallery-modal-image" alt="Imagen ampliada" />
 
-        <!-- Controles de navegación -->
         <div class="gallery-modal-controls" *ngIf="fotosPaciente.length > 1">
           <button class="gallery-control-btn prev-btn" (click)="imagenAnterior()">
             <i class="fas fa-chevron-left"></i>
@@ -534,18 +509,15 @@
           </button>
         </div>
 
-        <!-- Contador de imágenes -->
         <div class="gallery-counter" *ngIf="fotosPaciente.length > 1">
           {{ indiceImagenActual + 1 }} / {{ fotosPaciente.length }}
         </div>
       </div>
 
-      <!-- Información de la imagen (opcional) -->
       <div class="gallery-modal-info" *ngIf="imagenSeleccionada?.fecha">
         <p><i class="fas fa-calendar"></i> Subida: {{ imagenSeleccionada.fecha | date: 'dd/MM/yyyy HH:mm' }}</p>
       </div>
 
-      <!-- NUEVO: Botones de acciones -->
       <div class="gallery-modal-actions">
         <button class="gallery-action-btn btn-download" (click)="descargarImagen()">
           <i class="fas fa-download"></i> Descargar
@@ -554,57 +526,13 @@
           <i class="fas fa-trash-alt"></i> Eliminar
         </button>
       </div>
-
-
     </div>
   </div>
 </div>
 
-<!-- Modal Cita -->
-<app-modal [title]="'Nueva Cita'" [isVisible]="showModal" (close)="onCloseModal()">
-  <form class="appointment-form" (ngSubmit)="nuevaCita()">
-    <div class="form-grid">
-      <div class="form-group">
-        <label for="tratamiento">Tratamiento *</label>
-        <input id="tratamiento" type="text" [(ngModel)]="tratamiento" name="tratamiento" required>
-      </div>
-
-      <div class="form-group">
-        <label for="realizo">Realizado por</label>
-        <input id="realizo" type="text" [(ngModel)]="realizo" name="realizo">
-      </div>
-
-      <div class="form-group">
-        <label for="fechaCita">Fecha de Cita *</label>
-        <input id="fechaCita" type="date" [(ngModel)]="fechaCita" name="fechaCita" required>
-      </div>
-
-      <div class="form-group time-group">
-        <label>Horario *</label>
-        <div class="time-inputs">
-          <input type="time" [(ngModel)]="horaInicio" name="horaInicio" placeholder="Inicio" required>
-          <span>a</span>
-          <input type="time" [(ngModel)]="horaFin" name="horaFin" placeholder="Fin" required>
-        </div>
-      </div>
-
-      <div class="form-group full-width">
-        <label for="observaciones">Observaciones</label>
-        <textarea id="observaciones" rows="3" [(ngModel)]="observaciones" name="observaciones"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="pago">Pago ($)</label>
-        <div class="price-input">
-          <span class="currency">$</span>
-          <input id="pago" type="number" [(ngModel)]="pago" name="pago" min="0" step="0.01" placeholder="0.00">
-        </div>
-      </div>
-    </div>
-
-    <div class="form-actions">
-      <button type="button" class="btn-cancel" (click)="onCloseModal()">Cancelar</button>
-      <button type="submit" class="btn-submit">Crear Cita</button>
-    </div>
-  </form>
-</app-modal>
+<app-agendar-cita-perfil 
+  *ngIf="showModal" 
+  [paciente]="paciente"
+  (cerrarModal)="onCloseModal()"
+  (citaAgendada)="obtenerCitasPorPaciente(paciente._id); onCloseModal()">
+</app-agendar-cita-perfil>

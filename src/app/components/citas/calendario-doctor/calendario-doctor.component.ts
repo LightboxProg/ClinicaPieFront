@@ -110,12 +110,12 @@ export class CalendarioDoctorComponent implements OnInit, OnChanges {
         doctorId: this.doctorIdActual,
         fechaCita: this.fechaSeleccionada,
         horaInicio: this.limpiarHora(bloque.inicio),
-
-        // 🌟 NUEVO: Le mandamos los límites exactos del bloque libre
         limiteMinimo: this.limpiarHora(bloque.inicio),
         limiteMaximo: this.limpiarHora(bloque.fin),
-
-        telefono: ''
+        telefono: '',
+        doctoresDisponibles: [
+          { _id: this.doctorIdActual, nombre: this.doctorNombre }
+        ]
       };
 
       this.mostrarModalAgendar = true;
@@ -129,8 +129,8 @@ export class CalendarioDoctorComponent implements OnInit, OnChanges {
       nombreDoctor: this.doctorNombre,
       fechaCita: this.fechaSeleccionada,
       horaInicio: this.limpiarHora(bloque.inicio),
-      horaFin: this.limpiarHora(bloque.fin), 
-      
+      horaFin: this.limpiarHora(bloque.fin),
+
       nombrePaciente: bloque.titulo
     };
 

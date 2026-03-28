@@ -1,0 +1,115 @@
+<div class="modal-overlay" (click)="cerrar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+        <header class="modal-header">
+            <div class="header-text">
+                <h3>Agendar Cita: {{ paciente?.nombre }} {{ paciente?.apeP }}</h3>
+            </div>
+            <button class="btn-close" (click)="cerrar()">&times;</button>
+        </header>
+
+        <form [formGroup]="citaForm" (ngSubmit)="guardarCita()" class="modal-body">
+
+            <div class="grid-form">
+
+                <div class="campo full">
+                    <label>Sucursal</label>
+                    <select formControlName="sucursalId">
+                        <option value="" disabled selected>-- Selecciona Sucursal --</option>
+                        <option *ngFor="let suc of sucursales" [value]="suc._id">
+                            {{ suc.nombre }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="campo full">
+                    <label>Doctor / Especialista</label>
+                    <select formControlName="doctorId">
+                        <option value="" disabled selected>-- Selecciona Doctor --</option>
+                        <option *ngFor="let doc of doctoresDisponibles" [value]="doc._id">
+                            {{ doc.nombre }} {{ doc.apeP }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label>Tipo de Agendamiento</label>
+                    <select formControlName="itemTipo">
+                        <option value="srv">Servicio Individual</option>
+                        <option value="prom">Promoción / Paquete</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label>Seleccionar Tratamiento</label>
+                    <select formControlName="itemId">
+                        <option value="" disabled selected>-- Selecciona uno --</option>
+
+                        <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'srv'">
+                            <option *ngFor="let srv of servicios" [value]="srv._id">
+                                {{ srv.nombre }} ({{ srv.duracion }} min)
+                            </option>
+                        </ng-container>
+
+                        <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'prom'">
+                            <option *ngFor="let prom of promociones" [value]="prom._id">
+                                {{ prom.nombre }}
+                            </option>
+                        </ng-container>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label>Fecha</label>
+                    <input type="date" formControlName="fechaCita" [min]="hoy()">
+                </div>
+
+                <div class="campo">
+                    <label>Hora Inicio</label>
+                    <input type="time" formControlName="horaInicio">
+                    <small style="color: #ef4444; font-weight: 500;" *ngIf="errorTiempo">
+                        {{ errorTiempo }}
+                    </small>
+                </div>
+
+                <div class="campo full" *ngIf="citaForm.get('fechaCita')?.value">
+
+                    <div *ngIf="cargandoDisponibilidad" class="alerta-info">
+                        Consultando agenda del especialista...
+                    </div>
+
+                    <div *ngIf="!cargandoDisponibilidad && mensajeDisponibilidad" class="alerta-error">
+                        ⚠️ {{ mensajeDisponibilidad }}
+                    </div>
+
+                    <div *ngIf="!cargandoDisponibilidad && bloquesDisponibles.length > 0" class="contenedor-bloques">
+                        <label class="texto-exito">✅ Espacios libres detectados:</label>
+                        <div class="badges-horarios">
+                            <span class="badge-libre" *ngFor="let bloque of bloquesDisponibles">
+                                {{ bloque.inicio }} - {{ bloque.fin }}
+                            </span>
+                        </div>
+                        <small class="texto-ayuda">
+                            Asegúrate de que la hora elegida y la duración del tratamiento encajen en estos bloques.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="campo full">
+                    <label>Observaciones</label>
+                    <textarea formControlName="observaciones" rows="3"
+                        placeholder="Notas sobre la cita o tratamiento..."></textarea>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <button type="button" class="btn-cancelar" (click)="cerrar()">Cancelar</button>
+                <button type="submit" class="btn-guardar" [disabled]="citaForm.invalid || cargando">
+                    <span *ngIf="!cargando">Confirmar y Agendar</span>
+                    <span *ngIf="cargando" class="loader">Guardando...</span>
+                </button>
+            </footer>
+
+        </form>
+    </div>
+</div>

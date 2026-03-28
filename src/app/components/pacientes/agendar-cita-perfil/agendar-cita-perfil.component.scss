@@ -1,0 +1,265 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+/* Fondo oscuro con desenfoque para aislar el modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Caja principal del modal */
+.modal-content {
+    background: #ffffff;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transform: translateY(0);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+/* Estilos de la cabecera */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    background-color: #f8fafc;
+
+    .header-text {
+        h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+    }
+
+    .btn-close {
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+        color: #64748b;
+        cursor: pointer;
+        transition: color 0.2s;
+
+        &:hover {
+            color: #ef4444;
+        }
+    }
+}
+
+/* Cuerpo del modal con scroll interno si es necesario */
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* Disposición en cuadrícula para inputs */
+.grid-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    .campo {
+        display: flex;
+        flex-direction: column;
+
+        &.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: #334155;
+            background-color: #ffffff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+
+            &:focus {
+                outline: none;
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+
+            &:disabled {
+                background-color: #f1f5f9;
+                color: #94a3b8;
+                cursor: not-allowed;
+            }
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+    }
+}
+
+/* Pie del modal */
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background-color: #f8fafc;
+
+    button {
+        padding: 10px 18px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+
+        &.btn-cancelar {
+            background-color: #e2e8f0;
+            color: #475569;
+
+            &:hover {
+                background-color: #cbd5e1;
+            }
+        }
+
+        &.btn-guardar {
+            background-color: #3b82f6;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &:hover:not(:disabled) {
+                background-color: #2563eb;
+            }
+
+            &:disabled {
+                background-color: #93c5fd;
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para alertas y visualización de disponibilidad */
+.alerta-info, .alerta-error {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.alerta-info {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+}
+
+.alerta-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.contenedor-bloques {
+    background-color: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    padding: 14px;
+    border-radius: 8px;
+    margin-top: 8px;
+
+    .texto-exito {
+        color: #10b981;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .texto-ayuda {
+        color: #64748b;
+        margin-top: 10px;
+        display: block;
+        font-style: italic;
+    }
+}
+
+.badges-horarios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .badge-libre {
+        background-color: #10b981;
+        color: #ffffff;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+    }
+}
+
+.w-full {
+    width: 100%;
+}
+.grid-form .campo mat-form-field {
+    width: 100%;
+    margin-top: 0; 
+    padding: 0;
+}
+::ng-deep .mat-form-field-wrapper {
+    margin-bottom: 0px !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+    padding: 0 0.75em 0 0.75em !important;
+}

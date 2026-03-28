@@ -1,38 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModalComponent } from '../../modal/modal.component';
 import { PacientesService } from 'src/app/services/pacientes.service';
 import { ListaNegraService } from 'src/app/services/lista-negra.service';
 import { CitaService } from 'src/app/services/cita.service';
 import { FormsModule } from '@angular/forms';
 import { Cita } from 'src/app/models/worker-record.model';
 import { LoginService } from 'src/app/services/login.service';
-import { ViewChild, ElementRef } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ServicioContratadoService } from 'src/app/services/servicio-contratado.service';
 import { ServiciosService } from 'src/app/services/servicios.service';
 import { PromocionService, Promocion } from 'src/app/services/promocion.service';
+// Importar el nuevo componente
+import { AgendarCitaPerfilComponent } from '../agendar-cita-perfil/agendar-cita-perfil.component';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, ModalComponent, FormsModule],
+  imports: [CommonModule, FormsModule, AgendarCitaPerfilComponent],
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.scss'],
 })
-export class PerfilComponent {
+export class PerfilComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('zoomableImg') zoomableImg!: ElementRef<HTMLImageElement>;
+  
   showModal: boolean = false;
   paciente: any = {};
-  tratamiento: string = '';
-  observaciones: string = '';
-  realizo: string = '';
-  pago: number = 0;
-  horaInicio: string = '';
-  horaFin: string = '';
-  fechaCita: Date = new Date();
   listaNegra: any = null;
   citas: any[] = []; 
   editando: boolean = false;
@@ -62,11 +56,7 @@ export class PerfilComponent {
     cantidad: 1,
     motivo: ''
   };
-
-
-  onCloseModal() {
-    this.showModal = false;
-  }
+  zoomLevel = 1;
 
   constructor(
     private loginService: LoginService,
@@ -79,18 +69,17 @@ export class PerfilComponent {
     private promocionService: PromocionService,
     private citaService: CitaService) {
     if (!this.loginService.existeUsuario()) {
-      // Si no está autenticado, redirigir al login
       this.router.navigate(['/login']);
     }
   }
 
-
+  // Inicializa el componente cargando datos del paciente, sus citas, fotos y servicios contratados
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.pacienteService.getPacienteById(id).subscribe((res) => {
         this.paciente = res;
-        this.obtenerCitasPorPaciente(id); // Filtrar citas por paciente
+        this.obtenerCitasPorPaciente(id); 
         this.cargarFotosPaciente(id);
         this.cargarServiciosContratados();
         this.listaNegraService.getDatosListaNegraPorPaciente(id).subscribe((res) => {
@@ -104,17 +93,12 @@ export class PerfilComponent {
     this.esAdmin = usuario?.tipo === 'Administrador';
   }
 
-  // obtenerCitasPorPaciente(id: string) {
-  //   this.citaService.getCitasPorPaciente(id).subscribe(
-  //     (response: Cita[]) => {
-  //       this.citas = response;
-  //     },
-  //     (error) => {
-  //       console.error('Error al obtener citas del paciente:', error);
-  //     }
-  //   );
-  // }
+  // Cierra la ventana modal de agendamiento
+  onCloseModal() {
+    this.showModal = false;
+  }
 
+  // Consulta la API para obtener el listado de citas vinculadas al paciente actual
   obtenerCitasPorPaciente(id: string) {
     this.pacienteService.obtenerCitasPorPaciente(id).subscribe({
       next: (response: any) => {
@@ -123,25 +107,21 @@ export class PerfilComponent {
         }
       },
       error: (error) => {
-        console.error('Error al obtener citas del paciente:', error);
+        console.error(error);
       }
     });
   }
 
+  // Mapea la informacion de las citas para adaptar los datos a la vista del componente
   formatearCitas(citasData: any[]): any[] {
     return citasData.map(cita => {
-      // Nombre del servicio
       const nombreServicio = cita.servicioId?.nombre || 'Servicio no especificado';
-      
-      // Número de sesiones
       const sesiones = cita.servicioId?.sesiones?.numero || 
                       (cita.servicioId?.tieneSesiones ? 'Por definir' : 'No aplica');
       
-      // Doctor (creadoPor)
       let doctorNombre = 'Doctor no asignado';
       if (cita.servicioContratadoId?.creadoPor) {
         const doctor = cita.servicioContratadoId.creadoPor;
-        // Construir el nombre completo del doctor
         doctorNombre = doctor.nombre || '';
         if (doctor.apeP) doctorNombre += ` ${doctor.apeP}`;
         if (doctor.apeM) doctorNombre += ` ${doctor.apeM}`;
@@ -161,58 +141,19 @@ export class PerfilComponent {
     });
   }
 
+  // Abre la ventana modal de agendamiento
   register() {
     this.showModal = true;
   }
 
-  nuevaCita() {
-    const nuevaCita = {
-      pacienteId: this.paciente._id,  // Se añade el pacienteId desde el objeto paciente cargado
-      tratamiento: this.tratamiento,
-      observaciones: this.observaciones || '',
-      realizo: this.realizo || '',
-      pago: this.pago || 0,
-      horaInicio: this.horaInicio || '',
-      horaFin: this.horaFin || '',
-      fechaCita: this.fechaCita || ''
-      ,
-      fecha: new Date()
-
-    };
-
-    this.citaService.addCita(nuevaCita).subscribe(
-      (response) => {
-        console.log('Cita creada:', response);
-        Swal.fire({
-          icon: 'success',
-          title: '¡Cita creada!',
-          text: 'La cita se creó correctamente.',
-          timer: 2000,
-          showConfirmButton: false
-        });
-        this.obtenerCitasPorPaciente(this.paciente._id); // Actualizar la lista de citas
-      },
-      (error: any) => {
-        console.error('Error al crear la cita:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo crear la cita. Por favor, inténtalo de nuevo.',
-          confirmButtonText: 'Entendido'
-        });
-      }
-    );
-  }
-
-
+  // Obtiene todas las citas de manera general
   obtenerCitas() {
     this.citaService.getCita().subscribe(
       (response: Cita[]) => {
-        this.citas = response; // Guardar las citas obtenidas
-        console.log('Citas:', this.citas); // Solo para depuración
+        this.citas = response; 
       },
       (error) => {
-        console.error('Error al obtener las citas:', error);
+        console.error(error);
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -222,6 +163,8 @@ export class PerfilComponent {
       }
     );
   }
+
+  // Realiza el calculo matematico de la edad del paciente con base en su fecha de nacimiento
   calcularEdad(fechaNacimiento: string): number {
     if (!fechaNacimiento) return 0;
 
@@ -238,19 +181,20 @@ export class PerfilComponent {
     return edad;
   }
 
+  // Envia el arreglo de alergias al backend para persistencia
   guardarAlergias() {
     this.pacienteService.guardarAlergias(this.paciente._id, { alergias: this.paciente.alergias }).subscribe({
       next: (res) => {
         Swal.fire({
           icon: 'success',
-          title: '¡Éxito!',
+          title: 'Exito',
           text: 'Alergias actualizadas correctamente',
           timer: 2000,
           showConfirmButton: false
         });
       },
       error: (err) => {
-        console.error('Error al guardar alergias:', err);
+        console.error(err);
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -261,19 +205,20 @@ export class PerfilComponent {
     });
   }
 
+  // Envia el texto de medicamentos al backend para persistencia
   guardarMedicamentos() {
     this.pacienteService.guardarMedicamentos(this.paciente._id, { medicamentos: this.paciente.medicamentos }).subscribe({
       next: (res) => {
         Swal.fire({
           icon: 'success',
-          title: '¡Éxito!',
+          title: 'Exito',
           text: 'Medicamentos actualizados correctamente',
           timer: 2000,
           showConfirmButton: false
         });
       },
       error: (err) => {
-        console.error('Error al guardar medicamentos:', err);
+        console.error(err);
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -284,31 +229,33 @@ export class PerfilComponent {
     });
   }
 
+  // Redirige al usuario a la vista de chat seteando el telefono del paciente en cache
   abrirChat(paciente: any) {
     localStorage.setItem('chat-telefono', paciente.telefonoWhatsapp);
     this.router.navigate(['/chats']);
   }
 
+  // Realiza la peticion para sacar al paciente del estatus de lista negra
   eliminarDeListaNegra(): void {
     if (!this.paciente || !this.paciente._id) return;
 
     Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'Esta acción eliminará al paciente de la lista negra',
+      title: 'Seguro?',
+      text: 'Esta accion eliminara al paciente de la lista negra',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
+      confirmButtonText: 'Si, eliminar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         this.listaNegraService.removerPacienteYActualizar(this.paciente._id).subscribe({
           next: () => {
-            Swal.fire('¡Eliminado!', 'El paciente ha sido eliminado de la lista negra.', 'success');
+            Swal.fire('Eliminado', 'El paciente ha sido eliminado de la lista negra.', 'success');
             this.listaNegra = null;
             this.paciente.enListaNegra = false;
           },
           error: (err) => {
-            console.error('Error al eliminar de lista negra:', err);
+            console.error(err);
             Swal.fire('Error', 'No se pudo eliminar al paciente de la lista negra.', 'error');
           }
         });
@@ -316,38 +263,29 @@ export class PerfilComponent {
     });
   }
 
-
+  // Cambia la variable de estado para habilitar los inputs del formulario
   activarEdicion() {
     this.editando = true;
   }
 
+  // Valida fechas de fallecimiento y numeros telefonicos para luego guardarlos en bd
   guardarCambiosGenerales() {
-    // Si se marca como finado y no hay fecha de fallecimiento, asigna la fecha actual
     if (this.paciente.finado && !this.paciente.fechaFallecimiento) {
       this.paciente.fechaFallecimiento = new Date();
     }
-
-    // Si se desmarca como finado, limpia la fecha de fallecimiento
     if (!this.paciente.finado) {
       this.paciente.fechaFallecimiento = null;
     }
 
-    // --- Sincronización de teléfonos ---
     const telefonoWhatsapp = this.paciente.telefonoWhatsapp;
     if (telefonoWhatsapp) {
-      // Convertir a string por si es número
       const telefonoStr = telefonoWhatsapp.toString();
-
-      // Determinar si es México: asumimos que el código de país son los primeros 2 dígitos (52)
-      const esMexico = telefonoStr.startsWith('52') && telefonoStr.length >= 12; // 52 + 10 dígitos
+      const esMexico = telefonoStr.startsWith('52') && telefonoStr.length >= 12;
 
       if (esMexico) {
-        // Extraer el número local (después del código 52)
-        const numeroLocal = telefonoStr.substring(2); // deberían ser 10 dígitos
-        // Construir telefonoPaciente: 52 + 1 + numeroLocal
+        const numeroLocal = telefonoStr.substring(2); 
         this.paciente.telefonoPaciente = Number('52' + '1' + numeroLocal);
       } else {
-        // Para otros países, ambos números son iguales
         this.paciente.telefonoPaciente = Number(telefonoStr);
       }
     }
@@ -357,14 +295,14 @@ export class PerfilComponent {
         this.editando = false;
         Swal.fire({
           icon: 'success',
-          title: '¡Actualizado!',
+          title: 'Actualizado',
           text: 'Los datos del paciente han sido actualizados correctamente.',
           timer: 2000,
           showConfirmButton: false
         });
       },
       error: (err) => {
-        console.error('Error al actualizar paciente:', err);
+        console.error(err);
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -375,28 +313,28 @@ export class PerfilComponent {
     });
   }
 
-
+  // Elimina al paciente tras confirmar la contrasena del usuario administrador
   eliminarPaciente(): void {
     Swal.fire({
       title: `Eliminar a ${this.paciente.nombre}`,
-      text: 'Esta acción eliminará al paciente y TODOS sus archivos (fotos, documentos, etc.) de forma permanente.',
+      text: 'Esta accion eliminara al paciente y TODOS sus archivos de forma permanente.',
       icon: 'warning',
       input: 'password',
-      inputLabel: 'Por favor, ingresa tu contraseña para confirmar',
-      inputPlaceholder: 'Contraseña',
+      inputLabel: 'Por favor, ingresa tu contrasena para confirmar',
+      inputPlaceholder: 'Contrasena',
       inputAttributes: {
         autocapitalize: 'off',
         autocorrect: 'off',
         type: 'password'
       },
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
+      confirmButtonText: 'Si, eliminar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#7066e0',
       cancelButtonColor: '#6e7881',
       preConfirm: (password) => {
         if (!password) {
-          Swal.showValidationMessage('Debes ingresar tu contraseña');
+          Swal.showValidationMessage('Debes ingresar tu contrasena');
           return false;
         }
 
@@ -407,7 +345,7 @@ export class PerfilComponent {
           const usuarioAutenticado = JSON.parse(rawUsuario || '{}');
           nombreUsuario = usuarioAutenticado?.usuario?.usuario || usuarioAutenticado?.usuario;
         } catch (e) {
-          console.error('Error al parsear usuarioAutenticado:', e);
+          console.error(e);
         }
 
         if (!nombreUsuario || typeof nombreUsuario !== 'string') {
@@ -429,22 +367,24 @@ export class PerfilComponent {
     });
   }
 
+  // Trae las URLs de la galeria vinculadas a la identificacion del paciente
   cargarFotosPaciente(pacienteId: string) {
     this.pacienteService.obtenerFotosDelPaciente(pacienteId).subscribe({
       next: (res) => {
         this.fotosPaciente = res.fotos || [];
       },
       error: (err) => {
-        console.error('Error al cargar fotos del paciente:', err);
+        console.error(err);
       }
     });
   }
 
-
+  // Ejecuta un clic simulado en el input de tipo archivo
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }
 
+  // Recibe la informacion del archivo subido e inicia el proceso de guardado iterativo
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
@@ -458,6 +398,7 @@ export class PerfilComponent {
     this.fileInput.nativeElement.value = '';
   }
 
+  // Construye un formulario de datos y ejecuta la peticion HTTP de carga de imagen
   subirImagen(file: File) {
     if (!this.paciente || !this.paciente._id) {
       Swal.fire('Error', 'Paciente no seleccionado', 'error');
@@ -465,16 +406,15 @@ export class PerfilComponent {
     }
 
     this.subiendoImagenes = true;
-
     const formData = new FormData();
     formData.append('file', file);
 
     this.pacienteService.subirImagenAlbum(this.paciente._id, formData).subscribe({
       next: () => {
-        this.cargarFotosPaciente(this.paciente._id); // refresca galería
+        this.cargarFotosPaciente(this.paciente._id); 
       },
       error: (err) => {
-        console.error('Error al subir imagen:', err);
+        console.error(err);
         Swal.fire('Error', 'No se pudo subir la imagen', 'error');
       },
       complete: () => {
@@ -483,23 +423,14 @@ export class PerfilComponent {
     });
   }
 
-
-
-  // cerrarModalImagen() {
-  //   this.imagenModal = null;
-  // }
-
-  zoomLevel = 1;
-
+  // Configura evento de la rueda del raton para la manipulacion del zoom
   ngAfterViewInit() {
     if (this.zoomableImg) {
       this.zoomableImg.nativeElement.addEventListener('wheel', (event: WheelEvent) => {
         event.preventDefault();
         if (event.deltaY < 0) {
-          // Scroll arriba: aumentar zoomabrirModalImagen
           this.zoomLevel = Math.min(this.zoomLevel + 0.1, 5);
         } else {
-          // Scroll abajo: disminuir zoom
           this.zoomLevel = Math.max(this.zoomLevel - 0.1, 1);
         }
         this.zoomableImg.nativeElement.style.transform = `scale(${this.zoomLevel})`;
@@ -507,36 +438,37 @@ export class PerfilComponent {
     }
   }
 
+  // Despliega el visualizador y marca la imagen actual como activa
   abrirModalImagen(foto: any, index: number) {
-    console.log('Abriendo modal con foto:', foto); // Para debugging
     this.imagenSeleccionada = foto;
     this.indiceImagenActual = index;
     this.mostrarModalGaleria = true;
   }
 
+  // Resta una posicion al puntero del indice para visualizar imagen previa
   imagenAnterior() {
     if (this.fotosPaciente.length > 0) {
       this.indiceImagenActual = (this.indiceImagenActual - 1 + this.fotosPaciente.length) % this.fotosPaciente.length;
       this.imagenSeleccionada = this.fotosPaciente[this.indiceImagenActual];
-      console.log("Foto actual:", this.imagenSeleccionada)
     }
   }
 
+  // Suma una posicion al puntero del indice para visualizar imagen siguiente
   imagenSiguiente() {
     if (this.fotosPaciente.length > 0) {
       this.indiceImagenActual = (this.indiceImagenActual + 1) % this.fotosPaciente.length;
       this.imagenSeleccionada = this.fotosPaciente[this.indiceImagenActual];
-      console.log("Foto actual:", this.imagenSeleccionada)
     }
   }
 
+  // Vacia las variables de galeria y oculta el visualizador
   cerrarModalGaleria() {
     this.mostrarModalGaleria = false;
     this.imagenSeleccionada = null;
     this.indiceImagenActual = 0;
   }
 
-  // Método para descargar la imagen con una URL firmada
+  // Genera objeto tipo blob temporal e inicializa su descarga
   descargarImagen() {
     if (!this.imagenSeleccionada) return;
 
@@ -560,23 +492,22 @@ export class PerfilComponent {
 
         this.cerrarModalGaleria();
         Swal.close();
-        Swal.fire('¡Descarga completa!', '', 'success');
+        Swal.fire('Descarga completa', '', 'success');
       },
       error: (error) => {
-        console.error('Error:', error);
+        console.error(error);
         Swal.close();
         Swal.fire('Error', 'No se pudo descargar', 'error');
       }
     });
   }
 
-  // Método auxiliar para obtener el nombre del archivo
+  // Evalua los parametros de la imagen actual para conformar su nombre de salida
   obtenerNombreArchivo(): string {
     if (this.imagenSeleccionada?.nombre) {
       return this.imagenSeleccionada.nombre;
     }
 
-    // Extraer nombre de la URL
     const url = this.imagenSeleccionada?.url;
     if (url) {
       const partes = url.split('/');
@@ -587,31 +518,26 @@ export class PerfilComponent {
       if (!nombreArchivo.includes('.')) {
         nombreArchivo += '.jpg';
       }
-
       return nombreArchivo;
     }
-
-    // Nombre por defecto
     return `imagen_paciente_${Date.now()}.jpg`;
   }
 
-
-  // Método para eliminar la imagen
+  // Muestra ventana de precaucion para confirmar el deseo de borrar el recurso
   eliminarImagen() {
     if (!this.imagenSeleccionada) return;
 
-    // Obtener el ID de la foto (ajusta según tu estructura)
     const fotoId = this.imagenSeleccionada._id || this.imagenSeleccionada.id;
 
     this.cerrarModalGaleria();
     Swal.fire({
-      title: '¿Eliminar imagen?',
-      text: 'Esta acción no se puede deshacer. La imagen se eliminará permanentemente.',
+      title: 'Eliminar imagen?',
+      text: 'Esta accion no se puede deshacer. La imagen se eliminara permanentemente.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#7066e0',
       cancelButtonColor: '#6e7881',
-      confirmButtonText: 'Sí, eliminar',
+      confirmButtonText: 'Si, eliminar',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,
       allowOutsideClick: false
@@ -622,10 +548,10 @@ export class PerfilComponent {
     });
   }
 
+  // Contacta al API ejecutando la peticion destructiva final sobre la imagen
   confirmarEliminarImagen(fotoId: string) {
     if (!this.paciente?._id) return;
 
-    // Mostrar loading
     Swal.fire({
       title: 'Eliminando...',
       text: 'Por favor espere',
@@ -635,26 +561,20 @@ export class PerfilComponent {
       }
     });
 
-    // Llamar al servicio para eliminar la imagen
     this.pacienteService.eliminarImagenAlbum(this.paciente._id, fotoId).subscribe({
       next: (response) => {
-        // Cerrar modal
         this.cerrarModalGaleria();
-
-        // Recargar las fotos
         this.cargarFotosPaciente(this.paciente._id);
-
-        // Mostrar mensaje de éxito
         Swal.fire({
-          title: '¡Eliminada!',
-          text: 'La imagen se eliminó correctamente',
+          title: 'Eliminada',
+          text: 'La imagen se elimino correctamente',
           icon: 'success',
           timer: 2000,
           showConfirmButton: false
         });
       },
       error: (error) => {
-        console.error('Error al eliminar imagen:', error);
+        console.error(error);
         Swal.fire({
           title: 'Error',
           text: error.error?.error || 'No se pudo eliminar la imagen',
@@ -665,19 +585,15 @@ export class PerfilComponent {
     });
   }
 
-
-
-  // Métodos para servicios contratados
+  // Asigna formato JSON a cada elemento de la consulta a base de datos
   cargarServiciosContratados() {
     if (this.paciente?._id) {
       this.servicioContratadoService.obtenerServiciosPorPaciente(this.paciente._id)
         .subscribe({
           next: (res) => {
             this.serviciosContratados = (res.data || []).map((servicio: any) => {
-              // Inicializar propiedad para el acordeón
               servicio.mostrarObservaciones = false;
 
-              // Si observaciones es un string, convertirlo a array
               if (servicio.observaciones && typeof servicio.observaciones === 'string') {
                 servicio.observaciones = [{
                   texto: servicio.observaciones,
@@ -686,40 +602,40 @@ export class PerfilComponent {
                   autor: 'Sistema'
                 }];
               }
-
               return servicio;
             });
           },
           error: (err) => {
-            console.error('Error al cargar servicios contratados:', err);
+            console.error(err);
           }
         });
     }
   }
 
+  // Lista elementos con sesiones validas
   cargarServiciosDisponibles() {
     this.serviciosService.obtenerServicios('', 'true')
       .subscribe({
         next: (res) => {
-          // Filtrar solo servicios con múltiples sesiones
           this.serviciosDisponibles = res.data.filter((servicio: any) => servicio.tieneSesiones);
         },
         error: (err) => {
-          console.error('Error al cargar servicios:', err);
+          console.error(err);
         }
       });
   }
 
+  // Establece parametros inicales del modal para nuevo servicio
   abrirModalContratarServicio() {
     this.mostrarModalServicio = true;
     this.cargarServiciosDisponibles();
 
-    // Calcular fecha por defecto (4 meses desde hoy)
     const hoy = new Date();
     const fechaExp = new Date(hoy.setMonth(hoy.getMonth() + 4));
-    this.nuevoServicio.fechaExpiracion = fechaExp.toISOString().split('T')[0]; // formato YYYY-MM-DD
+    this.nuevoServicio.fechaExpiracion = fechaExp.toISOString().split('T')[0]; 
   }
 
+  // Manda informacion del formulario finalizada hacia api de servicios
   contratarServicio() {
     if (!this.nuevoServicio.servicioId) {
       Swal.fire('Error', 'Selecciona un servicio', 'error');
@@ -737,7 +653,7 @@ export class PerfilComponent {
     this.servicioContratadoService.contratarServicio(servicioData)
       .subscribe({
         next: (res) => {
-          Swal.fire('¡Éxito!', 'Servicio contratado correctamente', 'success');
+          Swal.fire('Exito', 'Servicio contratado correctamente', 'success');
           this.mostrarModalServicio = false;
           this.cargarServiciosContratados();
           this.resetearFormularioServicio();
@@ -749,33 +665,33 @@ export class PerfilComponent {
       });
   }
 
+  // Descuenta del inventario una sesion y anexa informacion de seguimiento
   usarSesion(servicioContratado: any) {
     Swal.fire({
-      title: '¿Usar una sesión?',
-      text: `¿Deseas usar una sesión de ${servicioContratado.servicio.nombre}?`,
+      title: 'Usar una sesion?',
+      text: `Deseas usar una sesion de ${servicioContratado.servicio.nombre}?`,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Sí, usar sesión',
+      confirmButtonText: 'Si, usar sesion',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
-          title: 'Observaciones de la sesión',
+          title: 'Observaciones de la sesion',
           input: 'textarea',
           inputLabel: 'Observaciones (opcional)',
           inputPlaceholder: 'Describe el procedimiento, observaciones, recomendaciones...',
           showCancelButton: true,
           inputValidator: (value) => {
-            // Puedes agregar validaciones aquí si es necesario
             return null;
           }
         }).then((observacionResult) => {
           if (observacionResult.isConfirmed) {
             const observacionData = {
-              texto: observacionResult.value || 'Sesión utilizada sin observaciones',
+              texto: observacionResult.value || 'Sesion utilizada sin observaciones',
               fecha: new Date(),
               hora: new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
-              autor: 'Usuario actual' // Puedes obtener el usuario actual del servicio de autenticación
+              autor: 'Usuario actual' 
             };
 
             this.servicioContratadoService.usarSesion(
@@ -783,27 +699,23 @@ export class PerfilComponent {
               observacionData.texto
             ).subscribe({
               next: (res) => {
-                Swal.fire('¡Éxito!', 'Sesión utilizada correctamente', 'success');
+                Swal.fire('Exito', 'Sesion utilizada correctamente', 'success');
 
-                // Agregar la observación al array local
                 if (!Array.isArray(servicioContratado.observaciones)) {
                   servicioContratado.observaciones = [];
                 }
 
                 servicioContratado.observaciones.unshift(observacionData);
 
-                // Actualizar contadores
                 servicioContratado.sesionesUsadas++;
                 servicioContratado.sesionesRestantes--;
 
-                // Abrir automáticamente las observaciones
                 servicioContratado.mostrarObservaciones = true;
 
-                // Actualizar la lista completa (opcional)
                 this.cargarServiciosContratados();
               },
               error: (err) => {
-                Swal.fire('Error', err.error?.message || 'No se pudo usar la sesión', 'error');
+                Swal.fire('Error', err.error?.message || 'No se pudo usar la sesion', 'error');
               }
             });
           }
@@ -812,12 +724,14 @@ export class PerfilComponent {
     });
   }
 
+  // Permite agregar turnos a paciente para determinado registro de servicio
   abrirModalAgregarSesiones(servicio: any) {
     this.servicioParaAgregarSesiones = servicio;
     this.nuevasSesiones = { cantidad: 1, motivo: '' };
     this.mostrarModalAgregarSesiones = true;
   }
 
+  // Ejecuta actualizacion de sumatoria sobre servicio del cliente
   agregarSesiones() {
     if (this.nuevasSesiones.cantidad <= 0) {
       Swal.fire('Error', 'La cantidad debe ser mayor a 0', 'error');
@@ -830,7 +744,7 @@ export class PerfilComponent {
       this.nuevasSesiones.motivo
     ).subscribe({
       next: (res) => {
-        Swal.fire('¡Éxito!', `${this.nuevasSesiones.cantidad} sesiones agregadas`, 'success');
+        Swal.fire('Exito', `${this.nuevasSesiones.cantidad} sesiones agregadas`, 'success');
         this.mostrarModalAgregarSesiones = false;
         this.cargarServiciosContratados();
       },
@@ -840,6 +754,7 @@ export class PerfilComponent {
     });
   }
 
+  // Limpia visual y logica de formulario en servicio
   resetearFormularioServicio() {
     this.nuevoServicio = {
       servicioId: '',
@@ -849,17 +764,17 @@ export class PerfilComponent {
     };
   }
 
+  // Activa despliegue general de comentarios en seccion html
   toggleObservaciones(servicio: any): void {
     servicio.mostrarObservaciones = !servicio.mostrarObservaciones;
   }
 
-
+  // Forma bloques visuales separando logs dependiente a cada fecha unica 
   getObservationsGroupedByDate(observaciones: any[]): any[] {
     if (!observaciones || !Array.isArray(observaciones)) {
       return [];
     }
 
-    // Si las observaciones son strings, convertirlas a objetos
     const processedObs = observaciones.map((obs, index) => {
       if (typeof obs === 'string') {
         return {
@@ -872,7 +787,6 @@ export class PerfilComponent {
       return obs;
     });
 
-    // Agrupar por fecha (sin hora)
     const groups: any = {};
 
     processedObs.forEach(obs => {
@@ -884,15 +798,12 @@ export class PerfilComponent {
           observaciones: []
         };
       }
-
       groups[fechaKey].observaciones.push(obs);
     });
 
-    // Convertir a array y ordenar por fecha (más reciente primero)
     return Object.values(groups)
       .map((group: any) => ({
         ...group,
-        // Ordenar observaciones dentro del grupo por hora (más reciente primero)
         observaciones: group.observaciones.sort((a: any, b: any) => {
           const timeA = a.hora ? this.timeToMinutes(a.hora) : 0;
           const timeB = b.hora ? this.timeToMinutes(b.hora) : 0;
@@ -904,15 +815,16 @@ export class PerfilComponent {
       });
   }
 
+  // Auxiliar numerico que asiste proceso en ordenacion por horas
   timeToMinutes(time: string): number {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
   }
 
+  // Valida y modifica strings a formato 24 horas 
   formatTime(time: string): string {
     if (!time) return '--:--';
 
-    // Si ya está en formato 24h
     if (time.includes(':')) {
       const [hours, minutes] = time.split(':');
       return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
@@ -921,18 +833,21 @@ export class PerfilComponent {
     return time;
   }
 
+  // Metodo booleano verificador 
   isObservacionesArray(observaciones: any): boolean {
     return Array.isArray(observaciones) && observaciones.length > 0;
   }
 
+  // Inicializa seccion general interactiva para agregar beneficios promocionales
   abrirModalContratarPromocion() {
     this.cargarPromocionesDisponibles();
     this.mostrarModalPromocion = true;
   }
 
+  // Restringe busqueda para ignorar beneficios unitarios
   cargarPromocionesDisponibles() {
     this.promocionService.obtenerPromociones({ activa: true, vigente: true }).subscribe({
-      next: (res: any) => {  // o mejor (res: { success: boolean; data: Promocion[] })
+      next: (res: any) => {  
         this.promocionesDisponibles = res.data.filter((p: Promocion) =>
           p.tipoAnclaje === 'servicio' &&
           p.servicios &&
@@ -940,20 +855,21 @@ export class PerfilComponent {
         );
       },
       error: (err: any) => {
-        console.error('Error al cargar promociones', err);
+        console.error(err);
         Swal.fire('Error', 'No se pudieron cargar las promociones', 'error');
       }
     });
   }
 
+  // Modifica bd asignando sesiones correspondientes basadas en la seleccion
   contratarPromocion(promocion: Promocion) {
     Swal.fire({
-      title: 'Confirmar contratación',
-      html: `¿Deseas contratar la promoción <strong>${promocion.nombre}</strong>?<br>
-           Se agregarán las sesiones correspondientes a los servicios incluidos.`,
+      title: 'Confirmar contratacion',
+      html: `Deseas contratar la promocion <strong>${promocion.nombre}</strong>?<br>
+           Se agregaran las sesiones correspondientes a los servicios incluidos.`,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Sí, contratar',
+      confirmButtonText: 'Si, contratar',
       cancelButtonText: 'Cancelar'
     }).then(result => {
       if (result.isConfirmed) {
@@ -963,39 +879,39 @@ export class PerfilComponent {
         };
         this.promocionService.contratarPromocion(promocion._id!, payload).subscribe({
           next: (res: any) => {
-            Swal.fire('¡Éxito!', 'Promoción contratada correctamente', 'success');
+            Swal.fire('Exito', 'Promocion contratada correctamente', 'success');
             this.mostrarModalPromocion = false;
             this.cargarServiciosContratados();
           },
           error: (err: any) => {
-            console.error('Error al contratar promoción', err);
-            Swal.fire('Error', err.error?.message || 'No se pudo contratar la promoción', 'error');
+            console.error(err);
+            Swal.fire('Error', err.error?.message || 'No se pudo contratar la promocion', 'error');
           }
         });
       }
     });
   }
 
-
+  // Realiza purga individual del servicio seleccionado
   eliminarServicioContratado(servicio: any) {
     Swal.fire({
-      title: '¿Eliminar servicio?',
-      text: `¿Estás seguro de eliminar "${servicio.servicio?.nombre}"? Esta acción no se puede deshacer.`,
+      title: 'Eliminar servicio?',
+      text: `Estas seguro de eliminar "${servicio.servicio?.nombre}"? Esta accion no se puede deshacer.`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar',
+      confirmButtonText: 'Si, eliminar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         this.servicioContratadoService.eliminarServicioContratado(servicio._id).subscribe({
           next: () => {
-            Swal.fire('¡Eliminado!', 'El servicio ha sido eliminado.', 'success');
-            this.cargarServiciosContratados(); // recargar lista
+            Swal.fire('Eliminado', 'El servicio ha sido eliminado.', 'success');
+            this.cargarServiciosContratados(); 
           },
           error: (err) => {
-            console.error('Error al eliminar servicio contratado:', err);
+            console.error(err);
             Swal.fire('Error', 'No se pudo eliminar el servicio.', 'error');
           }
         });
@@ -1003,26 +919,26 @@ export class PerfilComponent {
     });
   }
 
-  // Eliminar todos los servicios contratados del paciente
+  // Itera coleccion y ejecuta purga de listado de servicios vinculados
   eliminarTodosServiciosContratados() {
     Swal.fire({
-      title: '¿Eliminar todos los servicios?',
-      text: `Esta acción eliminará TODOS los servicios contratados de ${this.paciente.nombre}. No se puede deshacer.`,
+      title: 'Eliminar todos los servicios?',
+      text: `Esta accion eliminara TODOS los servicios contratados de ${this.paciente.nombre}. No se puede deshacer.`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar todos',
+      confirmButtonText: 'Si, eliminar todos',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         this.servicioContratadoService.eliminarTodosServicios(this.paciente._id).subscribe({
           next: (res) => {
-            Swal.fire('¡Eliminados!', `Se eliminaron ${res.deletedCount} servicios.`, 'success');
-            this.cargarServiciosContratados(); // recargar lista (vacía)
+            Swal.fire('Eliminados', `Se eliminaron ${res.deletedCount} servicios.`, 'success');
+            this.cargarServiciosContratados(); 
           },
           error: (err) => {
-            console.error('Error al eliminar todos los servicios:', err);
+            console.error(err);
             Swal.fire('Error', 'No se pudieron eliminar los servicios.', 'error');
           }
         });
@@ -1030,7 +946,3 @@ export class PerfilComponent {
     });
   }
 }
-
-
-
-
