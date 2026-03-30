@@ -303,12 +303,8 @@
               </div>
 
               <div class="servicio-actions" *ngIf="servicio.estado === 'activo'">
-                <button class="btn-use-session" (click)="usarSesion(servicio)"
-                  [disabled]="servicio.sesionesRestantes <= 0">
-                  <i class="fas fa-check"></i> Usar Sesión
-                </button>
-                <button class="btn-add-sessions" (click)="abrirModalAgregarSesiones(servicio)">
-                  <i class="fas fa-plus-circle"></i> Agregar
+                <button class="btn-edit-service" (click)="abrirModalEditarServicio(servicio)">
+                  <i class="fas fa-edit"></i> Editar
                 </button>
                 <button class="btn-delete-service" (click)="eliminarServicioContratado(servicio)">
                   <i class="fas fa-trash-alt"></i> Eliminar
@@ -530,9 +526,44 @@
   </div>
 </div>
 
-<app-agendar-cita-perfil 
-  *ngIf="showModal" 
-  [paciente]="paciente"
-  (cerrarModal)="onCloseModal()"
+<!-- Modal Editar Servicio Contratado -->
+<div class="modal-overlay" *ngIf="mostrarModalEditarServicio" (click)="mostrarModalEditarServicio = false">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Editar {{ servicioParaEditar?.servicio?.nombre }}</h3>
+      <button class="modal-close" (click)="mostrarModalEditarServicio = false">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="current-sessions">
+        <p>Sesiones usadas: {{ servicioParaEditar?.sesionesUsadas }}/{{ servicioParaEditar?.sesionesTotales }}</p>
+        <p>Sesiones restantes: {{ servicioParaEditar?.sesionesRestantes }}</p>
+      </div>
+
+      <div class="form-group">
+        <label>Ajuste de sesiones</label>
+        <input type="number" [(ngModel)]="datosEdicion.ajusteSesiones" class="form-input" step="1"
+          placeholder="Ej: +3 o -1">
+        <small class="form-text text-muted">Usa números positivos para agregar, negativos para restar sesiones.</small>
+      </div>
+
+      <div class="form-group">
+        <label>Nueva fecha de expiración</label>
+        <input type="date" [(ngModel)]="datosEdicion.nuevaFechaExpiracion" class="form-input">
+        <small class="form-text text-muted">Opcional: Dejar vacío para mantener la actual.</small>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="mostrarModalEditarServicio = false">Cancelar</button>
+      <button class="btn-submit" (click)="guardarEdicionServicio()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+
+<app-agendar-cita-perfil *ngIf="showModal" [paciente]="paciente" (cerrarModal)="onCloseModal()"
   (citaAgendada)="obtenerCitasPorPaciente(paciente._id); onCloseModal()">
 </app-agendar-cita-perfil>

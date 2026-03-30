@@ -14,25 +14,25 @@ import { PacientesService } from 'src/app/services/pacientes.service';
   styleUrls: ['./agendar-cita.component.scss']
 })
 export class AgendarCitaComponent implements OnInit {
-  
+
   @Input() datosPreconfigurados: any = { doctorId: '', fechaCita: '', horaInicio: '', telefono: '' };
-  
+
   @Output() cerrarModal = new EventEmitter<void>();
   @Output() citaAgendada = new EventEmitter<any>();
 
   citaForm: FormGroup;
   cargando = false;
-  
+
   servicios: any[] = [];
   promociones: Promocion[] = [];
 
-  todosLosContactos: any[] = []; 
+  todosLosContactos: any[] = [];
   contactosFiltrados: any[] = [];
   terminoBusqueda: string = '';
 
   todosLosPacientes: any[] = [];
   todosLosPreguntones: any[] = [];
-  
+
   personaEncontrada: any = null;
   tipoContacto: 'paciente' | 'pregunton' | 'nuevo' = 'nuevo';
 
@@ -52,7 +52,7 @@ export class AgendarCitaComponent implements OnInit {
       nombre: [''],
       apeP: [''],
       doctorId: ['', Validators.required],
-      itemTipo: ['srv', Validators.required], 
+      itemTipo: ['srv', Validators.required],
       itemId: ['', Validators.required],
       fechaCita: ['', Validators.required],
       horaInicio: ['', Validators.required],
@@ -67,16 +67,16 @@ export class AgendarCitaComponent implements OnInit {
       this.citaForm.patchValue(this.datosPreconfigurados);
       this.horaMinimaPermitida = this.datosPreconfigurados.limiteMinimo;
       this.horaMaximaPermitida = this.datosPreconfigurados.limiteMaximo;
-      
+
       if (this.datosPreconfigurados.doctoresDisponibles) {
         this.doctoresDisponibles = this.datosPreconfigurados.doctoresDisponibles;
-        
+
         if (this.doctoresDisponibles.length === 1) {
           this.citaForm.get('doctorId')?.disable();
         }
       }
     }
-    
+
     this.cargarCatalogos();
     this.cargarPacientesYEscuchar();
 
@@ -100,22 +100,28 @@ export class AgendarCitaComponent implements OnInit {
 
   // Carga las listas de pacientes y preguntones, y activa la escucha de cambios en el teléfono
   cargarPacientesYEscuchar(): void {
-    this.pacientesService.obtenerPacientes();
-    this.pacientesService.obtenerPreguntones();
-    
-    this.pacientesService.paciente$.subscribe(pacientes => {
-      this.todosLosPacientes = pacientes;
-      this.actualizarListaMaestra();
-      this.verificarTelefonoActual();
+    // Cargar pacientes que NO están en lista negra
+    this.pacientesService.obtenerPacientesCitas().subscribe({
+      next: (pacientes: any[]) => { // <-- tipar como any[] o mejor definir una interfaz
+        this.todosLosPacientes = pacientes;
+        this.actualizarListaMaestra();
+        this.verificarTelefonoActual();
+      },
+      error: (err: any) => console.error('Error al cargar pacientes sin lista negra', err)
     });
 
-    this.pacientesService.preguntone$.subscribe(preguntones => {
-      this.todosLosPreguntones = preguntones;
-      this.actualizarListaMaestra();
-      this.verificarTelefonoActual();
+    // Cargar preguntones que NO están en lista negra usando el nuevo método
+    this.pacientesService.obtenerPreguntonesParaCitas().subscribe({
+      next: (preguntones: any[]) => {
+        this.todosLosPreguntones = preguntones;
+        this.actualizarListaMaestra();
+        this.verificarTelefonoActual();
+      },
+      error: (err: any) => console.error('Error al cargar preguntones', err)
     });
 
-    this.citaForm.get('telefono')?.valueChanges.subscribe(telefonoInput => {
+    // Escuchar cambios en el teléfono
+    this.citaForm.get('telefono')?.valueChanges.subscribe((telefonoInput: string) => {
       if (telefonoInput && telefonoInput.length >= 10) {
         this.buscarPersona(telefonoInput);
       } else {
@@ -135,7 +141,7 @@ export class AgendarCitaComponent implements OnInit {
   // Filtra los contactos en tiempo real según lo que el usuario escribe en el input de búsqueda
   filtrarContactos(event: any): void {
     const termino = event.target.value.toLowerCase().trim();
-    
+
     if (!termino || termino.length < 2) {
       this.contactosFiltrados = [];
       return;
@@ -144,7 +150,7 @@ export class AgendarCitaComponent implements OnInit {
     this.contactosFiltrados = this.todosLosContactos.filter(c => {
       const nombreCompleto = `${c.nombre || ''} ${c.apeP || c.apellidos || c.apellido || ''}`.toLowerCase();
       const telefonos = `${c.telefonoWhatsapp || ''} ${c.numeroTelefono || ''} ${c.telefono || ''}`;
-      
+
       return nombreCompleto.includes(termino) || telefonos.includes(termino);
     }).slice(0, 5);
   }
@@ -154,10 +160,32 @@ export class AgendarCitaComponent implements OnInit {
     this.terminoBusqueda = '';
     this.contactosFiltrados = [];
 
+    // Teléfono
     const tel = contacto.telefonoWhatsapp || contacto.numeroTelefono || contacto.telefono || '';
     this.citaForm.patchValue({ telefono: tel });
-  }
 
+    // Nombre y apellido
+    const nombre = contacto.nombre || '';
+    const apeP = contacto.apeP || contacto.apellidos || contacto.apellido || '';
+    this.citaForm.patchValue({ nombre, apeP });
+
+    // Actualizar estado de contacto encontrado
+    this.personaEncontrada = contacto;
+    this.tipoContacto = contacto.tipoContactoDb === 'paciente' ? 'paciente' : 'pregunton';
+
+    // Deshabilitar los campos si tienen valor (vienen de un contacto existente)
+    if (nombre) {
+      this.citaForm.get('nombre')?.disable();
+    } else {
+      this.citaForm.get('nombre')?.enable();
+    }
+    if (apeP) {
+      this.citaForm.get('apeP')?.disable();
+    } else {
+      this.citaForm.get('apeP')?.enable();
+    }
+  }
+  
   // Valida si ya existe un teléfono en el formulario al abrir el modal e inicia su búsqueda
   verificarTelefonoActual(): void {
     const telActual = this.citaForm.get('telefono')?.value;
@@ -170,22 +198,22 @@ export class AgendarCitaComponent implements OnInit {
   buscarPersona(telefonoInput: string): void {
     const telABuscar = String(telefonoInput);
 
-    let encontrado = this.todosLosPacientes.find(p => 
-      String(p.telefono) === telABuscar || 
+    let encontrado = this.todosLosPacientes.find(p =>
+      String(p.telefono) === telABuscar ||
       String(p.telefonoWhatsapp) === telABuscar ||
       String(p.numeroTelefono) === telABuscar
     );
-    
+
     if (encontrado) {
       this.personaEncontrada = encontrado;
       this.tipoContacto = 'paciente';
     } else {
-      encontrado = this.todosLosPreguntones.find(p => 
-        String(p.telefono) === telABuscar || 
+      encontrado = this.todosLosPreguntones.find(p =>
+        String(p.telefono) === telABuscar ||
         String(p.telefonoWhatsapp) === telABuscar ||
         String(p.numeroTelefono) === telABuscar
       );
-      
+
       if (encontrado) {
         this.personaEncontrada = encontrado;
         this.tipoContacto = 'pregunton';
@@ -194,13 +222,13 @@ export class AgendarCitaComponent implements OnInit {
         this.tipoContacto = 'nuevo';
       }
     }
-    
+
     if (this.personaEncontrada) {
       this.citaForm.patchValue({
         nombre: this.personaEncontrada.nombre || '',
-        apeP: this.personaEncontrada.apeP || this.personaEncontrada.apellidos || this.personaEncontrada.apellido || '' 
+        apeP: this.personaEncontrada.apeP || this.personaEncontrada.apellidos || this.personaEncontrada.apellido || ''
       });
-      
+
       if (this.citaForm.get('nombre')?.value) this.citaForm.get('nombre')?.disable();
       else this.citaForm.get('nombre')?.enable();
 
@@ -257,7 +285,7 @@ export class AgendarCitaComponent implements OnInit {
   horaFueraDeRango(): boolean {
     const horaElegida = this.citaForm.get('horaInicio')?.value;
     if (!horaElegida || !this.horaMinimaPermitida || !this.horaMaximaPermitida) return false;
-    
+
     return horaElegida < this.horaMinimaPermitida || horaElegida > this.horaMaximaPermitida;
   }
 

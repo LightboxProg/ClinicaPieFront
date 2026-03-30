@@ -11,7 +11,6 @@ import Swal from 'sweetalert2';
 import { ServicioContratadoService } from 'src/app/services/servicio-contratado.service';
 import { ServiciosService } from 'src/app/services/servicios.service';
 import { PromocionService, Promocion } from 'src/app/services/promocion.service';
-// Importar el nuevo componente
 import { AgendarCitaPerfilComponent } from '../agendar-cita-perfil/agendar-cita-perfil.component';
 
 @Component({
@@ -24,11 +23,11 @@ import { AgendarCitaPerfilComponent } from '../agendar-cita-perfil/agendar-cita-
 export class PerfilComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('zoomableImg') zoomableImg!: ElementRef<HTMLImageElement>;
-  
+
   showModal: boolean = false;
   paciente: any = {};
   listaNegra: any = null;
-  citas: any[] = []; 
+  citas: any[] = [];
   editando: boolean = false;
   esAdmin: boolean = false;
   fotosPaciente: any[] = [];
@@ -58,6 +57,14 @@ export class PerfilComponent implements OnInit {
   };
   zoomLevel = 1;
 
+
+  mostrarModalEditarServicio: boolean = false;
+  servicioParaEditar: any = null;
+  datosEdicion: any = {
+    ajusteSesiones: 0,
+    nuevaFechaExpiracion: ''
+  };
+
   constructor(
     private loginService: LoginService,
     private router: Router,
@@ -79,7 +86,7 @@ export class PerfilComponent implements OnInit {
     if (id) {
       this.pacienteService.getPacienteById(id).subscribe((res) => {
         this.paciente = res;
-        this.obtenerCitasPorPaciente(id); 
+        this.obtenerCitasPorPaciente(id);
         this.cargarFotosPaciente(id);
         this.cargarServiciosContratados();
         this.listaNegraService.getDatosListaNegraPorPaciente(id).subscribe((res) => {
@@ -116,9 +123,9 @@ export class PerfilComponent implements OnInit {
   formatearCitas(citasData: any[]): any[] {
     return citasData.map(cita => {
       const nombreServicio = cita.servicioId?.nombre || 'Servicio no especificado';
-      const sesiones = cita.servicioId?.sesiones?.numero || 
-                      (cita.servicioId?.tieneSesiones ? 'Por definir' : 'No aplica');
-      
+      const sesiones = cita.servicioId?.sesiones?.numero ||
+        (cita.servicioId?.tieneSesiones ? 'Por definir' : 'No aplica');
+
       let doctorNombre = 'Doctor no asignado';
       if (cita.servicioContratadoId?.creadoPor) {
         const doctor = cita.servicioContratadoId.creadoPor;
@@ -127,7 +134,7 @@ export class PerfilComponent implements OnInit {
         if (doctor.apeM) doctorNombre += ` ${doctor.apeM}`;
         doctorNombre = doctorNombre.trim() || 'Doctor no asignado';
       }
-      
+
       return {
         tratamiento: nombreServicio,
         sesiones: sesiones,
@@ -150,7 +157,7 @@ export class PerfilComponent implements OnInit {
   obtenerCitas() {
     this.citaService.getCita().subscribe(
       (response: Cita[]) => {
-        this.citas = response; 
+        this.citas = response;
       },
       (error) => {
         console.error(error);
@@ -283,7 +290,7 @@ export class PerfilComponent implements OnInit {
       const esMexico = telefonoStr.startsWith('52') && telefonoStr.length >= 12;
 
       if (esMexico) {
-        const numeroLocal = telefonoStr.substring(2); 
+        const numeroLocal = telefonoStr.substring(2);
         this.paciente.telefonoPaciente = Number('52' + '1' + numeroLocal);
       } else {
         this.paciente.telefonoPaciente = Number(telefonoStr);
@@ -411,7 +418,7 @@ export class PerfilComponent implements OnInit {
 
     this.pacienteService.subirImagenAlbum(this.paciente._id, formData).subscribe({
       next: () => {
-        this.cargarFotosPaciente(this.paciente._id); 
+        this.cargarFotosPaciente(this.paciente._id);
       },
       error: (err) => {
         console.error(err);
@@ -632,7 +639,7 @@ export class PerfilComponent implements OnInit {
 
     const hoy = new Date();
     const fechaExp = new Date(hoy.setMonth(hoy.getMonth() + 4));
-    this.nuevoServicio.fechaExpiracion = fechaExp.toISOString().split('T')[0]; 
+    this.nuevoServicio.fechaExpiracion = fechaExp.toISOString().split('T')[0];
   }
 
   // Manda informacion del formulario finalizada hacia api de servicios
@@ -691,7 +698,7 @@ export class PerfilComponent implements OnInit {
               texto: observacionResult.value || 'Sesion utilizada sin observaciones',
               fecha: new Date(),
               hora: new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
-              autor: 'Usuario actual' 
+              autor: 'Usuario actual'
             };
 
             this.servicioContratadoService.usarSesion(
@@ -847,7 +854,7 @@ export class PerfilComponent implements OnInit {
   // Restringe busqueda para ignorar beneficios unitarios
   cargarPromocionesDisponibles() {
     this.promocionService.obtenerPromociones({ activa: true, vigente: true }).subscribe({
-      next: (res: any) => {  
+      next: (res: any) => {
         this.promocionesDisponibles = res.data.filter((p: Promocion) =>
           p.tipoAnclaje === 'servicio' &&
           p.servicios &&
@@ -861,34 +868,38 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  // Modifica bd asignando sesiones correspondientes basadas en la seleccion
   contratarPromocion(promocion: Promocion) {
+    // 1. Cerrar el modal de promociones
+    this.mostrarModalPromocion = false;
+
+    // 2. Mostrar confirmación
     Swal.fire({
-      title: 'Confirmar contratacion',
-      html: `Deseas contratar la promocion <strong>${promocion.nombre}</strong>?<br>
-           Se agregaran las sesiones correspondientes a los servicios incluidos.`,
+      title: 'Confirmar contratación',
+      html: `Deseas contratar la promoción <strong>${promocion.nombre}</strong>?<br>
+           Se agregarán las sesiones correspondientes a los servicios incluidos.`,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Si, contratar',
+      confirmButtonText: 'Sí, contratar',
       cancelButtonText: 'Cancelar'
     }).then(result => {
       if (result.isConfirmed) {
+        // 3. Realizar la contratación
         const payload = {
           pacienteId: this.paciente._id,
           sucursalId: null
         };
         this.promocionService.contratarPromocion(promocion._id!, payload).subscribe({
           next: (res: any) => {
-            Swal.fire('Exito', 'Promocion contratada correctamente', 'success');
-            this.mostrarModalPromocion = false;
+            Swal.fire('Éxito', 'Promoción contratada correctamente', 'success');
             this.cargarServiciosContratados();
           },
           error: (err: any) => {
             console.error(err);
-            Swal.fire('Error', err.error?.message || 'No se pudo contratar la promocion', 'error');
+            Swal.fire('Error', err.error?.message || 'No se pudo contratar la promoción', 'error');
           }
         });
       }
+      // Si cancela, no hacemos nada, el modal ya está cerrado.
     });
   }
 
@@ -908,7 +919,7 @@ export class PerfilComponent implements OnInit {
         this.servicioContratadoService.eliminarServicioContratado(servicio._id).subscribe({
           next: () => {
             Swal.fire('Eliminado', 'El servicio ha sido eliminado.', 'success');
-            this.cargarServiciosContratados(); 
+            this.cargarServiciosContratados();
           },
           error: (err) => {
             console.error(err);
@@ -935,13 +946,58 @@ export class PerfilComponent implements OnInit {
         this.servicioContratadoService.eliminarTodosServicios(this.paciente._id).subscribe({
           next: (res) => {
             Swal.fire('Eliminados', `Se eliminaron ${res.deletedCount} servicios.`, 'success');
-            this.cargarServiciosContratados(); 
+            this.cargarServiciosContratados();
           },
           error: (err) => {
             console.error(err);
             Swal.fire('Error', 'No se pudieron eliminar los servicios.', 'error');
           }
         });
+      }
+    });
+  }
+
+  // Abre el modal de edición con los datos actuales del servicio
+  abrirModalEditarServicio(servicio: any) {
+    this.servicioParaEditar = servicio;
+    this.datosEdicion = {
+      ajusteSesiones: 0,
+      nuevaFechaExpiracion: ''
+    };
+    this.mostrarModalEditarServicio = true;
+  }
+
+  // Guarda los cambios: ajusta sesiones y actualiza fecha de expiración
+  guardarEdicionServicio() {
+    const ajuste = this.datosEdicion.ajusteSesiones;
+    if (ajuste === 0 && !this.datosEdicion.nuevaFechaExpiracion) {
+      Swal.fire('Sin cambios', 'No se realizó ningún ajuste.', 'info');
+      this.mostrarModalEditarServicio = false;
+      return;
+    }
+
+    const payload: any = {};
+    if (ajuste !== 0) payload.ajusteSesiones = ajuste;
+    if (this.datosEdicion.nuevaFechaExpiracion) payload.fechaExpiracion = this.datosEdicion.nuevaFechaExpiracion;
+
+    Swal.fire({
+      title: 'Guardando cambios...',
+      text: 'Por favor espere',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading()
+    });
+
+    this.servicioContratadoService.ajustarServicio(this.servicioParaEditar._id, payload).subscribe({
+      next: (res) => {
+        Swal.close();
+        Swal.fire('Éxito', 'Servicio actualizado correctamente', 'success');
+        this.mostrarModalEditarServicio = false;
+        this.cargarServiciosContratados();
+      },
+      error: (err) => {
+        Swal.close();
+        const msg = err.error?.message || 'Error al actualizar el servicio';
+        Swal.fire('Error', msg, 'error');
       }
     });
   }

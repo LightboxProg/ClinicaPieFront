@@ -56,4 +56,8 @@ export class ServicioContratadoService {
   eliminarTodosServicios(pacienteId: string): Observable<any> {
     return this.http.delete(`${this.api.getApiUrl()}/paciente/${pacienteId}/servicios-contratados`);
   }
+
+  ajustarServicio(servicioContratadoId: string, data: { ajusteSesiones?: number; fechaExpiracion?: string }): Observable<any> {
+    return this.http.put(`${this.api.getApiUrl()}/servicio-contratado/${servicioContratadoId}/ajustar`, data);
+  }
 }
