@@ -98,6 +98,8 @@ export class PerfilComponent implements OnInit {
     }
     const usuario = JSON.parse(localStorage.getItem('usuarioAutenticado') || '{}');
     this.esAdmin = usuario?.tipo === 'Administrador';
+
+    this.cargarServiciosDisponibles();
   }
 
   // Cierra la ventana modal de agendamiento
@@ -853,13 +855,48 @@ export class PerfilComponent implements OnInit {
 
   // Restringe busqueda para ignorar beneficios unitarios
   cargarPromocionesDisponibles() {
+    // Si los servicios aún no se han cargado, los cargamos ahora
+    if (this.serviciosDisponibles.length === 0) {
+      this.serviciosService.obtenerServicios('', 'true').subscribe({
+        next: (res) => {
+          this.serviciosDisponibles = res.data.filter((servicio: any) => servicio.tieneSesiones);
+          this.procesarPromociones(); // una vez cargados, procesamos promociones
+        },
+        error: (err) => {
+          console.error(err);
+          Swal.fire('Error', 'No se pudieron cargar los servicios', 'error');
+        }
+      });
+    } else {
+      this.procesarPromociones();
+    }
+  }
+
+  procesarPromociones() {
     this.promocionService.obtenerPromociones({ activa: true, vigente: true }).subscribe({
       next: (res: any) => {
-        this.promocionesDisponibles = res.data.filter((p: Promocion) =>
+        let promociones = res.data.filter((p: Promocion) =>
           p.tipoAnclaje === 'servicio' &&
           p.servicios &&
           p.servicios.length > 0
         );
+
+        // Enriquecer cada promoción con los nombres de los servicios
+        promociones = promociones.map((promo: Promocion) => {
+          // Si promo.servicios existe, lo mapeamos; si no, array vacío
+          const serviciosEnriquecidos = promo.servicios?.map((item: any) => {
+            // Buscar el servicio completo en la lista local usando item.servicio (ID)
+            const servicioCompleto = this.serviciosDisponibles.find(s => s._id === item.servicio);
+            return {
+              ...item,
+              servicio: servicioCompleto ? servicioCompleto : { nombre: 'Servicio desconocido' }
+            };
+          }) || [];
+
+          return { ...promo, servicios: serviciosEnriquecidos };
+        });
+
+        this.promocionesDisponibles = promociones;
       },
       error: (err: any) => {
         console.error(err);
@@ -867,7 +904,7 @@ export class PerfilComponent implements OnInit {
       }
     });
   }
-
+  
   contratarPromocion(promocion: Promocion) {
     // 1. Cerrar el modal de promociones
     this.mostrarModalPromocion = false;
