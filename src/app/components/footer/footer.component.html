@@ -1,6 +1,6 @@
 <footer class="footer-container">
   <div class="footer-content">
-    
+
     <!-- Sección Superior: Logo y eslogan -->
     <div class="footer-top">
       <div class="footer-logo-section">
@@ -8,8 +8,20 @@
           <img src="../../../assets/logos/logo.png" alt="Pro Pigment" class="footer-logo">
           <div class="footer-brand">
             <h2 class="footer-clinic-name">Pro Pigment</h2>
+            <p class="footer-tagline">Excelencia en pigmentación</p>
           </div>
         </div>
+        <p class="footer-description">
+          Centro especializado en tratamientos de pigmentación, cuidado de la piel y bienestar estético.
+        </p>
+      </div>
+      <div class="footer-cta">
+        <button class="cta-button" (click)="navigate('/login')" *ngIf="!isLoggedIn">
+          <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+        </button>
+        <button class="cta-button secondary" (click)="scrollToTop()" *ngIf="isLoggedIn">
+          <i class="fas fa-arrow-up"></i> Volver arriba
+        </button>
       </div>
     </div>
 
@@ -24,43 +36,9 @@
 
     <!-- Sección Media: Enlaces organizados -->
     <div class="footer-middle">
-      
-      <!-- Enlaces de Navegación -->
-      <div class="footer-section">
-        <h4 class="footer-section-title">
-          <i class="fas fa-compass"></i>
-          Navegación
-        </h4>
-        <ul class="footer-links">
-          <li *ngIf="!isLoggedIn">
-            <a class="footer-link" (click)="navigate('/login')">
-              <i class="fas fa-sign-in-alt"></i>
-              <span>Iniciar Sesión</span>
-            </a>
-          </li>
-          <li *ngIf="isLoggedIn">
-            <a class="footer-link" (click)="navigate('/lista-pacientes')">
-              <i class="fas fa-users"></i>
-              <span>Pacientes</span>
-            </a>
-          </li>
-          <li *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
-            <a class="footer-link" (click)="navigate('/calendario')">
-              <i class="fas fa-calendar-alt"></i>
-              <span>Agenda</span>
-            </a>
-          </li>
-          <li *ngIf="isLoggedIn">
-            <a class="footer-link" (click)="logout()" class="logout-link">
-              <i class="fas fa-sign-out-alt"></i>
-              <span>Cerrar Sesión</span>
-            </a>
-          </li>
-        </ul>
-      </div>
 
-      <!-- Enlaces de Comunicación -->
-      <div class="footer-section" *ngIf="isLoggedIn">
+      <!-- SECCIÓN COMUNICACIÓN -->
+      <div class="footer-section">
         <h4 class="footer-section-title">
           <i class="fas fa-comments"></i>
           Comunicación
@@ -72,29 +50,95 @@
               <span>Chats</span>
             </a>
           </li>
-          <li>
-            <a class="footer-link" (click)="navigate('/messages')">
-              <i class="fas fa-envelope"></i>
-              <span>Mensajes</span>
-            </a>
-          </li>
-          <li>
-            <a class="footer-link" (click)="navigate('/lista-mensajes')">
-              <i class="fas fa-filter"></i>
-              <span>Filtros</span>
-            </a>
-          </li>
           <li *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
-            <a class="footer-link" (click)="navigate('/campañas')">
-              <i class="fas fa-bullhorn"></i>
-              <span>Campañas</span>
+            <a class="footer-link" (click)="navigate('/mensajes-masivos')">
+              <i class="fas fa-envelope"></i>
+              <span>Mensajes Masivos</span>
             </a>
           </li>
         </ul>
       </div>
 
-      <!-- Catálogo (solo Administrador) -->
-      <div class="footer-section" *ngIf="isLoggedIn && ['Administrador'].includes(credentials?.tipo)">
+      <!-- SECCIÓN AGENDA / CITAS -->
+      <div class="footer-section" *ngIf="isLoggedIn">
+        <h4 class="footer-section-title">
+          <i class="fas fa-calendar-alt"></i>
+          Agenda
+        </h4>
+        <ul class="footer-links">
+          <li *ngIf="['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
+            <a class="footer-link" (click)="navigate('/calendario')">
+              <i class="fas fa-calendar"></i>
+              <span>Calendario</span>
+            </a>
+          </li>
+          <li *ngIf="credentials?.tipo === 'Doctor'">
+            <a class="footer-link" (click)="navigate('/agenda-doctor')">
+              <i class="fas fa-calendar-check"></i>
+              <span>Mi Agenda</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- SECCIÓN SUCURSALES -->
+      <div class="footer-section" *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
+        <h4 class="footer-section-title">
+          <i class="fas fa-store"></i>
+          Sucursales
+        </h4>
+        <ul class="footer-links">
+          <li>
+            <a class="footer-link" (click)="navigate('/sucursales-lista')">
+              <i class="fas fa-list"></i>
+              <span>Lista de Sucursales</span>
+            </a>
+          </li>
+          <li>
+            <a class="footer-link" (click)="navigate('/sucursales-formulario')">
+              <i class="fas fa-plus-circle"></i>
+              <span>Registrar Sucursal</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- SECCIÓN PACIENTES -->
+      <div class="footer-section" *ngIf="isLoggedIn">
+        <h4 class="footer-section-title">
+          <i class="fas fa-user-injured"></i>
+          Pacientes
+        </h4>
+        <ul class="footer-links">
+          <li>
+            <a class="footer-link" (click)="navigate('/lista-pacientes')">
+              <i class="fas fa-list"></i>
+              <span>Lista de Pacientes</span>
+            </a>
+          </li>
+          <li *ngIf="['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
+            <a class="footer-link" (click)="navigate('/lista-preguntones')">
+              <i class="fas fa-question-circle"></i>
+              <span>Lista de Leads</span>
+            </a>
+          </li>
+          <li *ngIf="['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
+            <a class="footer-link" (click)="navigate('/lista-negra')">
+              <i class="fas fa-user-slash"></i>
+              <span>Black List</span>
+            </a>
+          </li>
+          <li *ngIf="['Administrador', 'Doctor'].includes(credentials?.tipo)">
+            <a class="footer-link" (click)="navigate('/registroP')">
+              <i class="fas fa-user-plus"></i>
+              <span>Registrar Paciente</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- SECCIÓN CATÁLOGO Y PROMOCIONES -->
+      <div class="footer-section" *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
         <h4 class="footer-section-title">
           <i class="fas fa-layer-group"></i>
           Catálogo
@@ -115,13 +159,40 @@
         </ul>
       </div>
 
-      <!-- Administración (solo Administrador) -->
-      <div class="footer-section" *ngIf="isLoggedIn && ['Administrador'].includes(credentials?.tipo)">
+      <div class="footer-section" *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
+        <h4 class="footer-section-title">
+          <i class="fas fa-percent"></i>
+          Promociones
+        </h4>
+        <ul class="footer-links">
+          <li>
+            <a class="footer-link" (click)="navigate('/promociones')">
+              <i class="fas fa-list"></i>
+              <span>Lista de Promociones</span>
+            </a>
+          </li>
+          <li>
+            <a class="footer-link" (click)="navigate('/promocion-form')">
+              <i class="fas fa-plus"></i>
+              <span>Nueva Promoción</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- SECCIÓN ADMINISTRACIÓN (solo Administrador) -->
+      <div class="footer-section" *ngIf="isLoggedIn && credentials?.tipo === 'Administrador'">
         <h4 class="footer-section-title">
           <i class="fas fa-user-shield"></i>
           Administración
         </h4>
         <ul class="footer-links">
+          <li>
+            <a class="footer-link" (click)="navigate('/lista-usuarios')">
+              <i class="fas fa-users"></i>
+              <span>Lista de Usuarios</span>
+            </a>
+          </li>
           <li>
             <a class="footer-link" (click)="navigate('/registro')">
               <i class="fas fa-user-plus"></i>
@@ -129,24 +200,25 @@
             </a>
           </li>
           <li>
-            <a class="footer-link" (click)="navigate('/lista-usuarios')">
-              <i class="fas fa-users-cog"></i>
-              <span>Listado Usuarios</span>
+            <a class="footer-link" (click)="navigate('/horariosDoctores')">
+              <i class="fas fa-clock"></i>
+              <span>Horarios de Doctores</span>
             </a>
           </li>
         </ul>
       </div>
     </div>
 
-    <!-- Sección Inferior: Redes sociales, copyright y mensaje -->
+    <!-- Sección Inferior: Redes sociales, copyright y botón -->
     <div class="footer-bottom">
+      <div class="social-section">
+      </div>
       <div class="copyright-section">
         <div class="copyright">
           <p>&copy; {{ currentYear }} <strong>Pro Pigment</strong>. Todos los derechos reservados.</p>
-            Hecho con el ❤️ por Lightbox Mercadotecnia.
+          <p class="made-with-love">Hecho con el ❤️ por Lightbox Mercadotecnia.</p>
         </div>
       </div>
-      
       <button class="back-to-top" (click)="scrollToTop()" aria-label="Volver arriba">
         <i class="fas fa-chevron-up"></i>
       </button>

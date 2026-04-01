@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatService } from 'src/app/services/chat.service';
 
@@ -23,11 +23,16 @@ export class ChatsComponent implements OnInit, OnDestroy {
   usuarioActivo: any = null;
   pestanaActiva: 'pacientes' | 'preguntones' = 'preguntones';
 
+  // Controles para móvil
+  isMobile = false;      // ¿Es pantalla pequeña?
+  showList = true;       // true = mostrar lista de contactos, false = mostrar conversación
+
   private intervalo: any;
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
+    this.checkScreenSize(); // evaluar tamaño inicial
     this.cargarBandeja();
     // Actualizar cada 5 segundos
     this.intervalo = setInterval(() => {
@@ -38,6 +43,26 @@ export class ChatsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.intervalo) {
       clearInterval(this.intervalo);
+    }
+  }
+
+  // Escuchar cambios de tamaño de pantalla (ej. rotación)
+  @HostListener('window:resize')
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize() {
+    const wasMobile = this.isMobile;
+    this.isMobile = window.innerWidth <= 800;
+
+    // Si pasamos de escritorio a móvil y hay un chat activo, ocultamos la lista
+    if (!wasMobile && this.isMobile && this.usuarioActivo) {
+      this.showList = false;
+    }
+    // Si pasamos de móvil a escritorio, mostramos siempre la lista (ambas columnas visibles)
+    if (wasMobile && !this.isMobile) {
+      this.showList = true;
     }
   }
 
@@ -63,6 +88,15 @@ export class ChatsComponent implements OnInit, OnDestroy {
 
   abrirChat(usuario: any) {
     this.usuarioActivo = usuario;
+    if (this.isMobile) {
+      this.showList = false; // en móvil, ocultar lista y mostrar conversación
+    }
+  }
+
+  // Método para regresar a la lista de contactos
+  volverALista() {
+    this.showList = true;
+    // No limpiamos usuarioActivo para que al volver al chat se conserve el contexto
   }
 
   cambiarStatusSaludos(usuario: any) {
@@ -80,4 +114,13 @@ export class ChatsComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  recargarHistorialYLista() {
+    if (this.chatBurbujas && this.usuarioActivo) {
+      // Llama al método del componente hijo con el id del usuario
+      this.chatBurbujas.cargarHistorial(this.usuarioActivo.idUsuario);
+    }
+    this.cargarBandeja(); // recarga la lista de chats
+  }
+
 }
