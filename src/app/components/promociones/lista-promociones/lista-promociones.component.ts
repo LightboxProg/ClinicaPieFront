@@ -27,6 +27,11 @@ export class ListaPromocionesComponent implements OnInit {
   filtroCategoria = '';
   filtroSucursal = '';
 
+  // Control para expandir filas en tabla
+  expandedIndex: number | null = null;
+  // Control para expandir tarjetas en móvil
+  expandedCardId: string | null = null;
+
   constructor(
     private promocionService: PromocionService,
     private categoriasService: CategoriasService,
@@ -64,6 +69,9 @@ export class ListaPromocionesComponent implements OnInit {
     this.promocionService.obtenerPromociones(filtros).subscribe({
       next: (res) => {
         this.promociones = res.data;
+        // Reiniciamos expansión al cargar nuevas promos
+        this.expandedIndex = null;
+        this.expandedCardId = null;
       },
       error: (err) => {
         this.swal.error('Error al cargar promociones');
@@ -133,10 +141,10 @@ export class ListaPromocionesComponent implements OnInit {
     });
   }
 
-  nombresServicios(servicios: any[]): string {
+  nombresServicios(servicios?: any[]): string {
     return servicios?.map(s => s.nombre).join(', ') || '';
   }
-
+  
   importarPromocionesIniciales(): void {
     this.swal.confirm(
       'Importar promociones iniciales',
@@ -146,7 +154,7 @@ export class ListaPromocionesComponent implements OnInit {
         this.promocionService.importarPromocionesIniciales().subscribe({
           next: (res) => {
             this.swal.success(`Se importaron ${res.count} promociones`);
-            this.cargarPromociones(); // recargar la lista
+            this.cargarPromociones();
           },
           error: (err) => {
             this.swal.error('Error al importar promociones');
@@ -161,4 +169,13 @@ export class ListaPromocionesComponent implements OnInit {
     return typeof servicio === 'object' ? servicio.nombre : this.servicios.find(s => s._id === servicio)?.nombre || servicio;
   }
 
+  // Expansión en tabla
+  toggleExpand(index: number): void {
+    this.expandedIndex = this.expandedIndex === index ? null : index;
+  }
+
+  // Expansión en tarjetas móvil
+  toggleExpandCard(id: string): void {
+    this.expandedCardId = this.expandedCardId === id ? null : id;
+  }
 }
