@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CalendarioService } from 'src/app/services/calendario.service';
@@ -15,9 +15,10 @@ import { LoginService } from 'src/app/services/login.service';
   templateUrl: './agendar-cita-perfil.component.html',
   styleUrls: ['./agendar-cita-perfil.component.scss']
 })
-export class AgendarCitaPerfilComponent implements OnInit {
+export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
 
   @Input() paciente: any;
+  @Input() serviciosContratados: any[] = [];
 
   @Output() cerrarModal = new EventEmitter<void>();
   @Output() citaAgendada = new EventEmitter<any>();
@@ -35,6 +36,8 @@ export class AgendarCitaPerfilComponent implements OnInit {
   bloquesDisponibles: any[] = [];
   mensajeDisponibilidad: string = '';
   errorTiempo: string = '';
+
+  itemsList: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -67,6 +70,16 @@ export class AgendarCitaPerfilComponent implements OnInit {
     this.escucharCambiosFormulario();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['serviciosContratados'] && this.citaForm.get('itemTipo')?.value === 'prom') {
+      this.itemsList = this.serviciosContratadosActivos;
+    }
+  }
+
+  get serviciosContratadosActivos(): any[] {
+    return (this.serviciosContratados || []).filter(s => s.sesionesRestantes > 0);
+  }
+
   // Carga catalogos principales de servicios, promociones y sucursales
   cargarCatalogosBasicos(): void {
     this.sucursalesService.obtenerSucursales().subscribe({
@@ -75,14 +88,18 @@ export class AgendarCitaPerfilComponent implements OnInit {
     });
 
     this.serviciosService.obtenerServiciosIndividuales().subscribe({
-      next: (res) => this.servicios = res.data || res,
+      next: (res) => {
+        this.servicios = res.data || res;
+        // Inicializar itemsList con servicios individuales (por defecto)
+        this.itemsList = this.servicios;
+      },
       error: (err) => console.error(err)
     });
 
-    this.promocionService.obtenerPromociones({ vigente: true, activa: true }).subscribe({
-      next: (res) => this.promociones = res.data,
-      error: (err) => console.error(err)
-    });
+    // this.promocionService.obtenerPromociones({ vigente: true, activa: true }).subscribe({
+    //   next: (res) => this.promociones = res.data,
+    //   error: (err) => console.error(err)
+    // });
   }
 
   // Vincula los cambios de seleccion con las validaciones dinamicas
@@ -123,8 +140,13 @@ export class AgendarCitaPerfilComponent implements OnInit {
       }
     });
 
-    this.citaForm.get('itemTipo')?.valueChanges.subscribe(() => {
+    this.citaForm.get('itemTipo')?.valueChanges.subscribe(tipo => {
       this.citaForm.get('itemId')?.setValue('');
+      if (tipo === 'srv') {
+        this.itemsList = this.servicios;
+      } else if (tipo === 'prom') {
+        this.itemsList = this.serviciosContratadosActivos;
+      }
       this.validarAjusteTiempo();
     });
 
@@ -216,6 +238,20 @@ export class AgendarCitaPerfilComponent implements OnInit {
 
   // Extrae duracion del tratamiento o sumatoria de promo en minutos
   obtenerDuracionTratamiento(): number {
+    // const tipo = this.citaForm.get('itemTipo')?.value;
+    // const itemId = this.citaForm.get('itemId')?.value;
+    // if (!itemId) return 0;
+
+    // if (tipo === 'srv') {
+    //   const srv = this.servicios.find(s => s._id === itemId);
+    //   return srv ? srv.duracion : 60;
+    // } else if (tipo === 'prom') {
+    //   const prom = this.promociones.find(p => p._id === itemId);
+    //   if (!prom || !prom.servicios) return 60;
+    //   return prom.servicios.reduce((total: number, s: any) => total + (s.servicio?.duracion || 60), 0);
+    // }
+    // return 60;
+
     const tipo = this.citaForm.get('itemTipo')?.value;
     const itemId = this.citaForm.get('itemId')?.value;
     if (!itemId) return 0;
@@ -224,11 +260,11 @@ export class AgendarCitaPerfilComponent implements OnInit {
       const srv = this.servicios.find(s => s._id === itemId);
       return srv ? srv.duracion : 60;
     } else if (tipo === 'prom') {
-      const prom = this.promociones.find(p => p._id === itemId);
-      if (!prom || !prom.servicios) return 60;
-      return prom.servicios.reduce((total: number, s: any) => total + (s.servicio?.duracion || 60), 0);
+      const contratado = this.serviciosContratados.find(sc => sc._id === itemId);
+      return contratado?.servicio?.duracion || 60;
     }
     return 60;
+
   }
 
   // Transforma formatos de tiempo legibles a formato numerico evaluable
@@ -278,7 +314,17 @@ export class AgendarCitaPerfilComponent implements OnInit {
     if (this.citaForm.invalid) return;
     this.cargando = true;
 
-    const payload = this.citaForm.getRawValue();
+    const raw = this.citaForm.getRawValue();
+    const payload = {
+      telefono: raw.telefono,
+      sucursalId: raw.sucursalId,
+      doctorId: raw.doctorId,
+      fechaCita: raw.fechaCita,
+      horaInicio: raw.horaInicio,
+      observaciones: raw.observaciones,
+      itemTipo: raw.itemTipo,
+      itemId: raw.itemId
+    };
 
     this.calendarioService.agendarCita(payload).subscribe({
       next: (res) => {

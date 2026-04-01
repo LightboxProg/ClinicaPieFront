@@ -115,6 +115,7 @@ export class PerfilComponent implements OnInit {
       next: (response: any) => {
         if (response.success && response.data) {
           this.citas = this.formatearCitas(response.data);
+          console.log("Modelo de citas: ", this.citas)
         }
       },
       error: (error) => {
@@ -126,17 +127,22 @@ export class PerfilComponent implements OnInit {
   // Mapea la informacion de las citas para adaptar los datos a la vista del componente
   formatearCitas(citasData: any[]): any[] {
     return citasData.map(cita => {
-      const nombreServicio = cita.servicioId?.nombre || 'Servicio no especificado';
+      const nombreServicio = cita.servicioId?.nombre || 
+                              cita.promocionId?.nombre || 
+                              'Servicio no especificado';
       const sesiones = cita.servicioId?.sesiones?.numero ||
-        (cita.servicioId?.tieneSesiones ? 'Por definir' : 'No aplica');
+                        (cita.servicioId?.tieneSesiones ? 'Por definir' : 'No aplica');
 
-      let doctorNombre = 'Doctor no asignado';
-      if (cita.servicioContratadoId?.creadoPor) {
+      let doctorNombre = '';
+      // Priorizar doctor de la cita (si está poblado)
+      if (cita.doctorId && cita.doctorId.nombre) {
+        const doctor = cita.doctorId;
+        doctorNombre = `${doctor.nombre || ''} ${doctor.apeP || ''} ${doctor.apeM || ''}`.trim();
+      } 
+      // Fallback: doctor del contrato
+      else if (cita.servicioContratadoId?.creadoPor) {
         const doctor = cita.servicioContratadoId.creadoPor;
-        doctorNombre = doctor.nombre || '';
-        if (doctor.apeP) doctorNombre += ` ${doctor.apeP}`;
-        if (doctor.apeM) doctorNombre += ` ${doctor.apeM}`;
-        doctorNombre = doctorNombre.trim() || 'Doctor no asignado';
+        doctorNombre = `${doctor.nombre || ''} ${doctor.apeP || ''} ${doctor.apeM || ''}`.trim();
       }
 
       return {
@@ -147,7 +153,7 @@ export class PerfilComponent implements OnInit {
         fecha: cita.fechaCita,
         hora: cita.horaCita || '--:--',
         ampm: cita.ampm || '',
-        doctor: doctorNombre
+        doctor: doctorNombre || 'Doctor no asignado'
       };
     });
   }
