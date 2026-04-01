@@ -44,18 +44,14 @@
                     <label>Seleccionar Tratamiento</label>
                     <select formControlName="itemId">
                         <option value="" disabled selected>-- Selecciona uno --</option>
-
+                        <option *ngFor="let item of itemsList" [value]="item._id">
                         <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'srv'">
-                            <option *ngFor="let srv of servicios" [value]="srv._id">
-                                {{ srv.nombre }} ({{ srv.duracion }} min)
-                            </option>
+                            {{ item.nombre }} ({{ item.duracion }} min)
                         </ng-container>
-
                         <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'prom'">
-                            <option *ngFor="let prom of promociones" [value]="prom._id">
-                                {{ prom.nombre }}
-                            </option>
+                            {{ item.servicio.nombre }} - Sesiones restantes: {{ item.sesionesRestantes }}
                         </ng-container>
+                        </option>
                     </select>
                 </div>
 
