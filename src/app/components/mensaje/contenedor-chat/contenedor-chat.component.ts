@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChatService } from 'src/app/services/chat.service'; 
+import { ChatService } from 'src/app/services/chat.service';
 
 
 @Component({
@@ -13,10 +13,10 @@ import { ChatService } from 'src/app/services/chat.service';
 export class ContenedorChatComponent implements OnChanges {
   // Recibe el usuario seleccionado desde el padre
   @Input() usuario: any;
-  
+
   historial: any[] = [];
 
-  constructor(private chatService: ChatService) {}
+  constructor(private chatService: ChatService) { }
 
   // Se ejecuta automáticamente cada vez que el @Input() cambia
   ngOnChanges(changes: SimpleChanges): void {

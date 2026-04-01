@@ -374,7 +374,6 @@ $box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       font-weight: 500;
       
       &::before {
-        content: '❤️';
         margin-right: 5px;
         animation: heartbeat 1.5s infinite;
       }

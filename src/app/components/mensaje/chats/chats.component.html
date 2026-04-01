@@ -1,6 +1,6 @@
 <div class="crm-chat-layout">
-    <div class="sidebar-chats">
-
+    <!-- Barra lateral: lista de contactos -->
+    <div class="sidebar-chats" *ngIf="!isMobile || showList">
         <div class="tabs">
             <button (click)="pestanaActiva = 'preguntones'" [class.activo]="pestanaActiva === 'preguntones'">
                 Leads ({{ chatsPreguntones.length }})
@@ -17,30 +17,30 @@
         <app-chat-paciente *ngIf="pestanaActiva === 'pacientes'" [chats]="chatsPacientes"
             (seleccionar)="abrirChat($event)" (cambiarStatusSaludos)="cambiarStatusSaludos($event)">
         </app-chat-paciente>
-
     </div>
 
-    <div class="area-conversacion">
-
+    <!-- Área de conversación -->
+    <div class="area-conversacion" *ngIf="!isMobile || !showList">
         <div *ngIf="!usuarioActivo" class="estado-vacio">
             <h3>Selecciona un chat para comenzar a enviar mensajes</h3>
         </div>
 
         <ng-container *ngIf="usuarioActivo">
-
             <div class="chat-header">
-                <h3>{{ usuarioActivo.nombre }}</h3>
-                <small>{{ usuarioActivo.telefono }}</small>
+                <!-- Botón de volver (solo en móvil cuando se muestra la conversación) -->
+                <button class="back-button" *ngIf="isMobile && !showList" (click)="volverALista()">
+                    ←
+                </button>
+                <div class="user-info">
+                    <h3>{{ usuarioActivo.nombre }}</h3>
+                    <small>{{ usuarioActivo.telefono }}</small>
+                </div>
             </div>
 
             <app-contenedor-chat #chatBurbujas [usuario]="usuarioActivo">
             </app-contenedor-chat>
-
-            <app-mandar-mensaje [usuario]="usuarioActivo"
-                (mensajeEnviado)="chatBurbujas.cargarHistorial(usuarioActivo.idUsuario); cargarBandeja()">
+            <app-mandar-mensaje [usuario]="usuarioActivo" (mensajeEnviado)="recargarHistorialYLista()">
             </app-mandar-mensaje>
-
         </ng-container>
-
     </div>
 </div>

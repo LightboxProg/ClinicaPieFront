@@ -24,19 +24,12 @@ import { FormHorariosComponent } from './components/horarios/form-horarios/form-
 export const routes: Routes = [
   // Rutas públicas (sin autenticación)
   { path: "login", component: UserLoginComponent },
-  { path: "registroP", component: PacienteRegistroComponent },
-  { path: "horariosDoctores", component: FormHorariosComponent },
 
   // Rutas para usuarios autenticados (sin restricción de roles)
-  { path: "calendario", component: CalendarioPageComponent, canActivate: [authGuard] },
   { path: "chats", component: ChatsComponent, canActivate: [authGuard] },
   { path: "perfil/:name/:id", component: PerfilComponent, canActivate: [authGuard] },
   { path: "lista-pacientes", component: PacientesComponent, canActivate: [authGuard] },
-  { path: "lista-preguntones", component: PreguntonesComponent, canActivate: [authGuard] },
-  { path: "sucursales-formulario", component: FormularioSucursalesComponent, canActivate: [authGuard] },
-  { path: "sucursales-lista", component: ListaSucursalesComponent, canActivate: [authGuard] },
-  { path: "mensajes-masivos", component: MensajesMasivosComponent, canActivate: [authGuard] },
-  
+
 
   // Rutas solo para Administrador
   {
@@ -52,21 +45,25 @@ export const routes: Routes = [
     data: { roles: ['Administrador'] }
   },
   {
-    path: "categorias",
-    component: ListaCategoriasComponent,
-    canActivate: [authGuard],
-    data: { roles: ['Administrador'] }
-  },
-  {
-    path: "servicios",
-    component: ListaServiciosComponent,
+    path: "horariosDoctores",
+    component: FormHorariosComponent,
     canActivate: [authGuard],
     data: { roles: ['Administrador'] }
   },
 
   // Rutas para Administrador y Recepcionista
-
-
+  {
+    path: "categorias",
+    component: ListaCategoriasComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Recepcionista'] }
+  },
+  {
+    path: "servicios",
+    component: ListaServiciosComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Recepcionista'] }
+  },
   {
     path: "promociones",
     component: ListaPromocionesComponent,
@@ -89,26 +86,56 @@ export const routes: Routes = [
     path: "sucursales-formulario",
     component: FormularioSucursalesComponent,
     canActivate: [authGuard],
-    data: { roles: ['Administrador'] }
+    data: { roles: ['Administrador', 'Recepcionista'] }
   },
   {
     path: "sucursales-formulario/:id",
     component: FormularioSucursalesComponent,
     canActivate: [authGuard],
-    data: { roles: ['Administrador'] }
+    data: { roles: ['Administrador', 'Recepcionista'] }
   },
-
-  // Rutas para Administrador y Doctor
+  {
+    path: "sucursales-lista",
+    component: ListaSucursalesComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Recepcionista'] }
+  },
   {
     path: "lista-negra",
     component: PacientesListadosComponent,
     canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Recepcionista'] }
+  },
+  {
+    path: "lista-preguntones",
+    component: PreguntonesComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Recepcionista'] }
+  },
+  {
+    path: "calendario",
+    component: CalendarioPageComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Recepcionista'] }
+  },
+  {
+    path: "mensajes-masivos",
+    component: MensajesMasivosComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Recepcionista'] }
+  },
+
+  // Rutas para Administrador y Doctor
+  {
+    path: "registroP",
+    component: PacienteRegistroComponent,
+    canActivate: [authGuard],
     data: { roles: ['Administrador', 'Doctor'] }
   },
-  
+
   // Agenda: Doctor ve la suya propia, Admin/Recepcionista ven la general
-  { 
-    path: "agenda-doctor", 
+  {
+    path: "agenda-doctor",
     component: AgendaDoctorComponent,
     canActivate: [authGuard],
     data: { roles: ['Doctor', 'Administrador', 'Recepcionista'] }

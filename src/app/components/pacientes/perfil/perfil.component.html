@@ -147,8 +147,8 @@
       <div class="appointments-section">
         <div class="section-header">
           <h3><i class="fas fa-calendar-alt"></i> Citas y Tratamientos</h3>
-          <button class="btn-new-appointment" (click)="register()" *ngIf="!paciente?.finado">
-            <i class="fas fa-plus"></i> Nueva Cita
+          <button class="btn-new-appointment" (click)="register()" *ngIf="!paciente?.finado && (esAdmin || esRecepcionista)">
+             <i class="fas fa-plus"></i> Nueva Cita
           </button>
         </div>
 
@@ -188,14 +188,14 @@
         <div class="section-header">
           <h3><i class="fas fa-boxes"></i> Servicios Contratados</h3>
           <div class="button-group">
-            <button class="btn-new-service" (click)="abrirModalContratarServicio()" *ngIf="!paciente?.finado">
+            <button class="btn-new-service" (click)="abrirModalContratarServicio()" *ngIf="!paciente?.finado && (esAdmin || esRecepcionista)">
               <i class="fas fa-plus"></i> Contratar Servicio
             </button>
-            <button class="btn-new-promotion" (click)="abrirModalContratarPromocion()" *ngIf="!paciente?.finado">
+            <button class="btn-new-promotion" (click)="abrirModalContratarPromocion()" *ngIf="!paciente?.finado && (esAdmin || esRecepcionista)">
               <i class="fas fa-tags"></i> Contratar Promo
             </button>
             <button class="btn-delete-all" (click)="eliminarTodosServiciosContratados()"
-              *ngIf="serviciosContratados.length > 0 && !paciente?.finado"
+              *ngIf="serviciosContratados.length > 0 && !paciente?.finado && (esAdmin || esRecepcionista)"
               [disabled]="serviciosContratados.length === 0">
               <i class="fas fa-trash-alt"></i> Eliminar todos
             </button>
@@ -302,7 +302,7 @@
                 </div>
               </div>
 
-              <div class="servicio-actions" *ngIf="servicio.estado === 'activo'">
+              <div class="servicio-actions" *ngIf="servicio.estado === 'activo' && !paciente?.finado && (esAdmin || esRecepcionista)">
                 <button class="btn-edit-service" (click)="abrirModalEditarServicio(servicio)">
                   <i class="fas fa-edit"></i> Editar
                 </button>

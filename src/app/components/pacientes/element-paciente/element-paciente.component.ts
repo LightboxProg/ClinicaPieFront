@@ -19,6 +19,8 @@ import { Subscription } from 'rxjs';
 export class ElementPacienteComponent implements OnInit, OnDestroy {
   @Input() paciente: any;
   user: any;
+  esAdmin: boolean = false;
+  esRecepcionista: boolean = false;
   showListaNegraModal = false;
   razon = '';
   detalles = '';
@@ -42,6 +44,9 @@ export class ElementPacienteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cargarPacientesListaNegra();
     this.cargarUsuario();
+    const usuario = JSON.parse(localStorage.getItem('usuarioAutenticado') || '{}');
+    this.esAdmin = usuario?.tipo === 'Administrador';
+    this.esRecepcionista = usuario?.tipo === 'Recepcionista';
   }
 
   ngOnDestroy(): void {

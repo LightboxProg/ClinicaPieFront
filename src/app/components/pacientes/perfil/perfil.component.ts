@@ -30,6 +30,7 @@ export class PerfilComponent implements OnInit {
   citas: any[] = [];
   editando: boolean = false;
   esAdmin: boolean = false;
+  esRecepcionista: boolean = false;
   fotosPaciente: any[] = [];
   imagenModal: string | null = null;
   subiendoImagenes: boolean = false;
@@ -98,6 +99,7 @@ export class PerfilComponent implements OnInit {
     }
     const usuario = JSON.parse(localStorage.getItem('usuarioAutenticado') || '{}');
     this.esAdmin = usuario?.tipo === 'Administrador';
+    this.esRecepcionista = usuario?.tipo === 'Recepcionista';
 
     this.cargarServiciosDisponibles();
   }

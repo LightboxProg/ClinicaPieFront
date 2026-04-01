@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div class="list-options">
+    <div class="list-options" *ngIf="!paciente.finado && (esAdmin || esRecepcionista)">
       <button class="Lista-negra" (click)="abrirListaNegra(paciente)">
         <span>Lista Negra</span>
         <span>
