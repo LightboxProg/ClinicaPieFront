@@ -24,6 +24,10 @@ export class CitaService {
   
   getCitasPorPaciente(pacienteId: string): Observable<Cita[]> {
     return this.http.get<Cita[]>(`${this.apiUrl}/citas/paciente/${pacienteId}`);
-}
+  }
+
+  eliminarCita(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/citas/${id}`);
+  }
 
 }

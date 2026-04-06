@@ -174,10 +174,11 @@
                   <i class="fas fa-user-md"></i>
                   <span>{{ cita.doctor || 'No especificado' }}</span>
                 </div>
-                <!-- <div class="detail-item">
-                  <i class="fas fa-calendar-day"></i>
-                  <span>{{ cita.sesiones || '0' }} sesiones</span>
-                </div> -->
+                <div class="detail-item">
+                  <button class="btn-delete" (click)="eliminarCita(cita)" title="Eliminar cita">
+                    Eliminar <i class="fas fa-trash-alt" style="color: white;"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

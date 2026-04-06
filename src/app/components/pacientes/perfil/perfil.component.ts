@@ -127,11 +127,9 @@ export class PerfilComponent implements OnInit {
   // Mapea la informacion de las citas para adaptar los datos a la vista del componente
   formatearCitas(citasData: any[]): any[] {
     return citasData.map(cita => {
-      const nombreServicio = cita.servicioId?.nombre || 
-                              cita.promocionId?.nombre || 
-                              'Servicio no especificado';
+      const nombreServicio = cita.servicioId?.nombre || 'Servicio no especificado';
       const sesiones = cita.servicioId?.sesiones?.numero ||
-                        (cita.servicioId?.tieneSesiones ? 'Por definir' : 'No aplica');
+        (cita.servicioId?.tieneSesiones ? 'Por definir' : 'No aplica');
 
       let doctorNombre = '';
       // Priorizar doctor de la cita (si está poblado)
@@ -145,7 +143,20 @@ export class PerfilComponent implements OnInit {
         doctorNombre = `${doctor.nombre || ''} ${doctor.apeP || ''} ${doctor.apeM || ''}`.trim();
       }
 
+      // return {
+      //   tratamiento: nombreServicio,
+      //   sesiones: sesiones,
+      //   tipoCita: cita.tipoCita || 'No especificado',
+      //   observaciones: cita.observaciones || '',
+      //   fecha: cita.fechaCita,
+      //   hora: cita.horaCita || '--:--',
+      //   ampm: cita.ampm || '',
+      //   doctor: doctorNombre || 'Doctor no asignado'
+      // };
+
       return {
+        _id: cita._id,   // ← Agregado: ID de la cita
+        servicioContratadoId: cita.servicioContratadoId?._id || cita.servicioContratadoId, // ← ID del contrato si existe
         tratamiento: nombreServicio,
         sesiones: sesiones,
         tipoCita: cita.tipoCita || 'No especificado',
@@ -153,7 +164,7 @@ export class PerfilComponent implements OnInit {
         fecha: cita.fechaCita,
         hora: cita.horaCita || '--:--',
         ampm: cita.ampm || '',
-        doctor: doctorNombre || 'Doctor no asignado'
+        doctor: doctorNombre
       };
     });
   }
@@ -161,6 +172,40 @@ export class PerfilComponent implements OnInit {
   // Abre la ventana modal de agendamiento
   register() {
     this.showModal = true;
+  }
+
+  eliminarCita(cita: any): void {
+    if (!cita._id) {
+      console.error('Cita sin ID', cita);
+      Swal.fire('Error', 'No se puede eliminar la cita: ID no encontrado', 'error');
+      return;
+    }
+
+    Swal.fire({
+      title: '¿Eliminar cita?',
+      text: `Esta acción eliminará la cita de ${cita.tratamiento} el ${cita.fecha}. ${
+        cita.servicioContratadoId ? 'Se restaurará la sesión consumida en el servicio contratado.' : ''
+      }`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.citaService.eliminarCita(cita._id).subscribe({
+          next: () => {
+            Swal.fire('Eliminada', 'La cita ha sido eliminada correctamente.', 'success');
+            // Refrescar listas
+            this.obtenerCitasPorPaciente(this.paciente._id);
+            this.cargarServiciosContratados(); // Actualiza sesiones restantes
+          },
+          error: (err) => {
+            console.error(err);
+            Swal.fire('Error', 'No se pudo eliminar la cita.', 'error');
+          }
+        });
+      }
+    });
   }
 
   // Obtiene todas las citas de manera general
