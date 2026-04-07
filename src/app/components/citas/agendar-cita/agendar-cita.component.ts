@@ -1,10 +1,11 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CalendarioService } from 'src/app/services/calendario.service';
 import { ServiciosService } from 'src/app/services/servicios.service';
 import { PromocionService, Promocion } from 'src/app/services/promocion.service';
 import { PacientesService } from 'src/app/services/pacientes.service';
+import { ServicioContratadoService } from 'src/app/services/servicio-contratado.service';
 
 @Component({
   selector: 'app-agendar-cita',
@@ -25,6 +26,9 @@ export class AgendarCitaComponent implements OnInit {
 
   servicios: any[] = [];
   promociones: Promocion[] = [];
+  serviciosContratadosPaciente: any[] = [];
+
+  itemsList: any[] = [];
 
   todosLosContactos: any[] = [];
   contactosFiltrados: any[] = [];
@@ -45,7 +49,9 @@ export class AgendarCitaComponent implements OnInit {
     private calendarioService: CalendarioService,
     private serviciosService: ServiciosService,
     private promocionService: PromocionService,
-    private pacientesService: PacientesService
+    private pacientesService: PacientesService,
+    private servicioContratadoService: ServicioContratadoService,
+    private cdr: ChangeDetectorRef
   ) {
     this.citaForm = this.fb.group({
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]{10,12}$')]],
@@ -80,21 +86,20 @@ export class AgendarCitaComponent implements OnInit {
     this.cargarCatalogos();
     this.cargarPacientesYEscuchar();
 
-    this.citaForm.get('itemTipo')?.valueChanges.subscribe(() => {
+    this.citaForm.get('itemTipo')?.valueChanges.subscribe(tipo => {
       this.citaForm.get('itemId')?.setValue('');
+      this.actualizarItemsListPorTipo();
     });
   }
 
   // Obtiene la lista de servicios y promociones disponibles desde el backend
   cargarCatalogos(): void {
     this.serviciosService.obtenerServiciosIndividuales().subscribe({
-      next: (res) => this.servicios = res.data || res,
-      error: (err) => console.error('Error al cargar servicios', err)
-    });
-
-    this.promocionService.obtenerPromociones({ vigente: true, activa: true }).subscribe({
-      next: (res) => this.promociones = res.data,
-      error: (err) => console.error('Error al cargar promociones', err)
+      next: (res) => {
+        this.servicios = res.data || res;
+        this.actualizarItemsListPorTipo();
+      },
+      error: (err) => console.error(err)
     });
   }
 
@@ -138,6 +143,17 @@ export class AgendarCitaComponent implements OnInit {
     ];
   }
 
+  actualizarItemsListPorTipo(): void {
+    const tipo = this.citaForm.get('itemTipo')?.value;
+    if (tipo === 'srv') {
+      this.itemsList = this.servicios;
+      console.log('Lista actualizada a servicios individuales:', this.itemsList.length);
+    } else if (tipo === 'prom') {
+      this.itemsList = this.serviciosContratadosPaciente;
+      console.log('Lista actualizada a servicios contratados:', this.itemsList.length);
+    }
+  }
+
   // Filtra los contactos en tiempo real según lo que el usuario escribe en el input de búsqueda
   filtrarContactos(event: any): void {
     const termino = event.target.value.toLowerCase().trim();
@@ -160,29 +176,28 @@ export class AgendarCitaComponent implements OnInit {
     this.terminoBusqueda = '';
     this.contactosFiltrados = [];
 
-    // Teléfono
     const tel = contacto.telefonoWhatsapp || contacto.numeroTelefono || contacto.telefono || '';
     this.citaForm.patchValue({ telefono: tel });
 
-    // Nombre y apellido
     const nombre = contacto.nombre || '';
     const apeP = contacto.apeP || contacto.apellidos || contacto.apellido || '';
     this.citaForm.patchValue({ nombre, apeP });
 
-    // Actualizar estado de contacto encontrado
     this.personaEncontrada = contacto;
     this.tipoContacto = contacto.tipoContactoDb === 'paciente' ? 'paciente' : 'pregunton';
 
-    // Deshabilitar los campos si tienen valor (vienen de un contacto existente)
-    if (nombre) {
-      this.citaForm.get('nombre')?.disable();
+    // Deshabilitar campos si corresponden
+    if (nombre) this.citaForm.get('nombre')?.disable();
+    else this.citaForm.get('nombre')?.enable();
+    if (apeP) this.citaForm.get('apeP')?.disable();
+    else this.citaForm.get('apeP')?.enable();
+
+    // Si es paciente, cargar sus servicios contratados inmediatamente
+    if (this.tipoContacto === 'paciente') {
+      this.cargarServiciosContratadosPaciente(contacto._id);
     } else {
-      this.citaForm.get('nombre')?.enable();
-    }
-    if (apeP) {
-      this.citaForm.get('apeP')?.disable();
-    } else {
-      this.citaForm.get('apeP')?.enable();
+      this.serviciosContratadosPaciente = [];
+      this.actualizarItemsListPorTipo();
     }
   }
   
@@ -207,6 +222,13 @@ export class AgendarCitaComponent implements OnInit {
     if (encontrado) {
       this.personaEncontrada = encontrado;
       this.tipoContacto = 'paciente';
+      if (encontrado && this.tipoContacto === 'paciente') {
+        this.cargarServiciosContratadosPaciente(this.personaEncontrada._id);
+      } else {
+        // Si no es paciente, vaciamos la lista de servicios contratados
+        this.serviciosContratadosPaciente = [];
+        this.actualizarItemsListPorTipo();
+      }
     } else {
       encontrado = this.todosLosPreguntones.find(p =>
         String(p.telefono) === telABuscar ||
@@ -240,10 +262,27 @@ export class AgendarCitaComponent implements OnInit {
     }
   }
 
+  cargarServiciosContratadosPaciente(pacienteId: string): void {
+    console.log('Cargando servicios contratados para paciente:', pacienteId);
+    this.servicioContratadoService.obtenerServiciosPorPaciente(pacienteId).subscribe({
+      next: (res) => {
+        console.log('Respuesta servicios contratados:', res);
+        this.serviciosContratadosPaciente = (res.data || []).filter((s: any) => s.sesionesRestantes > 0);
+        console.log('Servicios contratados filtrados:', this.serviciosContratadosPaciente);
+        this.actualizarItemsListPorTipo();
+        // Forzar detección de cambios por si acaso
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error al cargar servicios contratados:', err)
+    });
+  }
+
   // Limpia los campos de nombre y apellido, y rehabilita su edición manual
   resetearCamposNombres(): void {
     this.personaEncontrada = null;
     this.tipoContacto = 'nuevo';
+    this.serviciosContratadosPaciente = [];
+    this.actualizarItemsListPorTipo();
     this.citaForm.patchValue({ nombre: '', apeP: '' });
     this.citaForm.get('nombre')?.enable();
     this.citaForm.get('apeP')?.enable();

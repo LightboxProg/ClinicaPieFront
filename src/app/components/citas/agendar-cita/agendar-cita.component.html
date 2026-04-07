@@ -90,18 +90,19 @@
                         <option value="" disabled selected>-- Selecciona uno --</option>
 
                         <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'srv'">
-                            <option *ngFor="let srv of servicios" [value]="srv._id">
-                                {{ srv.nombre }} ({{ srv.duracion }} min)
-                            </option>
+                        <option *ngFor="let srv of itemsList" [value]="srv._id">
+                            {{ srv.nombre }} ({{ srv.duracion }} min)
+                        </option>
                         </ng-container>
 
                         <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'prom'">
-                            <option *ngFor="let prom of promociones" [value]="prom._id">
-                                {{ prom.nombre }}
-                            </option>
+                        <option *ngFor="let contrato of itemsList" [value]="contrato._id">
+                            {{ contrato.servicio?.nombre || contrato.nombre }} - 
+                            Sesiones restantes: {{ contrato.sesionesRestantes }}
+                        </option>
                         </ng-container>
                     </select>
-                </div>
+                    </div>
 
                 <div class="campo">
                     <label>Fecha</label>
