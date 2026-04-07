@@ -36,7 +36,7 @@
                     <label>Tipo de Agendamiento</label>
                     <select formControlName="itemTipo">
                         <option value="srv">Servicio Individual</option>
-                        <option value="prom">Promoción / Paquete</option>
+                        <option value="prom">Paquete</option>
                     </select>
                 </div>
 
@@ -45,12 +45,25 @@
                     <select formControlName="itemId">
                         <option value="" disabled selected>-- Selecciona uno --</option>
                         <option *ngFor="let item of itemsList" [value]="item._id">
-                        <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'srv'">
-                            {{ item.nombre }} ({{ item.duracion }} min)
-                        </ng-container>
-                        <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'prom'">
-                            {{ item.servicio.nombre }} - Sesiones restantes: {{ item.sesionesRestantes }}
-                        </ng-container>
+                            <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'srv'">
+                                {{ item.nombre }} ({{ item.duracion }} min)
+                            </ng-container>
+                            <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'prom'">
+                                {{ item.servicio.nombre }} - Sesiones restantes: {{ item.sesionesRestantes }}
+                            </ng-container>
+                        </option>
+                    </select>
+                </div>
+
+                <div class="campo full"
+                    *ngIf="citaForm.get('itemTipo')?.value === 'srv' && promocionesDisponibles.length > 0">
+                    <label>Aplicar Promoción (opcional)</label>
+                    <select formControlName="promocionId">
+                        <option value="">Sin promoción</option>
+                        <option *ngFor="let promo of promocionesDisponibles" [value]="promo._id">
+                            {{ promo.nombre }} –
+                            {{ promo.tipoDescuento === 'porcentaje' ? promo.valorDescuento + '%' : '$' +
+                            promo.valorDescuento }}
                         </option>
                     </select>
                 </div>

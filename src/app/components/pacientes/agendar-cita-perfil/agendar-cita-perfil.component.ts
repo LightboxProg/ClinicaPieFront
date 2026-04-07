@@ -31,6 +31,7 @@ export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
   doctoresDisponibles: any[] = [];
   servicios: any[] = [];
   promociones: any[] = [];
+  promocionesDisponibles: any[] = [];
 
   diasLaborales: string[] = [];
   bloquesDisponibles: any[] = [];
@@ -55,7 +56,8 @@ export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
       itemId: ['', Validators.required],
       fechaCita: [{ value: '', disabled: true }, Validators.required],
       horaInicio: [{ value: '', disabled: true }, Validators.required],
-      observaciones: ['']
+      observaciones: [''],
+      promocionId: ['']
     });
   }
 
@@ -157,6 +159,24 @@ export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
     this.citaForm.get('horaInicio')?.valueChanges.subscribe(() => {
       this.validarAjusteTiempo();
     });
+
+    this.citaForm.get('itemId')?.valueChanges.subscribe(itemId => {
+      this.citaForm.patchValue({ promocionId: '' });
+      this.promocionesDisponibles = [];
+      if (itemId && this.citaForm.get('itemTipo')?.value === 'srv') {
+        this.cargarPromocionesParaServicio(itemId);
+      }
+    });
+  }
+
+  cargarPromocionesParaServicio(servicioId: string): void {
+    this.promocionService.obtenerPromocionesParaServicio(servicioId, this.citaForm.get('sucursalId')?.value)
+      .subscribe({
+        next: (res: any) => {
+          this.promocionesDisponibles = res.data || [];
+        },
+        error: (err) => console.error('Error al cargar promociones', err)
+      });
   }
 
   // Utiliza el LoginService para cargar los doctores asignados a la sucursal
@@ -323,7 +343,8 @@ export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
       horaInicio: raw.horaInicio,
       observaciones: raw.observaciones,
       itemTipo: raw.itemTipo,
-      itemId: raw.itemId
+      itemId: raw.itemId,
+      promocionId: raw.promocionId || null
     };
 
     this.calendarioService.agendarCita(payload).subscribe({
@@ -341,7 +362,7 @@ export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
   }
 
   // Devuelve fecha actual en formato texto
- hoy(): Date {
+  hoy(): Date {
     return new Date();
   }
   // Cierra el componente interactivo
