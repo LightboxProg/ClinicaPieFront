@@ -136,7 +136,7 @@ export class PerfilComponent implements OnInit {
       if (cita.doctorId && cita.doctorId.nombre) {
         const doctor = cita.doctorId;
         doctorNombre = `${doctor.nombre || ''} ${doctor.apeP || ''} ${doctor.apeM || ''}`.trim();
-      } 
+      }
       // Fallback: doctor del contrato
       else if (cita.servicioContratadoId?.creadoPor) {
         const doctor = cita.servicioContratadoId.creadoPor;
@@ -183,9 +183,8 @@ export class PerfilComponent implements OnInit {
 
     Swal.fire({
       title: '¿Eliminar cita?',
-      text: `Esta acción eliminará la cita de ${cita.tratamiento} el ${cita.fecha}. ${
-        cita.servicioContratadoId ? 'Se restaurará la sesión consumida en el servicio contratado.' : ''
-      }`,
+      text: `Esta acción eliminará la cita de ${cita.tratamiento} el ${cita.fecha}. ${cita.servicioContratadoId ? 'Se restaurará la sesión consumida en el servicio contratado.' : ''
+        }`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
@@ -676,10 +675,10 @@ export class PerfilComponent implements OnInit {
 
   // Lista elementos con sesiones validas
   cargarServiciosDisponibles() {
-    this.serviciosService.obtenerServicios('', 'true')
+    this.serviciosService.obtenerServicios('', 'true') 
       .subscribe({
         next: (res) => {
-          this.serviciosDisponibles = res.data.filter((servicio: any) => servicio.tieneSesiones);
+          this.serviciosDisponibles = res.data;
         },
         error: (err) => {
           console.error(err);
@@ -957,7 +956,7 @@ export class PerfilComponent implements OnInit {
       }
     });
   }
-  
+
   contratarPromocion(promocion: Promocion) {
     // 1. Cerrar el modal de promociones
     this.mostrarModalPromocion = false;
