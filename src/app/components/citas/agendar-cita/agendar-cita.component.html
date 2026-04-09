@@ -80,7 +80,7 @@
                     <label>Tipo de Agendamiento</label>
                     <select formControlName="itemTipo">
                         <option value="srv">Servicio Individual</option>
-                        <option value="prom">Promoción / Paquete</option>
+                        <option value="prom">Paquete</option>
                     </select>
                 </div>
 
@@ -90,19 +90,32 @@
                         <option value="" disabled selected>-- Selecciona uno --</option>
 
                         <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'srv'">
-                        <option *ngFor="let srv of itemsList" [value]="srv._id">
-                            {{ srv.nombre }} ({{ srv.duracion }} min)
-                        </option>
+                            <option *ngFor="let srv of itemsList" [value]="srv._id">
+                                {{ srv.nombre }} ({{ srv.duracion }} min)
+                            </option>
                         </ng-container>
 
                         <ng-container *ngIf="citaForm.get('itemTipo')?.value === 'prom'">
-                        <option *ngFor="let contrato of itemsList" [value]="contrato._id">
-                            {{ contrato.servicio?.nombre || contrato.nombre }} - 
-                            Sesiones restantes: {{ contrato.sesionesRestantes }}
-                        </option>
+                            <option *ngFor="let contrato of itemsList" [value]="contrato._id">
+                                {{ contrato.servicio?.nombre || contrato.nombre }} -
+                                Sesiones restantes: {{ contrato.sesionesRestantes }}
+                            </option>
                         </ng-container>
                     </select>
-                    </div>
+                </div>
+
+                <div class="campo full"
+                    *ngIf="citaForm.get('itemTipo')?.value === 'srv' && promocionesDisponibles.length > 0">
+                    <label>Aplicar Promoción (opcional)</label>
+                    <select formControlName="promocionId">
+                        <option value="">Sin promoción</option>
+                        <option *ngFor="let promo of promocionesDisponibles" [value]="promo._id">
+                            {{ promo.nombre }} –
+                            {{ promo.tipoDescuento === 'porcentaje' ? promo.valorDescuento + '%' : '$' +
+                            promo.valorDescuento }}
+                        </option>
+                    </select>
+                </div>
 
                 <div class="campo">
                     <label>Fecha</label>

@@ -43,6 +43,7 @@ export class AgendarCitaComponent implements OnInit {
   horaMinimaPermitida: string = '';
   horaMaximaPermitida: string = '';
   doctoresDisponibles: any[] = [];
+  promocionesDisponibles: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -63,6 +64,7 @@ export class AgendarCitaComponent implements OnInit {
       fechaCita: ['', Validators.required],
       horaInicio: ['', Validators.required],
       observaciones: [''],
+      promocionId: [''],
       pago: [0, [Validators.min(0)]]
     });
   }
@@ -90,6 +92,25 @@ export class AgendarCitaComponent implements OnInit {
       this.citaForm.get('itemId')?.setValue('');
       this.actualizarItemsListPorTipo();
     });
+
+    this.citaForm.get('itemId')?.valueChanges.subscribe(itemId => {
+      this.citaForm.patchValue({ promocionId: '' });
+      this.promocionesDisponibles = [];
+      if (itemId && this.citaForm.get('itemTipo')?.value === 'srv') {
+        this.cargarPromocionesParaServicio(itemId);
+      }
+    });
+  }
+
+
+  cargarPromocionesParaServicio(servicioId: string): void {
+    this.promocionService.obtenerPromocionesParaServicio(servicioId, undefined)
+      .subscribe({
+        next: (res: any) => {
+          this.promocionesDisponibles = res.data || [];
+        },
+        error: (err) => console.error('Error al cargar promociones', err)
+      });
   }
 
   // Obtiene la lista de servicios y promociones disponibles desde el backend
@@ -200,7 +221,7 @@ export class AgendarCitaComponent implements OnInit {
       this.actualizarItemsListPorTipo();
     }
   }
-  
+
   // Valida si ya existe un teléfono en el formulario al abrir el modal e inicia su búsqueda
   verificarTelefonoActual(): void {
     const telActual = this.citaForm.get('telefono')?.value;
@@ -303,7 +324,8 @@ export class AgendarCitaComponent implements OnInit {
       fechaCita: formValues.fechaCita,
       horaInicio: formValues.horaInicio,
       observaciones: formValues.observaciones,
-      pago: formValues.pago
+      pago: formValues.pago,
+      promocionId: formValues.promocionId || null
     };
 
     this.calendarioService.agendarCita(payload).subscribe({
