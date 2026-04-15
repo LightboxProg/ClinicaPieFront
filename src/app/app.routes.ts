@@ -20,6 +20,7 @@ import { ChatsComponent } from './components/mensaje/chats/chats.component';
 import { CalendarioPageComponent } from './pages/calendario-page/calendario-page.component';
 import { PreguntonesComponent } from './pages/preguntones/preguntones.component';
 import { FormHorariosComponent } from './components/horarios/form-horarios/form-horarios.component';
+import { TokenComponent } from './components/token/token.component';
 
 export const routes: Routes = [
   // Rutas públicas (sin autenticación)
@@ -121,6 +122,12 @@ export const routes: Routes = [
   {
     path: "mensajes-masivos",
     component: MensajesMasivosComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Recepcionista'] }
+  },
+  {
+    path: "estado-google",
+    component: TokenComponent,
     canActivate: [authGuard],
     data: { roles: ['Administrador', 'Recepcionista'] }
   },

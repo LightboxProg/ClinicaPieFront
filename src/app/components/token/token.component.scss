@@ -1,0 +1,107 @@
+.token-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  max-width: 400px;
+  margin: 1rem auto;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.token-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  color: #4285f4;
+
+  i {
+    font-size: 2rem;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+}
+
+.token-loading {
+  text-align: center;
+  color: #666;
+  margin: 1rem 0;
+}
+
+.token-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+
+  .status-icon {
+    font-size: 2rem;
+
+    &.valid i {
+      color: #28a745;
+    }
+
+    &.invalid i {
+      color: #dc3545;
+    }
+  }
+
+  .status-message {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333;
+    flex: 1;
+  }
+}
+
+.token-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    font-size: 1rem;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: #4285f4;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: #3367d6;
+  }
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: #c82333;
+  }
+}

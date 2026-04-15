@@ -32,8 +32,8 @@
             <button class="dropdown-item" (click)="navigate('/chats')">
               <i class="fas fa-comments"></i> Chats
             </button>
-            <button *ngIf="['Administrador', 'Recepcionista'].includes(credentials?.tipo)"
-              class="dropdown-item" (click)="navigate('/mensajes-masivos')">
+            <button *ngIf="['Administrador', 'Recepcionista'].includes(credentials?.tipo)" class="dropdown-item"
+              (click)="navigate('/mensajes-masivos')">
               <i class="fas fa-envelope"></i> Mensajes Masivos
             </button>
           </div>
@@ -72,6 +72,25 @@
               <i class="fas fa-plus-circle"></i> Registrar Sucursal
             </button>
           </div>
+        </div>
+
+        <!-- SECCIÓN TOKEN -->
+        <div *ngIf="['Administrador', 'Recepcionista'].includes(credentials?.tipo)" class="nav-dropdown">
+          <button class="nav-link dropdown-toggle">
+            <i class="fas fa-calendar-alt nav-icon"></i>
+            Verificaciones <i class="fas fa-chevron-down dropdown-icon"></i>
+          </button>
+          <div class="dropdown-menu">
+            <button class="dropdown-item" (click)="navigate('/estado-google')">
+              <i class="fas fa-calendar"></i> google
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="credentials?.tipo === 'Doctor'" class="nav-dropdown">
+          <button class="nav-link" (click)="navigate('/agenda-doctor')">
+            <i class="fas fa-calendar nav-icon"></i> Agenda
+          </button>
         </div>
 
         <!-- SECCIÓN PACIENTES -->

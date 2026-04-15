@@ -1,0 +1,27 @@
+<div class="token-card">
+  <div class="token-header">
+    <i class="fab fa-google"></i>
+    <h3>Google Calendar</h3>
+  </div>
+
+  <div *ngIf="isLoading" class="token-loading">
+    <i class="fas fa-spinner fa-spin"></i> Verificando...
+  </div>
+
+  <div *ngIf="!isLoading && status" class="token-status">
+    <div class="status-icon" [class.valid]="status.valido" [class.invalid]="!status.valido">
+      <i *ngIf="status.valido" class="fas fa-check-circle"></i>
+      <i *ngIf="!status.valido" class="fas fa-exclamation-triangle"></i>
+    </div>
+    <p class="status-message">{{ status.mensaje }}</p>
+  </div>
+
+  <div class="token-actions">
+    <button class="btn btn-primary" (click)="verificarToken()" [disabled]="isLoading">
+      <i class="fas fa-sync-alt"></i> Verificar ahora
+    </button>
+    <button *ngIf="status && !status.valido" class="btn btn-danger" (click)="autenticar()">
+      <i class="fab fa-google"></i> Autenticar Google
+    </button>
+  </div>
+</div>
