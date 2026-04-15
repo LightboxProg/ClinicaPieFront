@@ -13,7 +13,13 @@
       <i *ngIf="status.valido" class="fas fa-check-circle"></i>
       <i *ngIf="!status.valido" class="fas fa-exclamation-triangle"></i>
     </div>
-    <p class="status-message">{{ status.mensaje }}</p>
+    <div class="status-content">
+      <p class="status-message">{{ status.mensaje }}</p>
+      <div *ngIf="status.adminEmail" class="admin-email-info">
+        <span class="label">Cuenta Requerida:</span>
+        <span class="email-badge">{{ status.adminEmail }}</span>
+      </div>
+    </div>
   </div>
 
   <div class="token-actions">
@@ -21,7 +27,7 @@
       <i class="fas fa-sync-alt"></i> Verificar ahora
     </button>
     <button *ngIf="status && !status.valido" class="btn btn-danger" (click)="autenticar()">
-      <i class="fab fa-google"></i> Autenticar Google
+      <i class="fab fa-google"></i> Vincular cuenta de Administrador
     </button>
   </div>
 </div>

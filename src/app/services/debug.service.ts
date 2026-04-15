@@ -7,6 +7,7 @@ import { GlobalApiService } from './global-api.service';
 export interface TokenStatus {
   valido: boolean;
   motivo: 'no_token' | 'token_invalido' | null;
+  adminEmail?: string;
   mensaje: string;
 }
 
