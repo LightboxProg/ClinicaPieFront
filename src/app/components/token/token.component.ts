@@ -41,7 +41,7 @@ export class TokenComponent implements OnInit, OnDestroy {
   }
 
   autenticar(): void {
-    this.debugService.redirigirAutenticacion();
+    this.debugService.redirigirAutenticacion(this.status?.adminEmail);
   }
 
   ngOnDestroy(): void {

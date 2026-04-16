@@ -23,7 +23,11 @@ export class DebugService {
     return this.http.get<TokenStatus>(this.api.getApiUrl() + '/verificar-token-google');
   }
 
-  redirigirAutenticacion(): void {
-    window.location.href = this.api.getApiUrl() + '/auth';
+  redirigirAutenticacion(email?: string): void {
+    let url = this.api.getApiUrl() + '/auth';
+    if (email) {
+      url += `?email=${encodeURIComponent(email)}`;
+    }
+    window.location.href = url;
   }
 }
