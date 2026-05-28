@@ -2,226 +2,172 @@
 @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Gruppo&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
-// Variables
-$primary-color: #ff5a5f;
-$secondary-color: #00a699;
-$dark-color: #2d2d2d;
-$light-color: #f7f7f7;
-$accent-color: #ffb400;
-$text-dark: #333333;
-$text-med: #767676;
-$text-light: #ffffff;
-$border-radius: 8px;
-$transition: all 0.3s ease;
+/* ==========================================================================
+   PÁGINA DE LOGIN - CLÍNICA DEL PIE
+   ========================================================================== */
 
-.register-page {
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh; /* Permite que quede centrado en la pantalla */
+  background-color: var(--color-surface); 
+  padding: 2rem;
+  
+  /* Animación suave de entrada */
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.login-card {
+  background-color: var(--color-surface);
+  width: 100%;
+  max-width: 420px;
+  padding: 3rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Sombra elegante */
+  border: 1px solid var(--color-border);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* --- ENCABEZADO --- */
+.login-header {
+  margin-bottom: 2.5rem;
+
+  .login-logo {
+    height: 50px;
+    width: auto;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+  }
+
+  .login-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .login-subtitle {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+}
+
+/* --- FORMULARIO Y CAMPOS --- */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+
+  .form-group {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    position: relative;
-    overflow: hidden;
-    padding: 20px;
- 
-    // Contenedor del formulario
-    .register-form-container {
-        z-index: 1;
-        position: relative;
-        width: 80%;
-        max-width: 450px;
-        padding: 40px 35px;
-        background: rgba(255, 255, 255, 0.95);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        border-radius: $border-radius;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transform: translateY(0);
-        transition: $transition;
-        animation: fadeInUp 0.6s ease-out;
-        
-        &:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        // Encabezado con logo
-        .form-header {
-            text-align: center;
-            margin-bottom: 30px;
-            
-            .logo {
-                font-family: 'Alex Brush', cursive;
-                font-size: 2.5rem;
-                color: $primary-color;
-                margin-bottom: 10px;
-                display: block;
-            }
-            
-            .title {
-                font-family: 'Gruppo', sans-serif;
-                font-size: 2rem;
-                font-weight: 700;
-                color: $dark-color;
-                text-align: center;
-                margin-bottom: 1.5rem;
-                letter-spacing: 1px;
-            }
-        }
-        
-        // Estilos del formulario
-        .register-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            
-            .form-group {
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
-                position: relative;
-                
-                label {
-                    font-size: 0.9rem;
-                    color: $text-med;
-                    font-weight: 500;
-                    transition: $transition;
-                }
-                
-                .input-container {
-                    position: relative;
-                    
-                    .input-icon {
-                        position: absolute;
-                        left: 15px;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        color: $text-med;
-                        transition: $transition;
-                    }
-                    
-                    input {
-                        width: 80%;
-                        padding: 15px 15px 15px 45px;
-                        font-size: 1rem;
-                        border: 2px solid #e6e6e6;
-                        border-radius: $border-radius;
-                        outline: none;
-                        transition: $transition;
-                        background-color: #f9f9f9;
-                        font-family: 'Montserrat', sans-serif;
-                        
-                        &:focus {
-                            border-color: $primary-color;
-                            background-color: white;
-                            box-shadow: 0 0 0 3px rgba(255, 90, 95, 0.1);
-                            
-                            & + .input-icon {
-                                color: $primary-color;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            .btn-register {
-                background: linear-gradient(135deg, $primary-color 0%, #ff7e5f 100%);
-                color: $text-light;
-                padding: 15px;
-                border: none;
-                border-radius: $border-radius;
-                font-size: 1rem;
-                font-weight: 600;
-                cursor: pointer;
-                transition: $transition;
-                box-shadow: 0 4px 15px rgba(255, 90, 95, 0.3);
-                letter-spacing: 0.5px;
-                margin-top: 10px;
-                font-family: 'Montserrat', sans-serif;
-                
-                &:hover {
-                    background: linear-gradient(135deg, #ff7e5f 0%, $primary-color 100%);
-                    box-shadow: 0 6px 20px rgba(255, 90, 95, 0.4);
-                    transform: translateY(-2px);
-                }
-                
-                &:active {
-                    transform: translateY(0);
-                }
-            }
-        }
-        
-        // Enlaces adicionales
-        .form-footer {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 0.9rem;
-            color: $text-med;
-            
-            a {
-                color: $primary-color;
-                text-decoration: none;
-                font-weight: 500;
-                transition: $transition;
-                
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-        }
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-text-main);
     }
+  }
 }
 
-// Animación de entrada
+/* Contenedor de input con icono incrustado */
+.input-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+
+  /* ¡Magia! El icono cambia de color al amarillo de la clínica cuando escribes */
+  &:focus-within .icon {
+    color: var(--color-primary);
+  }
+}
+
+.form-control-icon {
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 2.8rem; /* Espacio extra a la izquierda para el icono */
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 213, 0, 0.15);
+    background-color: var(--color-surface);
+  }
+}
+
+/* --- BOTÓN --- */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-main);
+  border: none;
+  padding: 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 213, 0, 0.3);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Utilidades */
+.w-full {
+  width: 100%;
+}
+
+.mt-2 {
+  margin-top: 1rem;
+}
+
+/* Animación de entrada */
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-// Responsive
-@media (max-width: 768px) {
-    .register-form-container {
-        padding: 30px 25px !important;
-    }
-    
-    .title {
-        font-size: 1.8rem !important;
-    }
-    
-    .logo {
-        font-size: 2rem !important;
-    }
-    
-    .element-1, .element-2, .element-3 {
-        display: none;
-    }
-}
-
+/* Responsive */
 @media (max-width: 480px) {
-    .register-form-container {
-        padding: 25px 20px !important;
-    }
-    
-    .title {
-        font-size: 1.6rem !important;
-    }
-}
-
-// Para pantallas grandes
-@media (min-width: 1000px) {
-    .register-form-container {
-        max-width: 450px !important;
-        width: auto !important;
-    }
-    
-    .register-page {
-        min-height: 80vh !important;
-        height: 80vh !important;
-        overflow: hidden;
-    }
+  .login-card {
+    padding: 2rem 1.5rem;
+  }
+  .login-header .login-title {
+    font-size: 1.5rem;
+  }
 }

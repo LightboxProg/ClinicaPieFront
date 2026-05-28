@@ -1,75 +1,55 @@
-<div class="blacklist-card">
-  <div class="card-warning-strip"></div>
-  
-  <div class="card-content">
-    <!-- Header de la tarjeta -->
+<div class="patient-card alert-card fade-in-up">
+  <div class="alert-indicator"></div>
+
+  <div class="card-body">
     <div class="card-header">
-      <div class="patient-avatar">
-        <div class="avatar-placeholder">
+      <div class="patient-info">
+        <div class="avatar-error">
           <i class="fas fa-user-slash"></i>
         </div>
-      </div>
-      
-      <div class="patient-main-info">
-        <h3 class="patient-name">{{ entrada.pregunton.nombre }}</h3>
-        <div class="contact-info">
-          <span class="contact-item">
-            <i class="fas fa-phone"></i>
-            {{ entrada.pregunton.telefonoWhatsapp }}
-          </span>
+        <div>
+          <h3 class="patient-name">{{ entrada.pregunton.nombre }}</h3>
+          <p class="patient-phone">
+            <i class="fas fa-phone-alt"></i> {{ entrada.pregunton.telefonoWhatsapp }}
+          </p>
         </div>
       </div>
-      
-      <div class="warning-badge">
-        <i class="fas fa-exclamation-triangle"></i>
-        <span>Lista Negra</span>
+      <span class="badge-alert">Lead Restringido</span>
+    </div>
+
+    <div class="card-details">
+      <div class="detail-row">
+        <span class="detail-label">Tipo:</span>
+        <span class="detail-value status-badge" [class]="entrada.tipo">{{ entrada.tipo }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Motivo:</span>
+        <span class="detail-value">{{ entrada.razon }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Fecha:</span>
+        <span class="detail-value">{{ formatearFecha(entrada.fechaAgregado) }}</span>
       </div>
     </div>
 
-    <!-- Información de la lista negra -->
-    <div class="blacklist-details">
-      <div class="detail-grid">
-        <div class="detail-item">
-          <span class="detail-label">Tipo:</span>
-          <span class="detail-value type-badge" [class]="entrada.tipo">{{ entrada.tipo }}</span>
-        </div>
-        
-        <div class="detail-item">
-          <span class="detail-label">Razón:</span>
-          <span class="detail-value">{{ entrada.razon }}</span>
-        </div>
-        
-        <div class="detail-item">
-          <span class="detail-label">Fecha:</span>
-          <span class="detail-value">{{ formatearFecha(entrada.fechaAgregado) }}</span>
-        </div>
-      </div>
+    <div class="expandable-section" *ngIf="entrada.detalles">
+      <button class="btn-toggle" (click)="$event.stopPropagation(); toggleDetails()">
+        <span>Ver más detalles</span>
+        <i class="fas fa-chevron-down" [class.rotated]="showDetails"></i>
+      </button>
       
-      <!-- Detalles expandibles -->
-      <div class="details-expandable" *ngIf="entrada.detalles">
-        <div class="details-toggle" (click)="$event.stopPropagation(); toggleDetails()">
-          <span>Detalles adicionales</span>
-          <i class="fas fa-chevron-down" [class.rotated]="showDetails"></i>
-        </div>
-        
-        <div class="details-content" [class.show]="showDetails">
-          <p>{{ entrada.detalles }}</p>
-        </div>
+      <div class="expandable-content" [class.open]="showDetails">
+        <p>{{ entrada.detalles }}</p>
       </div>
     </div>
-
-    <!-- Footer con información adicional -->
-    <div class="card-footer">
-      <div class="footer-item">
-        <i class="fas fa-calendar"></i>
-        <span>Agregado el {{ formatearFecha(entrada.fechaAgregado) }}</span>
-      </div>
-
-      <div class="footer-item click-hint">
-        <button class="btn-remove-blacklist" (click)="eliminarDeListaNegra()">
-          <i class="fas fa-user-check"></i> Remover de Lista Negra
-        </button>
-      </div>
-    </div>
+  </div>
+  
+  <div class="card-footer">
+    <span class="hint-text">
+      <i class="fas fa-calendar-alt"></i> Agregado el {{ formatearFecha(entrada.fechaAgregado) }}
+    </span>
+    <button class="btn-outline-danger" (click)="eliminarDeListaNegra()">
+      <i class="fas fa-user-check"></i> Remover sanción
+    </button>
   </div>
 </div>

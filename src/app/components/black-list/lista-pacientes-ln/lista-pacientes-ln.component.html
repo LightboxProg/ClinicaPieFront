@@ -1,82 +1,55 @@
-<!-- <div class="blacklist-container">
-  <div class="blacklist-header">
-    <div class="header-background"></div>
+<div class="admin-page-container fade-in-up">
+  <!-- ENCABEZADO DE LA PÁGINA -->
+  <div class="page-header">
     <div class="header-content">
-      <h1 class="blacklist-title">Lista Negra de Pacientes</h1>
-      <p class="blacklist-subtitle">Pacientes con restricciones especiales</p>
+      <h1 class="page-title">Directorio de Restricciones</h1>
+      <p class="page-subtitle">Gestión de pacientes y leads con alertas o bloqueos del servicio.</p>
     </div>
   </div>
 
-  <div class="blacklist-content">
-    <div class="lista-container">
-      <div *ngFor="let entrada of pacientesListaNegra" class="blacklist-item-wrapper">
+  <div class="page-body">
+    <!-- PESTAÑAS DE NAVEGACIÓN -->
+    <div class="tabs-container">
+      <button 
+        class="tab-button"
+        [class.active]="tipoSeleccionado === 'pacientes'" 
+        (click)="seleccionarTipo('pacientes')">
+        <i class="fas fa-user-injured"></i> Pacientes
+      </button>
+      <button 
+        class="tab-button"
+        [class.active]="tipoSeleccionado === 'preguntones'" 
+        (click)="seleccionarTipo('preguntones')">
+        <i class="fas fa-user-clock"></i> Leads (Prospectos)
+      </button>
+    </div>
+
+    <!-- LISTA DE PACIENTES -->
+    <div class="list-wrapper" *ngIf="tipoSeleccionado === 'pacientes'">
+      <div *ngFor="let entrada of pacientesListaNegra" class="card-wrapper">
         <app-lista-negra [entrada]="entrada"></app-lista-negra>
       </div>
       
-      
+      <!-- Estado Vacío -->
       <div *ngIf="pacientesListaNegra.length === 0" class="empty-state">
-        <div class="empty-icon">🚫</div>
-        <h3>No hay pacientes en lista negra</h3>
-        <p>No se han registrado pacientes con restricciones especiales</p>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-
-<div class="blacklist-container">
-  <div class="blacklist-header">
-    <div class="header-background"></div>
-    <div class="header-content">
-      <h1 class="blacklist-title">Lista Negra</h1>
-      <p class="blacklist-subtitle">Elementos con restricciones especiales</p>
-    </div>
-  </div>
-
-
-  <div class="blacklist-content">
-    <!-- Selector de tipo -->
-  <div class="tipo-selector">
-    <button 
-      class="tipo-btn"
-      [class.active]="tipoSeleccionado === 'pacientes'" 
-      (click)="seleccionarTipo('pacientes')">
-      Pacientes
-    </button>
-    <button 
-      class="tipo-btn"
-      [class.active]="tipoSeleccionado === 'preguntones'" 
-      (click)="seleccionarTipo('preguntones')">
-      Leads
-    </button>
-  </div>
-
-    <!-- Lista de Pacientes -->
-    <div class="lista-container" *ngIf="tipoSeleccionado === 'pacientes'">
-      <div *ngFor="let entrada of pacientesListaNegra" class="blacklist-item-wrapper">
-        <app-lista-negra [entrada]="entrada"></app-lista-negra>
-      </div>
-      
-      <!-- Estado vacío para pacientes -->
-      <div *ngIf="pacientesListaNegra.length === 0" class="empty-state">
-        <div class="empty-icon">🚫</div>
-        <h3>No hay pacientes en lista negra</h3>
-        <p>No se han registrado pacientes con restricciones especiales</p>
+        <div class="empty-icon"><i class="fas fa-shield-alt"></i></div>
+        <h3>Todo en orden</h3>
+        <p>No hay pacientes registrados en la lista de restricciones actualmente.</p>
       </div>
     </div>
 
-    <!-- Lista de Preguntones -->
-    <div class="lista-container" *ngIf="tipoSeleccionado === 'preguntones'">
-      <div *ngFor="let entrada of preguntonesListaNegra" class="blacklist-item-wrapper">
-        <!-- Aquí necesitas un componente similar para preguntones, o reutilizar app-lista-negra si es compatible -->
+    <!-- LISTA DE LEADS -->
+    <div class="list-wrapper" *ngIf="tipoSeleccionado === 'preguntones'">
+      <div *ngFor="let entrada of preguntonesListaNegra" class="card-wrapper">
+        <!-- Aquí se inserta el componente que limpiamos en el paso anterior -->
         <app-lista-negra-pregunton [entrada]="entrada" (eliminado)="recargarPreguntones()"></app-lista-negra-pregunton>
       </div>
       
-      <!-- Estado vacío para preguntones -->
+      <!-- Estado Vacío -->
       <div *ngIf="preguntonesListaNegra.length === 0" class="empty-state">
-        <div class="empty-icon">🚫</div>
-        <h3>No hay leads en lista negra</h3>
-        <p>No se han registrado preguntones con restricciones especiales</p>
+        <div class="empty-icon"><i class="fas fa-shield-alt"></i></div>
+        <h3>Todo en orden</h3>
+        <p>No hay leads (prospectos) con restricciones en este momento.</p>
       </div>
     </div>
   </div>

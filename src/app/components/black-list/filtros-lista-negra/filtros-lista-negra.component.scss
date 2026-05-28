@@ -1,55 +1,83 @@
-.filtros{
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px  rgba(0, 0, 0, 0.077);
+
+.admin-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  margin-bottom: 2rem;
+  overflow: hidden;
 }
 
-*{
-  font-family: "Inter", serif;
-  font-weight: 300;
+.admin-card-header {
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem 1.5rem;
+}
+
+.admin-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin: 0;
+}
+
+.admin-card-body {
+  padding: 1.5rem;
 }
 
 
-.title{
-  background-color: #282927;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-
-  padding: 10px;
-  color: white;
-
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.5rem;
 }
 
-.filter-opt-container{
-  width: 100%;
+.form-group {
+  flex: 1 1 200px; 
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-
+  gap: 0.5rem;
 }
 
-
-
-.filter-opt{
- margin-top: 1rem;
-
+.search-group {
+  flex: 2 1 300px; 
 }
 
-
-.btn{
-  background-color: #282927;
-  color: white;
-  border-radius: 5px;
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-input{
-  border: 1px solid black;
-
+.form-control {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
 }
 
-input, select{
-  box-sizing: border-box;
-border-radius: 2px;
-padding: 4px;
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 213, 0, 0.15); 
+}
+
+.form-actions {
+  flex: 1 1 150px;
+}
+
+.w-full {
+  width: 100%;
+  padding: 0.6rem 1.5rem;
 }

@@ -21,6 +21,7 @@ import { CalendarioPageComponent } from './pages/calendario-page/calendario-page
 import { PreguntonesComponent } from './pages/preguntones/preguntones.component';
 import { FormHorariosComponent } from './components/horarios/form-horarios/form-horarios.component';
 import { TokenComponent } from './components/token/token.component';
+import { InicioComponent } from './pages/inicio/inicio.component';
 
 export const routes: Routes = [
   // Rutas públicas (sin autenticación)
@@ -148,14 +149,12 @@ export const routes: Routes = [
     data: { roles: ['Doctor', 'Administrador', 'Recepcionista'] }
   },
 
-  // Ruta por defecto (redirigir según rol o a login) - MODIFICADO
+  // Ruta principal de la Clínica
   {
     path: '',
     pathMatch: 'full',
-    component: RoleRedirectComponent, // Usa el componente de redirección
-    canActivate: [authGuard] // El guardia verificará autenticación
+    component: InicioComponent
   },
-
   // Ruta para página no encontrada (opcional)
   { path: '**', redirectTo: '/login' }
 ];

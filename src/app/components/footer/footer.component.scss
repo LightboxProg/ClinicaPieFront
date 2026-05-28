@@ -1,558 +1,145 @@
-@import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Gruppo&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-
-// Variables Pro Pigment (coinciden con navbar)
-$primary-color: #ff5a5f;
-$secondary-color: #00a699;
-$dark-color: #2d2d2d;
-$light-color: #f7f7f7;
-$accent-color: #ffb400;
-$text-dark: #333333;
-$text-med: #767676;
-$text-light: #ffffff;
-$border-radius: 8px;
-$transition: all 0.3s ease;
-$box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 
 .footer-container {
-  background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
-  color: $dark-color;
-  font-family: 'Montserrat', sans-serif;
-  position: relative;
-  border-top: 3px solid $primary-color;
-  box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, $primary-color, transparent);
-  }
+  background-color: var(--color-surface);
+  color: var(--color-text-main);
+  padding: 4rem 5% 1.5rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: 4rem;
 }
 
 .footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px 20px;
-}
-
-/* Sección Superior */
-.footer-top {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   flex-wrap: wrap;
-  gap: 40px;
-  margin-bottom: 40px;
+  justify-content: space-between;
+  gap: 3rem;
+  margin-bottom: 3rem;
 }
 
-.footer-logo-section {
-  flex: 1;
-  min-width: 300px;
-  
-  .footer-logo-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    
-    .footer-logo {
-      height: 60px;
-      width: auto;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-    }
-    
-    .footer-brand {
-      .footer-clinic-name {
-        font-family: 'Alex Brush', cursive;
-        font-size: 2.5rem;
-        color: $primary-color;
-        margin: 0;
-        line-height: 1;
-        letter-spacing: 1px;
-      }
-      
-      .footer-tagline {
-        font-size: 0.9rem;
-        color: $text-med;
-        margin: 5px 0 0;
-        font-style: italic;
-      }
-    }
-  }
-  
-  .footer-description {
-    color: $text-med;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    max-width: 400px;
-    margin: 0;
-  }
+.footer-brand {
+  flex: 1 1 300px;
 }
 
-.footer-cta {
-  flex-shrink: 0;
-  
-  .cta-title {
-    font-size: 1.1rem;
-    color: $dark-color;
-    margin-bottom: 15px;
-    font-weight: 600;
-  }
-  
-  .cta-button {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 24px;
-    background: linear-gradient(135deg, $primary-color 0%, #ff7e5f 100%);
-    color: white;
-    border: none;
-    border-radius: $border-radius;
-    font-weight: 600;
-    cursor: pointer;
-    transition: $transition;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
-    box-shadow: 0 4px 15px rgba(255, 90, 95, 0.3);
-    
-    i {
-      font-size: 1rem;
-    }
-    
-    &:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(255, 90, 95, 0.4);
-    }
-    
-    &.secondary {
-      background: linear-gradient(135deg, $secondary-color 0%, #00c7b7 100%);
-      box-shadow: 0 4px 15px rgba(0, 166, 153, 0.3);
-      
-      &:hover {
-        box-shadow: 0 8px 25px rgba(0, 166, 153, 0.4);
-      }
-    }
-  }
-}
-
-/* Línea divisoria decorativa */
-.footer-divider {
+.logo-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 40px 0;
-  
-  .divider-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba($primary-color, 0.3), transparent);
-  }
-  
-  .divider-icon {
-    margin: 0 20px;
-    color: $primary-color;
-    font-size: 1.2rem;
-    animation: pulse 2s infinite;
-  }
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
+.footer-logo {
+  height: 40px;
+  width: auto;
 }
 
-/* Sección Media */
-.footer-middle {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 40px;
-  margin-bottom: 40px;
+.footer-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.footer-section {
-  .footer-section-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    color: $dark-color;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid rgba($primary-color, 0.2);
-    font-weight: 600;
-    
-    i {
-      color: $primary-color;
-    }
-  }
+.footer-text {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
 }
 
-.footer-links {
+.footer-links, .footer-contact {
+  flex: 1 1 200px;
+}
+
+.footer-subtitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.footer-subtitle::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 30px;
+  height: 2px;
+  background-color: var(--color-primary);
+}
+
+.footer-links ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  
-  li {
-    margin-bottom: 12px;
-  }
 }
 
-.footer-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: $text-dark;
-  text-decoration: none;
+.footer-links li {
+  margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+  color: var(--color-text-muted);
   cursor: pointer;
-  padding: 8px 0;
-  transition: $transition;
-  font-size: 0.9rem;
-  border-radius: 4px;
-  
-  &:hover {
-    color: $primary-color;
-    transform: translateX(5px);
-    background: rgba($primary-color, 0.05);
-    padding-left: 10px;
-    padding-right: 10px;
-    
-    i {
-      color: $primary-color;
-    }
-  }
-  
-  i {
-    color: $text-med;
-    font-size: 0.9rem;
-    width: 20px;
-    text-align: center;
-    transition: $transition;
-  }
-  
-  &.logout-link {
-    &:hover {
-      color: #ff4757;
-      
-      i {
-        color: #ff4757;
-      }
-    }
-  }
+  transition: all 0.3s ease;
+  display: inline-block;
 }
 
-.footer-contact {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  
-  .contact-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 20px;
-    padding: 10px 0;
-    
-    i {
-      color: $primary-color;
-      font-size: 1.1rem;
-      margin-top: 3px;
-      flex-shrink: 0;
-    }
-    
-    .contact-details {
-      display: flex;
-      flex-direction: column;
-      
-      strong {
-        font-size: 0.9rem;
-        color: $dark-color;
-        margin-bottom: 4px;
-      }
-      
-      span {
-        font-size: 0.85rem;
-        color: $text-med;
-        line-height: 1.4;
-      }
-    }
-  }
+.footer-links a:hover {
+  color: var(--color-primary);
+  transform: translateX(5px);
 }
 
-/* Sección Inferior */
+.highlight {
+  color: var(--color-text-main) !important;
+  font-weight: 600;
+}
+
+.highlight:hover {
+  color: var(--color-primary) !important;
+}
+
+
+.social-links {
+  margin-top: 1.5rem;
+}
+
+.social-links a {
+  color: var(--color-text-muted);
+  transition: color 0.3s ease;
+  display: inline-block;
+}
+
+.social-links a:hover {
+  color: var(--color-primary);
+}
+
+
 .footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 30px;
-  padding-top: 30px;
-  border-top: 1px solid rgba($primary-color, 0.1);
-}
-
-.social-section {
-  h5 {
-    font-size: 0.9rem;
-    color: $text-med;
-    margin-bottom: 15px;
-    font-weight: 500;
-  }
-  
-  .social-icons {
-    display: flex;
-    gap: 15px;
-    
-    .social-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: $light-color;
-      color: $dark-color;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      transition: $transition;
-      border: 1px solid rgba($dark-color, 0.1);
-      
-      &:hover {
-        background: $primary-color;
-        color: white;
-        transform: translateY(-3px) rotate(5deg);
-        box-shadow: 0 5px 15px rgba(255, 90, 95, 0.3);
-        
-        &.fab.fa-instagram {
-          background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-        }
-        &.fab.fa-facebook-f {
-          background: #1877f2;
-        }
-        &.fab.fa-tiktok {
-          background: #000000;
-        }
-        &.fab.fa-youtube {
-          background: #ff0000;
-        }
-        &.fab.fa-twitter {
-          background: #1da1f2;
-        }
-      }
-      
-      i {
-        font-size: 1.1rem;
-      }
-    }
-  }
-}
-
-.copyright-section {
-  flex: 1;
   text-align: center;
-  min-width: 300px;
-  
-  .copyright {
-    p {
-      margin: 5px 0;
-      font-size: 0.85rem;
-      color: $text-med;
-      
-      strong {
-        color: $dark-color;
-        font-weight: 600;
-      }
-    }
-    
-    .made-with-love {
-      color: $primary-color;
-      font-size: 0.9rem;
-      margin-top: 10px;
-      font-weight: 500;
-      
-      &::before {
-        margin-right: 5px;
-        animation: heartbeat 1.5s infinite;
-      }
-    }
-  }
-}
-
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-.back-to-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, $dark-color 0%, lighten($dark-color, 10%) 100%);
-  color: white;
-  border: none;
-  border-radius: $border-radius;
-  cursor: pointer;
-  transition: $transition;
-  font-family: 'Montserrat', sans-serif;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
   font-size: 0.85rem;
-  font-weight: 500;
-  
-  &:hover {
-    background: linear-gradient(135deg, $primary-color 0%, #ff7e5f 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(255, 90, 95, 0.3);
-  }
-  
-  i {
-    font-size: 1rem;
-  }
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .footer-top {
-    flex-direction: column;
-    gap: 30px;
-  }
-  
-  .footer-logo-section {
-    min-width: 100%;
-    
-    .footer-logo-wrapper {
-      justify-content: center;
-      text-align: center;
-    }
-  }
-  
-  .footer-cta {
-    width: 100%;
-    text-align: center;
-    
-    .cta-button {
-      margin: 0 auto;
-    }
-  }
+.agency-credit {
+  margin-top: 0.5rem;
 }
+
+.agency-credit a {
+  color: var(--color-text-main);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.agency-credit a:hover {
+  color: var(--color-primary);
+}
+
 
 @media (max-width: 768px) {
   .footer-content {
-    padding: 30px 15px 15px;
-  }
-  
-  .footer-middle {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  
-  .footer-section {
-    text-align: center;
-    
-    .footer-section-title {
-      justify-content: center;
-    }
-  }
-  
-  .footer-link {
-    justify-content: center;
-    text-align: left;
-  }
-  
-  .footer-contact .contact-item {
-    justify-content: center;
-    text-align: center;
-  }
-  
-  .footer-bottom {
     flex-direction: column;
-    text-align: center;
-    gap: 20px;
-  }
-  
-  .copyright-section {
-    order: 3;
-  }
-  
-  .social-section {
-    order: 1;
-    
-    .social-icons {
-      justify-content: center;
-    }
-  }
-  
-  .back-to-top {
-    order: 2;
-    margin: 10px 0;
-  }
-  
-  .footer-divider {
-    margin: 30px 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .footer-clinic-name {
-    font-size: 2rem !important;
-  }
-  
-  .footer-description {
-    font-size: 0.9rem;
-  }
-  
-  .footer-links,
-  .footer-contact {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .cta-button {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Animaciones suaves */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.footer-container {
-  animation: fadeInUp 0.6s ease-out 0.3s both;
-}
-
-/* Mejoras de accesibilidad */
-.footer-link:focus,
-.cta-button:focus,
-.back-to-top:focus,
-.social-icon:focus {
-  outline: 2px solid $primary-color;
-  outline-offset: 2px;
-}
-
-/* Efectos de profundidad */
-.footer-container {
-  position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: radial-gradient(ellipse at top, rgba(255, 90, 95, 0.05) 0%, transparent 70%);
-    pointer-events: none;
+    gap: 2rem;
   }
 }

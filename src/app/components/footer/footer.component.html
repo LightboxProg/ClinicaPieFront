@@ -1,228 +1,39 @@
 <footer class="footer-container">
   <div class="footer-content">
-
-    <!-- Sección Superior: Logo y eslogan -->
-    <div class="footer-top">
-      <div class="footer-logo-section">
-        <div class="footer-logo-wrapper">
-          <img src="../../../assets/logos/logo.png" alt="Pro Pigment" class="footer-logo">
-          <div class="footer-brand">
-            <h2 class="footer-clinic-name">Pro Pigment</h2>
-            <p class="footer-tagline">Excelencia en pigmentación</p>
-          </div>
-        </div>
-        <p class="footer-description">
-          Centro especializado en tratamientos de pigmentación, cuidado de la piel y bienestar estético.
-        </p>
+    
+    <div class="footer-brand">
+      <div class="logo-wrapper">
+        <img src="../../../assets/logos/logo-clinica-pie.png" alt="Logo Clínica del Pie" class="footer-logo">
+        <h3 class="footer-title">Clínica del Pie Tijuana</h3>
       </div>
-      <div class="footer-cta">
-        <button class="cta-button" (click)="navigate('/login')" *ngIf="!isLoggedIn">
-          <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-        </button>
-        <button class="cta-button secondary" (click)="scrollToTop()" *ngIf="isLoggedIn">
-          <i class="fas fa-arrow-up"></i> Volver arriba
-        </button>
-      </div>
+      <p class="footer-text">
+        Atención podológica profesional. Nos dedicamos a cuidar la salud, función y estética de tus pies para que nunca te detengas.
+      </p>
     </div>
 
-    <!-- Línea divisoria decorativa -->
-    <div class="footer-divider">
-      <div class="divider-line"></div>
-      <div class="divider-icon">
-        <i class="fas fa-feather-alt"></i>
-      </div>
-      <div class="divider-line"></div>
+    <div class="footer-links">
+      <h4 class="footer-subtitle">Enlaces Rápidos</h4>
+      <ul>
+        <li><a (click)="navigate('/nosotros')">Nosotros</a></li>
+        <li><a (click)="navigate('/servicios')">Servicios</a></li>
+        <li><a (click)="navigate('/contacto')">Contacto</a></li>
+        <li><a (click)="navigate('/agendar-cita')" class="highlight">Agendar Cita</a></li>
+      </ul>
     </div>
 
-    <!-- Sección Media: Enlaces organizados -->
-    <div class="footer-middle">
-
-      <!-- SECCIÓN COMUNICACIÓN -->
-      <div class="footer-section">
-        <h4 class="footer-section-title">
-          <i class="fas fa-comments"></i>
-          Comunicación
-        </h4>
-        <ul class="footer-links">
-          <li>
-            <a class="footer-link" (click)="navigate('/chats')">
-              <i class="fas fa-comment-dots"></i>
-              <span>Chats</span>
-            </a>
-          </li>
-          <li *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
-            <a class="footer-link" (click)="navigate('/mensajes-masivos')">
-              <i class="fas fa-envelope"></i>
-              <span>Mensajes Masivos</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- SECCIÓN AGENDA / CITAS -->
-      <div class="footer-section" *ngIf="isLoggedIn">
-        <h4 class="footer-section-title">
-          <i class="fas fa-calendar-alt"></i>
-          Agenda
-        </h4>
-        <ul class="footer-links">
-          <li *ngIf="['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
-            <a class="footer-link" (click)="navigate('/calendario')">
-              <i class="fas fa-calendar"></i>
-              <span>Calendario</span>
-            </a>
-          </li>
-          <li *ngIf="credentials?.tipo === 'Doctor'">
-            <a class="footer-link" (click)="navigate('/agenda-doctor')">
-              <i class="fas fa-calendar-check"></i>
-              <span>Mi Agenda</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- SECCIÓN SUCURSALES -->
-      <div class="footer-section" *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
-        <h4 class="footer-section-title">
-          <i class="fas fa-store"></i>
-          Sucursales
-        </h4>
-        <ul class="footer-links">
-          <li>
-            <a class="footer-link" (click)="navigate('/sucursales-lista')">
-              <i class="fas fa-list"></i>
-              <span>Lista de Sucursales</span>
-            </a>
-          </li>
-          <li>
-            <a class="footer-link" (click)="navigate('/sucursales-formulario')">
-              <i class="fas fa-plus-circle"></i>
-              <span>Registrar Sucursal</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- SECCIÓN PACIENTES -->
-      <div class="footer-section" *ngIf="isLoggedIn">
-        <h4 class="footer-section-title">
-          <i class="fas fa-user-injured"></i>
-          Pacientes
-        </h4>
-        <ul class="footer-links">
-          <li>
-            <a class="footer-link" (click)="navigate('/lista-pacientes')">
-              <i class="fas fa-list"></i>
-              <span>Lista de Pacientes</span>
-            </a>
-          </li>
-          <li *ngIf="['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
-            <a class="footer-link" (click)="navigate('/lista-preguntones')">
-              <i class="fas fa-question-circle"></i>
-              <span>Lista de Leads</span>
-            </a>
-          </li>
-          <li *ngIf="['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
-            <a class="footer-link" (click)="navigate('/lista-negra')">
-              <i class="fas fa-user-slash"></i>
-              <span>Black List</span>
-            </a>
-          </li>
-          <li *ngIf="['Administrador', 'Doctor'].includes(credentials?.tipo)">
-            <a class="footer-link" (click)="navigate('/registroP')">
-              <i class="fas fa-user-plus"></i>
-              <span>Registrar Paciente</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- SECCIÓN CATÁLOGO Y PROMOCIONES -->
-      <div class="footer-section" *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
-        <h4 class="footer-section-title">
-          <i class="fas fa-layer-group"></i>
-          Catálogo
-        </h4>
-        <ul class="footer-links">
-          <li>
-            <a class="footer-link" (click)="navigate('/categorias')">
-              <i class="fas fa-tags"></i>
-              <span>Categorías</span>
-            </a>
-          </li>
-          <li>
-            <a class="footer-link" (click)="navigate('/servicios')">
-              <i class="fas fa-concierge-bell"></i>
-              <span>Servicios</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="footer-section" *ngIf="isLoggedIn && ['Administrador', 'Recepcionista'].includes(credentials?.tipo)">
-        <h4 class="footer-section-title">
-          <i class="fas fa-percent"></i>
-          Promociones
-        </h4>
-        <ul class="footer-links">
-          <li>
-            <a class="footer-link" (click)="navigate('/promociones')">
-              <i class="fas fa-list"></i>
-              <span>Lista de Promociones</span>
-            </a>
-          </li>
-          <li>
-            <a class="footer-link" (click)="navigate('/promocion-form')">
-              <i class="fas fa-plus"></i>
-              <span>Nueva Promoción</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- SECCIÓN ADMINISTRACIÓN (solo Administrador) -->
-      <div class="footer-section" *ngIf="isLoggedIn && credentials?.tipo === 'Administrador'">
-        <h4 class="footer-section-title">
-          <i class="fas fa-user-shield"></i>
-          Administración
-        </h4>
-        <ul class="footer-links">
-          <li>
-            <a class="footer-link" (click)="navigate('/lista-usuarios')">
-              <i class="fas fa-users"></i>
-              <span>Lista de Usuarios</span>
-            </a>
-          </li>
-          <li>
-            <a class="footer-link" (click)="navigate('/registro')">
-              <i class="fas fa-user-plus"></i>
-              <span>Registrar Usuario</span>
-            </a>
-          </li>
-          <li>
-            <a class="footer-link" (click)="navigate('/horariosDoctores')">
-              <i class="fas fa-clock"></i>
-              <span>Horarios de Doctores</span>
-            </a>
-          </li>
-        </ul>
+    <div class="footer-contact">
+      <h4 class="footer-subtitle">Contacto</h4>
+      <p class="footer-text">📍 Tijuana, Baja California</p>
+      <p class="footer-text">📞 (664) 123 4567</p> <div class="social-links">
+        <a href="https://www.facebook.com/" target="_blank" aria-label="Facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+        </a>
       </div>
     </div>
+  </div>
 
-    <!-- Sección Inferior: Redes sociales, copyright y botón -->
-    <div class="footer-bottom">
-      <div class="social-section">
-      </div>
-      <div class="copyright-section">
-        <div class="copyright">
-          <p>&copy; {{ currentYear }} <strong>Pro Pigment</strong>. Todos los derechos reservados.</p>
-          <p class="made-with-love">Hecho con el ❤️ por Lightbox Mercadotecnia.</p>
-        </div>
-      </div>
-      <button class="back-to-top" (click)="scrollToTop()" aria-label="Volver arriba">
-        <i class="fas fa-chevron-up"></i>
-      </button>
-    </div>
-
+  <div class="footer-bottom">
+    <p>&copy; {{ currentYear }} <strong>Clínica del Pie Tijuana</strong>. Todos los derechos reservados.</p>
+    <p class="agency-credit">Desarrollado por <a href="https://lightbox.mx" target="_blank">Lightbox Mercadotecnia</a></p>
   </div>
 </footer>
