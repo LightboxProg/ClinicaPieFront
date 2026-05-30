@@ -1,236 +1,91 @@
-// ==========================================
-// VARIABLES DE COLOR (Puedes ajustarlas a la paleta de tu CRM)
-// ==========================================
-$primary-color: #00a884; // Verde estilo WhatsApp
-$primary-hover: #008f6f;
-$bg-color: #f4f7f6;
-$text-dark: #2c3e50;
-$text-light: #7f8c8d;
-$border-color: #e0e6ed;
-$error-color: #e74c3c;
-$success-color: #2ecc71;
-$white: #ffffff;
+$primary-color: #ff5a5f;
+$dark-color: #2d2d2d;
+$bg-page: #f5f7fa;
+$border-color: #e5e7eb;
+$transition: all 0.3s ease;
 
-// ==========================================
-// CONTENEDOR PRINCIPAL Y HEADER
-// ==========================================
 .contenedor-masivos {
   padding: 2rem;
-  background-color: $bg-color;
+  background: $bg-page;
   min-height: 100vh;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-
-  .header-pagina {
-    margin-bottom: 2rem;
-    text-align: left;
-
-    h2 {
-      margin: 0;
-      color: $text-dark;
-      font-size: 2rem;
-      font-weight: 700;
-    }
-
-    p {
-      color: $text-light;
-      font-size: 1.1rem;
-      margin-top: 0.5rem;
-    }
-  }
 }
 
-// ==========================================
-// LAYOUT: DOS COLUMNAS (GRID)
-// ==========================================
+.header-pagina {
+  margin-bottom: 2rem;
+  h2 { font-size: 1.8rem; color: $dark-color; margin-bottom: 0.5rem; }
+  p { color: #666; }
+}
+
 .grid-dos-columnas {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr; // La columna del form es un poco más ancha
+  grid-template-columns: 1fr 400px; // Formulario flexible, Preview fija a la derecha
   gap: 2rem;
-  align-items: start; // Evita que las tarjetas se estiren a lo alto
+  align-items: start;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-// ==========================================
-// ESTILOS DE TARJETAS (CARDS)
-// ==========================================
-.tarjeta-formulario, .tarjeta-preview {
-  background-color: $white;
-  border-radius: 12px;
+// Tarjeta de Formulario
+.tarjeta-formulario {
+  background: white;
   padding: 2rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.tarjeta-preview {
-  // TRUCO: Mantiene el celular a la vista aunque hagas scroll en el formulario
-  position: sticky;
-  top: 2rem; 
-
-  h3 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    color: $text-dark;
-    text-align: center;
-    border-bottom: 2px solid $bg-color;
-    padding-bottom: 1rem;
-  }
-}
-
-// ==========================================
-// FORMULARIO Y CONTROLES
-// ==========================================
-.seccion-form {
-  background-color: #fcfcfc;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
   border: 1px solid $border-color;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+}
 
-  h3 {
-    margin-top: 0;
-    color: $text-dark;
-    font-size: 1.2rem;
-    border-bottom: 1px solid $border-color;
-    padding-bottom: 0.8rem;
-    margin-bottom: 1.2rem;
-  }
+.seccion-form {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid $border-color;
+
+  h3 { font-size: 1.1rem; color: $primary-color; margin-bottom: 1.5rem; }
 }
 
 .campo-grupo {
-  margin-bottom: 1.2rem;
-
-  label {
-    display: block;
-    font-weight: 600;
-    color: $text-dark;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-
-    &.label-destacado {
-      color: #8e44ad; // Morado para resaltar el campo de imagen
-    }
-  }
-
-  small {
-    display: block;
-    color: $text-light;
-    margin-top: 0.3rem;
-    font-size: 0.85rem;
-  }
-}
-
-.filtros-tiempo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  margin-bottom: 1rem;
+  label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
 }
 
 .form-control {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border: 1px solid $border-color;
-  border-radius: 6px;
-  background-color: $white;
-  color: $text-dark;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   box-sizing: border-box;
-
-  &:focus {
-    outline: none;
-    border-color: $primary-color;
-    box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
-  }
-
-  &::placeholder {
-    color: #b2bec3;
-  }
+  &:focus { border-color: $primary-color; outline: none; }
 }
 
-// Contenedor dinámico de variables
-.variables-contenedor {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px dashed $border-color;
-
-  h4 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: $primary-color;
-  }
-}
-
-// ==========================================
-// BOTONES
-// ==========================================
 .btn-lanzar {
   width: 100%;
   padding: 1rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: $white;
-  background-color: $primary-color;
+  background: $primary-color;
+  color: white;
   border: none;
   border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.1s;
-  box-shadow: 0 4px 6px rgba($primary-color, 0.2);
-
-  &:hover:not(:disabled) {
-    background-color: $primary-hover;
-    transform: translateY(-2px);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
-  }
-
-  &:disabled {
-    background-color: #bdc3c7;
-    cursor: not-allowed;
-    box-shadow: none;
-  }
+  transition: $transition;
+  &:hover:not(:disabled) { background: darken($primary-color, 10%); }
+  &:disabled { background: #ccc; cursor: not-allowed; }
 }
 
-// ==========================================
-// ALERTAS Y ANIMACIONES
-// ==========================================
-.alerta-exito, .alerta-error {
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 1.5rem;
-  font-weight: 500;
-  animation: fadeIn 0.4s ease;
+// Tarjeta de Preview (La derecha)
+.tarjeta-preview {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  border: 1px solid $border-color;
+  position: sticky; // Se queda pegada al hacer scroll
+  top: 20px;
+  
+  h3 { margin-bottom: 1rem; font-size: 1rem; color: #555; }
 }
 
-.alerta-exito {
-  background-color: rgba($success-color, 0.1);
-  color: darken($success-color, 10%);
-  border-left: 4px solid $success-color;
-}
-
-.alerta-error {
-  background-color: rgba($error-color, 0.1);
-  color: darken($error-color, 10%);
-  border-left: 4px solid $error-color;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.4s ease forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-// RESPONSIVE DESIGN (MÓVILES Y TABLETS)
-
-@media (max-width: 992px) {
-  .grid-dos-columnas {
-    grid-template-columns: 1fr; // Se apilan una sobre otra
-  }
-
-  .tarjeta-preview {
-    position: static; // Quitamos el sticky en móviles
-    order: -1; // Ponemos la vista previa arriba del formulario en móviles
-  }
-}
+// Alertas
+.alerta-exito { padding: 1rem; background: #d4edda; color: #155724; border-radius: 8px; margin-bottom: 1rem; }
+.alerta-error { padding: 1rem; background: #f8d7da; color: #721c24; border-radius: 8px; margin-bottom: 1rem; }

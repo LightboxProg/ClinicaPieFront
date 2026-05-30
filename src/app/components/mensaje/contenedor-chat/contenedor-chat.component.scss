@@ -1,113 +1,130 @@
-// ==========================================
-// VARIABLES DE COLOR
-// ==========================================
-$bg-burbuja-izq: #ffffff; 
-$bg-burbuja-der: #d9fdd3; // Verde WhatsApp para ti
-$text-dark: #111b21;
-$text-time: #667781;
-$primary: #00a884;
+// Variables de diseño
+$primary-color: #ff5a5f;
+$bg-doctor: #fff0f1;      // Un rosa/coral pastel muy sutil para tus mensajes
+$bg-cliente: #ffffff;     // Blanco puro para los mensajes que recibes
+$text-dark: #2d2d2d;
+$text-muted: #8e9aa6;
+$transition: all 0.2s ease;
 
-:host {
-  display: flex;
-  flex-direction: column;
-  flex: 1; // Le dice que tome el espacio sobrante
-  overflow: hidden; // ¡ESTO ES VITAL! Evita que crezca infinitamente
-}
-
-// ==========================================
-// CONTENEDOR PRINCIPAL
-// ==========================================
 .burbujas-contenedor {
-  flex: 1; 
-  padding: 20px 5%; 
   display: flex;
   flex-direction: column;
-  gap: 12px; 
-  
-  // ¡Aquí es donde ocurre la magia del scroll!
-  overflow-y: auto; 
+  gap: 0.75rem;
+  padding: 1.5rem;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #f4f6f8; // Fondo gris claro que hace resaltar las burbujas
 
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.2); border-radius: 10px; }
+  // Barra de scroll sutil
+  &::-webkit-scrollbar { width: 5px; }
+  &::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 10px; }
 }
-// ==========================================
-// ESTRUCTURA DE FILAS (La clave para la alineación)
-// ==========================================
+
+// Contenedor de la línea completa
 .mensaje-fila {
   display: flex;
-  width: 100%; // Ocupa todo el ancho disponible
+  width: 100%;
+  animation: bubbleAppear 0.25s ease-out forwards;
+
+  // ¡Aquí está el truco de alineación!
+  &.fila-doctor {
+    justify-content: flex-end; // Empuja el mensaje a la derecha
+  }
+
+  &.fila-cliente {
+    justify-content: flex-start; // Empuja el mensaje a la izquierda
+  }
 }
 
-.fila-doctor {
-  justify-content: flex-end; // Empuja tu burbuja a la derecha
-}
-
-.fila-cliente {
-  justify-content: flex-start; // Empuja la burbuja del paciente a la izquierda
-}
-
-// ==========================================
-// DISEÑO DE LA BURBUJA
-// ==========================================
+// Estilo base de cualquier burbuja
 .burbuja {
-  max-width: 70%; // Para que no cruce toda la pantalla
-  padding: 8px 12px;
-  border-radius: 8px;
+  max-width: 65%; // Evita que los mensajes cortos se estiren o los largos ocupen toda la pantalla
+  padding: 0.65rem 0.85rem;
   position: relative;
-  box-shadow: 0 1px 1px rgba(0,0,0,0.13); // Sombrita sutil
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
+  gap: 2px;
 
-  // El nombre de quién envía
-  .quien-envia {
-    font-size: 0.75rem;
-    font-weight: bold;
-    margin-bottom: 4px;
-    color: #128c7e;
-  }
-
-  // El texto principal
   .texto-mensaje {
     margin: 0;
-    font-size: 0.95rem;
-    color: $text-dark;
+    font-size: 0.92rem;
     line-height: 1.4;
-    white-space: pre-wrap; 
-    word-wrap: break-word; 
+    color: $text-dark;
+    word-break: break-word; // Rompe palabras largas para que no se desborde el texto
   }
 
-  // Contenedor de la hora y las palomitas
-  .hora-estado {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 4px;
-    margin-top: 4px;
-    margin-left: 15px; // Deja espacio para que no choque con el texto
-
-    small {
-      font-size: 0.65rem;
-      color: $text-time;
-    }
-
-    .check {
-      font-size: 0.7rem;
-      color: #53bdeb; // Color azul estilo WhatsApp
-    }
+  .quien-envia {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: $primary-color;
+    margin-bottom: 2px;
   }
 }
 
-// ==========================================
-// COLORES ESPECÍFICOS DE CADA LADO
-// ==========================================
-.burbuja-cliente {
-  background-color: $bg-burbuja-izq;
-  border-top-left-radius: 0; // Efecto de pico izquierdo
-  
-  .quien-envia { color: #81461f; } // Colorcito distinto para el nombre del cliente
-}
-
+// Personalización para los mensajes que ENVIAS (Doctor)
 .burbuja-doctor {
-  background-color: $bg-burbuja-der;
-  border-top-right-radius: 0; // Efecto de pico derecho
+  background-color: $bg-doctor;
+  border: 1px solid rgba($primary-color, 0.08);
+  // Redondeado asimétrico: esquina inferior derecha recta estilo WhatsApp
+  border-radius: 12px 12px 2px 12px; 
+  align-items: flex-end;
+
+  .texto-mensaje {
+    align-self: flex-start;
+  }
+}
+
+// Personalización para los mensajes que RECIBES (Cliente)
+.burbuja-cliente {
+  background-color: $bg-cliente;
+  border: 1px solid #eef0f2;
+  // Redondeado asimétrico: esquina inferior izquierda recta
+  border-radius: 12px 12px 12px 2px;
+  align-items: flex-start;
+}
+
+// Contenedor de hora y palomitas abajo del texto
+.hora-estado {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-end; // Siempre alineado a la esquina inferior derecha de la burbuja
+  margin-top: 2px;
+
+  .hora {
+    font-size: 0.7rem;
+    color: $text-muted;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  // Las dos palomitas estilo WhatsApp Leyendo
+  .check {
+    font-size: 0.8rem;
+    color: #4fc3f7; // Color azul claro de mensaje visto/entregado
+    font-weight: bold;
+    line-height: 1;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+// Animación suave cuando van apareciendo mensajes nuevos en la pantalla
+@keyframes bubbleAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Ajuste para pantallas pequeñas (Móviles)
+@media (max-width: 480px) {
+  .burbuja {
+    max-width: 85%; // En celular dejamos que la burbuja use más espacio de la pantalla
+  }
 }

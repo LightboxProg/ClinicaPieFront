@@ -1,4 +1,4 @@
-<div class="burbujas-contenedor">
+<div class="burbujas-contenedor custom-scrollbar">
   
   <div *ngFor="let globo of historial" 
        class="mensaje-fila"
@@ -6,13 +6,14 @@
 
     <div class="burbuja" [ngClass]="globo.emisor === 'doctor' ? 'burbuja-doctor' : 'burbuja-cliente'">
       
-      <span class="quien-envia" *ngIf="globo.emisor === 'doctor'"></span>
-      <span class="quien-envia" *ngIf="globo.emisor === 'cliente'"> {{ usuario?.nombre || 'Cliente' }}</span>
+      <span class="quien-envia" *ngIf="globo.emisor === 'cliente'"> 
+        {{ usuario?.nombre || 'Cliente' }}
+      </span>
 
       <p class="texto-mensaje">{{ globo.mensaje }}</p>
 
       <div class="hora-estado">
-        <small>{{ globo.fecha | date:'shortTime' }}</small>
+        <small class="hora">{{ globo.fecha | date:'shortTime' }}</small>
         <span class="check" *ngIf="globo.emisor === 'doctor'">✓✓</span>
       </div>
 

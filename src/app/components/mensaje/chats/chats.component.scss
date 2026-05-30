@@ -1,173 +1,193 @@
-// ==========================================
-// VARIABLES DE COLOR Y DISEÑO
-// ==========================================
-$primary: #00a884; // Verde estilo WhatsApp
-$primary-hover: #008f6f;
-$bg-app: #f0f2f5; // Fondo grisecito para el área vacía
-$bg-blanco: #ffffff;
-$border-color: #d1d7db;
-$text-dark: #111b21;
-$text-muted: #667781;
+// Variables
+$primary-color: #ff5a5f;
+$dark-color: #2d2d2d;
+$text-med: #666666;
+$border-color: #f0f0f0;
+$bg-main: #f5f7fa;
+$transition: all 0.3s ease;
 
-// ==========================================
-// CONTENEDOR PRINCIPAL (El "Marco" de la app)
-// ==========================================
-.crm-chat-layout {
+// Animación de entrada
+.fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.shadow-sm { box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
+// Contenedor principal del Chat
+.chat-wrapper {
   display: flex;
-  width: 100%;
-  height: calc(100vh - 100px); // Ajusta según tu navbar
-  min-height: 600px;
-  background-color: $bg-blanco;
+  height: calc(100vh - 120px); // Ajusta según tu header principal
+  background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  border: 1px solid $border-color;
+  border: 1px solid #e5e5e5;
+  margin: 1rem;
 }
 
 // ==========================================
-// COLUMNA IZQUIERDA: BARRA LATERAL (Listas)
+// BARRA LATERAL (Listas de chats)
 // ==========================================
-.sidebar-chats {
-  flex: 0 0 380px; // Ancho fijo de 380px
-  border-right: 1px solid $border-color;
+.chat-sidebar {
+  width: 350px;
   display: flex;
   flex-direction: column;
-  background-color: $bg-blanco;
+  border-right: 1px solid $border-color;
+  background: white;
+  flex-shrink: 0;
 
-  .tabs {
+  .sidebar-tabs {
     display: flex;
-    background-color: $bg-app;
-    padding: 10px 15px;
-    gap: 10px;
+    background: #fafafa;
     border-bottom: 1px solid $border-color;
 
-    button {
+    .tab-btn {
       flex: 1;
-      padding: 10px;
+      padding: 1rem;
       border: none;
-      border-radius: 20px;
-      background-color: transparent;
-      color: $text-muted;
+      background: transparent;
+      color: $text-med;
       font-weight: 600;
       font-size: 0.9rem;
       cursor: pointer;
-      transition: all 0.2s ease;
+      border-bottom: 2px solid transparent;
+      transition: $transition;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
 
-      &:hover {
-        background-color: darken($bg-app, 5%);
+      .badge-count {
+        background: #e0e0e0;
+        color: $text-med;
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 10px;
       }
 
-      &.activo {
-        background-color: $bg-blanco;
-        color: $primary;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      &:hover { background: #f0f0f0; }
+
+      &.active {
+        color: $primary-color;
+        border-bottom-color: $primary-color;
+        background: white;
+        
+        .badge-count {
+          background: rgba($primary-color, 0.1);
+          color: $primary-color;
+        }
       }
     }
+  }
+
+  .sidebar-content {
+    flex: 1;
+    overflow: hidden; // El scroll lo manejan los componentes hijos
+    display: flex;
+    flex-direction: column;
   }
 }
 
 // ==========================================
-// COLUMNA DERECHA: ÁREA DE CONVERSACIÓN
+// ÁREA CENTRAL (Conversación)
 // ==========================================
-.area-conversacion {
+.chat-main-area {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #efeae2;
-  background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-  background-repeat: repeat;
-  background-size: 400px;
-  background-blend-mode: overlay;
-  overflow: hidden; // Para que el scroll funcione dentro del contenedor de mensajes
+  background: $bg-main; // Fondo gris clarito para contrastar con las burbujas
+  position: relative;
+}
 
-  .chat-header {
-    background-color: $bg-app;
-    padding: 15px 20px;
-    border-bottom: 1px solid $border-color;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    z-index: 10;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+// Estado cuando no hay chat seleccionado
+.empty-state-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #adb5bd;
+  text-align: center;
+  padding: 2rem;
 
-    .back-button {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: $primary;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      transition: background 0.2s;
-
-      &:hover {
-        background-color: rgba(0,0,0,0.05);
-      }
-    }
-
-    .user-info {
-      flex: 1;
-      h3 {
-        margin: 0;
-        color: $text-dark;
-        font-size: 1.1rem;
-        font-weight: 600;
-      }
-      small {
-        color: $text-muted;
-        font-size: 0.85rem;
-        margin-top: 3px;
-        display: block;
-      }
-    }
+  .empty-circle {
+    width: 100px; height: 100px;
+    background: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+    
+    i { font-size: 3rem; color: #ced4da; }
   }
 
-  .estado-vacio {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    background-color: $bg-app;
-    text-align: center;
-    padding: 20px;
+  h3 { color: $text-med; font-size: 1.5rem; margin-bottom: 0.5rem; }
+  p { font-size: 0.95rem; max-width: 300px; }
+}
 
-    h3 {
-      background-color: white;
-      padding: 15px 30px;
-      border-radius: 30px;
-      color: $text-muted;
-      font-weight: normal;
-      font-size: 1rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
+// Cabecera superior (Nombre del paciente)
+.conversation-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: white;
+  border-bottom: 1px solid $border-color;
+  gap: 15px;
+
+  .back-btn {
+    background: transparent; border: none;
+    font-size: 1.2rem; color: $text-med;
+    cursor: pointer; padding: 5px;
+    margin-right: 5px;
+  }
+
+  .profile-avatar {
+    width: 40px; height: 40px;
+    background: rgba($primary-color, 0.1);
+    color: $primary-color;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+  }
+
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+
+    .profile-name { margin: 0; font-size: 1.1rem; color: $dark-color; font-weight: 600; }
+    .profile-phone { font-size: 0.8rem; color: #999; display: flex; align-items: center; gap: 5px; }
   }
 }
 
+// Contenedores Hijos
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  // Aquí puedes poner un patrón de fondo sutil de WhatsApp si lo deseas
+}
+
+.input-container {
+  background: white;
+  border-top: 1px solid $border-color;
+  padding: 1rem;
+}
+
 // ==========================================
-// RESPONSIVE (Pantallas pequeñas)
+// RESPONSIVE (Móviles)
 // ==========================================
-@media (max-width: 800px) {
-  .crm-chat-layout {
-    flex-direction: column;
-    height: 100vh; // Usa toda la pantalla en móvil
-    min-height: unset;
+@media (max-width: 768px) {
+  .chat-wrapper {
+    margin: 0;
+    height: calc(100vh - 70px);
     border-radius: 0;
+    border: none;
   }
-
-  .sidebar-chats {
-    flex: 1; // Ocupa toda la altura cuando se muestra
-    height: 100%;
-    border-right: none;
-    border-bottom: 1px solid $border-color;
-  }
-
-  .area-conversacion {
-    flex: 1;
-    height: 100%;
+  
+  .chat-sidebar {
+    width: 100%; // Ocupa todo el ancho en móvil
   }
 }

@@ -1,46 +1,55 @@
-<div class="crm-chat-layout">
-    <!-- Barra lateral: lista de contactos -->
-    <div class="sidebar-chats" *ngIf="!isMobile || showList">
-        <div class="tabs">
-            <button (click)="pestanaActiva = 'preguntones'" [class.activo]="pestanaActiva === 'preguntones'">
-                Leads ({{ chatsPreguntones.length }})
+<div class="chat-wrapper fade-in-up shadow-sm">
+    
+    <div class="chat-sidebar" *ngIf="!isMobile || showList">
+        
+        <div class="sidebar-tabs">
+            <button class="tab-btn" (click)="pestanaActiva = 'preguntones'" [class.active]="pestanaActiva === 'preguntones'">
+                Leads <span class="badge-count">{{ chatsPreguntones.length }}</span>
             </button>
-            <button (click)="pestanaActiva = 'pacientes'" [class.activo]="pestanaActiva === 'pacientes'">
-                Pacientes ({{ chatsPacientes.length }})
+            <button class="tab-btn" (click)="pestanaActiva = 'pacientes'" [class.active]="pestanaActiva === 'pacientes'">
+                Pacientes <span class="badge-count">{{ chatsPacientes.length }}</span>
             </button>
         </div>
 
-        <app-chat-pregunton *ngIf="pestanaActiva === 'preguntones'" [chats]="chatsPreguntones"
-            (seleccionar)="abrirChat($event)" (cambiarStatusSaludos)="cambiarStatusSaludos($event)">
-        </app-chat-pregunton>
+        <div class="sidebar-content">
+            <app-chat-pregunton *ngIf="pestanaActiva === 'preguntones'" [chats]="chatsPreguntones"
+                (seleccionar)="abrirChat($event)" (cambiarStatusSaludos)="cambiarStatusSaludos($event)">
+            </app-chat-pregunton>
 
-        <app-chat-paciente *ngIf="pestanaActiva === 'pacientes'" [chats]="chatsPacientes"
-            (seleccionar)="abrirChat($event)" (cambiarStatusSaludos)="cambiarStatusSaludos($event)">
-        </app-chat-paciente>
+            <app-chat-paciente *ngIf="pestanaActiva === 'pacientes'" [chats]="chatsPacientes"
+                (seleccionar)="abrirChat($event)" (cambiarStatusSaludos)="cambiarStatusSaludos($event)">
+            </app-chat-paciente>
+        </div>
     </div>
 
-    <!-- Área de conversación -->
-    <div class="area-conversacion" *ngIf="!isMobile || !showList">
-        <div *ngIf="!usuarioActivo" class="estado-vacio">
-            <h3>Selecciona un chat para comenzar a enviar mensajes</h3>
+    <div class="chat-main-area" *ngIf="!isMobile || !showList">
+        
+        <div *ngIf="!usuarioActivo" class="empty-state-main">
+            <div class="empty-circle">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h3>Selecciona un chat</h3>
+            <p>Elige un contacto de la lista lateral para comenzar a enviar mensajes.</p>
         </div>
 
         <ng-container *ngIf="usuarioActivo">
-            <div class="chat-header">
-                <!-- Botón de volver (solo en móvil cuando se muestra la conversación) -->
-                <button class="back-button" *ngIf="isMobile && !showList" (click)="volverALista()">
-                    ←
+            
+            <div class="conversation-header">
+                <button class="btn-icon back-btn" *ngIf="isMobile && !showList" (click)="volverALista()" title="Volver a la lista">
+                    <i class="fas fa-arrow-left"></i>
                 </button>
-                <div class="user-info">
-                    <h3>{{ usuarioActivo.nombre }}</h3>
-                    <small>{{ usuarioActivo.telefono }}</small>
+                
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                
+                <div class="profile-info">
+                    <h3 class="profile-name">{{ usuarioActivo.nombre }}</h3>
+                    <span class="profile-phone"><i class="fas fa-phone-alt"></i> {{ usuarioActivo.telefono }}</span>
                 </div>
             </div>
 
-            <app-contenedor-chat #chatBurbujas [usuario]="usuarioActivo">
-            </app-contenedor-chat>
-            <app-mandar-mensaje [usuario]="usuarioActivo" (mensajeEnviado)="recargarHistorialYLista()">
-            </app-mandar-mensaje>
-        </ng-container>
-    </div>
-</div>
+            <div class="messages-container">
+                <app-contenedor-chat #chatBurbujas [usuario]="usuarioActivo">
+                </app-contenedor-chat>
+            </div>

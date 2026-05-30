@@ -15,14 +15,33 @@
       <div class="seccion-form">
         <h3>1. Selecciona la Audiencia</h3>
         
-        <div class="campo-grupo">
-          <label>¿A quién enviarás el mensaje?</label>
-          <select [(ngModel)]="audienciaSeleccionada" class="form-control">
+                <div class="campo-grupo">
+          <label for="audiencia">¿A quién enviarás el mensaje?</label>
+          <select id="audiencia" [(ngModel)]="audienciaSeleccionada" class="form-control">
             <option value="todos">A Todos (Pacientes y Preguntones)</option>
             <option value="pacientes">Solo a Pacientes Registrados</option>
             <option value="preguntones">Solo a Preguntones (Leads)</option>
           </select>
         </div>
+
+        <div class="filtros-tiempo">
+// ...existing code...
+      <div class="seccion-form">
+        <h3>2. Configura el Mensaje</h3>
+        
+        <div class="campo-grupo">
+          <label for="plantilla">Plantilla de Meta</label>
+          <select id="plantilla" (change)="onPlantillaSeleccionada($event)" class="form-control">
+            <option value="" disabled selected>-- Elige una plantilla --</option>
+            <option *ngFor="let plantilla of plantillasDisponibles" [value]="plantilla.id">
+              {{ plantilla.nombre }} ({{ plantilla.categoria }})
+            </option>
+          </select>
+        </div>
+
+        <div class="campo-grupo animate-fade-in" *ngIf="requiereImagen">
+// ...existing code...
+
 
         <div class="filtros-tiempo">
           <div class="campo-grupo">
@@ -36,33 +55,46 @@
         </div>
       </div>
 
-      <div class="seccion-form">
-        <h3>2. Configura el Mensaje</h3>
-        
-        <div class="campo-grupo">
-          <label>Plantilla de Meta</label>
-          <select (change)="onPlantillaSeleccionada($event)" class="form-control">
-            <option value="" disabled selected>-- Elige una plantilla --</option>
-            <option *ngFor="let plantilla of plantillasDisponibles" [value]="plantilla.id">
-              {{ plantilla.nombre }} ({{ plantilla.categoria }})
-            </option>
-          </select>
-        </div>
-
-        <div class="campo-grupo animate-fade-in" *ngIf="requiereImagen">
-          <label class="label-destacado">📷 Enlace de la Imagen (URL)</label>
-          <input type="text" [(ngModel)]="urlImagenHeader" class="form-control" placeholder="https://ejemplo.com/foto.jpg">
-          <small>Esta plantilla requiere una imagen en la cabecera.</small>
-        </div>
-
-        <div class="variables-contenedor" *ngIf="variablesDinamicas.length > 0">
-          <h4>Variables del mensaje:</h4>
-          <div class="campo-grupo" *ngFor="let variable of variablesDinamicas; let i = index; trackBy: trackByIndex">
-            <label>Variable {{ '{' }}{{ i + 1 }}{{ '}' }}</label>
-            <input type="text" [(ngModel)]="variablesDinamicas[i]" class="form-control" placeholder="Texto para la variable {{i+1}}">
+            <div class="form-group">
+        <label for="audiencia">Seleccionar Audiencia</label>
+        <select id="audiencia" [(ngModel)]="audienciaSeleccionada" class="form-control">
+          <option value="todos">Todos los Pacientes</option>
+          <option value="seguimiento">Pacientes en Seguimiento</option>
+          <option value="nuevos">Pacientes Nuevos (últimos 30 días)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="plantilla">Seleccionar Plantilla de Mensaje</label>
+        <select id="plantilla" (change)="onPlantillaSeleccionada($event)" class="form-control">
+          <option value="">Seleccione una plantilla</option>
+          <option *ngFor="let plantilla of plantillas" [value]="plantilla.name">{{ plantilla.name }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="preview-card">
+        <h5><i class="fab fa-whatsapp"></i> Vista Previa del Mensaje</h5>
+        <div class="wa-preview">
+          <div class="wa-header">
+            <strong>{{ plantillaSeleccionada?.name || 'Nombre de Plantilla' }}</strong>
+          </div>
+          <div class="wa-body">
+            <p>{{ getBodyPreview() }}</p>
+          </div>
+          <div class="wa-footer">
+            <small>{{ plantillaSeleccionada?.components?.find(c => c.type === 'FOOTER')?.text || 'Texto de pie de página' }}</small>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <button class="btn-primary" (click)="enviarMensajes()" [disabled]="!audienciaSeleccionada || !plantillaSeleccionada">
+      <i class="fas fa-paper-plane"></i> Enviar a {{ audienciaSeleccionada }}
+    </button>
+  </div>
+</div>
+
 
       <button class="btn-lanzar" (click)="lanzarCampana()" [disabled]="enviando || !plantillaSeleccionada">
         {{ enviando ? 'Procesando Envíos...' : '📢 Lanzar Campaña Ahora' }}

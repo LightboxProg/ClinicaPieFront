@@ -23,7 +23,24 @@
 
             </ng-container>
 
-            <div class="wa-body" style="white-space: pre-wrap;">{{ getBodyConVariables() }}</div>
+                      <div class="wa-header">
+            <strong>{{ plantilla.name }}</strong>
+            <span class="wa-category">{{ plantilla.category }}</span>
+          </div>
+          <div class="wa-body">{{ getBodyConVariables() }}</div>
+          <div class="wa-footer">
+            <small>{{ getFooter() }}</small>
+          </div>
+        </div>
+        <div class="plantilla-actions">
+          <button class="btn-secondary" (click)="editarPlantilla(plantilla)">Editar</button>
+          <button class="btn-danger" (click)="eliminarPlantilla(plantilla.id)">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
             <div class="wa-footer" *ngIf="getComponente('FOOTER') as footer">
                 {{ footer.text }}

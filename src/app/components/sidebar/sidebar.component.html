@@ -1,0 +1,26 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <div class="logo-container" *ngIf="!isCollapsed">
+      <img src="assets/logo.png" alt="Logo" class="logo">
+    </div>
+    <button class="btn-toggle" (click)="onToggle()" title="Minimizar menú">
+      <i class="fas" [ngClass]="isCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+    </button>
+  </div>
+  <nav class="sidebar-nav">
+    <ul>
+      <li *ngFor="let item of menuItems">
+        <a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [title]="item.title">
+          <i class="nav-icon" [ngClass]="item.icon"></i>
+          <span class="nav-text" *ngIf="!isCollapsed">{{ item.title }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div class="sidebar-footer">
+    <a (click)="logout()" class="logout-link" title="Cerrar Sesión">
+      <i class="fas fa-sign-out-alt"></i>
+      <span *ngIf="!isCollapsed">Cerrar Sesión</span>
+    </a>
+  </div>
+</aside>

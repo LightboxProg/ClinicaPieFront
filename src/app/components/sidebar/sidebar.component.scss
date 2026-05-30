@@ -1,0 +1,110 @@
+$sidebar-bg: #1e293b;
+$sidebar-hover: #334155;
+$sidebar-active: #ff5a5f; // Tu color primario
+$text-light: #f8fafc;
+$text-muted: #94a3b8;
+
+.admin-sidebar {
+  width: 250px;
+  height: calc(100vh - 70px); // Restamos la altura de tu Navbar superior
+  background-color: $sidebar-bg;
+  color: $text-light;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 70px; // Empieza justo debajo del Navbar
+  overflow-y: auto;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+  z-index: 100;
+
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+
+  .sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    
+    .panel-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: $text-muted;
+      font-weight: 700;
+    }
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.85rem 1.5rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      gap: 1rem;
+
+      i { width: 20px; text-align: center; font-size: 1.1rem; opacity: 0.8; }
+      .nav-text { font-size: 0.95rem; font-weight: 500; }
+
+      &:hover {
+        background-color: $sidebar-hover;
+        color: white;
+        i { opacity: 1; }
+      }
+
+      &.active {
+        background-color: rgba($sidebar-active, 0.15);
+        color: white;
+        border-right: 4px solid $sidebar-active;
+        i { color: $sidebar-active; opacity: 1; }
+      }
+    }
+  }
+
+  .sidebar-footer {
+    padding: 1rem 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    
+    .status-link {
+      i { color: #4285F4; }
+      &:hover i { color: #ea4335; }
+    }
+  }
+}
+.admin-sidebar {
+  transition: width 0.3s ease;
+  
+  .btn-toggle {
+    background: transparent;
+    border: none;
+    color: #cbd5e1;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+    
+    &:hover { color: white; }
+  }
+
+  &.collapsed {
+    width: 70px; 
+
+    .sidebar-header {
+      justify-content: center;
+      padding: 1.5rem 0;
+    }
+
+    .nav-item {
+      justify-content: center;
+      padding: 0.85rem 0;
+      
+      i { width: auto; font-size: 1.3rem; margin: 0; }
+    }
+  }
+}

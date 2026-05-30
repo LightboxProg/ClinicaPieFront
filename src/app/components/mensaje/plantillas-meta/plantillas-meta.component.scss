@@ -1,111 +1,91 @@
-.estado-vacio {
+// Variables visuales de WhatsApp
+$bg-chat: #e5ddd5; // El fondo clásico de papel tapiz de WA
+$bubble-white: #ffffff;
+$text-dark: #111b21;
+$text-muted: #667781;
+$accent-btn: #ffffff;
+$link-color: #027eb5;
+
+.whatsapp-simulador {
+  padding: 10px;
+  background: $bg-chat;
+  border-radius: 12px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  min-height: 300px;
-  background-color: #f0f2f5;
-  border-radius: 10px;
-  color: #667781;
-  text-align: center;
-  padding: 20px;
+}
 
-  .icono-vacio {
-    font-size: 3rem;
-    margin-bottom: 10px;
-    opacity: 0.5;
+.whatsapp-chat-fondo {
+  max-width: 320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+// La burbuja principal
+.whatsapp-burbuja {
+  background: $bubble-white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  position: relative;
+  font-family: sans-serif;
+  
+  .wa-header-texto { font-weight: 700; margin-bottom: 5px; color: $text-dark; }
+  
+  .wa-header-imagen {
+    margin: -8px -12px 8px -12px;
+    .placeholder-img {
+      height: 150px; background: #e0e0e0; 
+      display: flex; align-items: center; justify-content: center;
+      color: #777; font-size: 0.9rem;
+    }
+  }
+
+  .wa-body {
+    font-size: 0.95rem;
+    color: $text-dark;
+    line-height: 1.4;
+    margin-bottom: 4px;
+    white-space: pre-wrap;
+  }
+  
+  .wa-footer { font-size: 0.8rem; color: $text-muted; margin-top: 4px; }
+  
+  .wa-hora {
+    font-size: 0.7rem; color: #a9a9a9; text-align: right; margin-top: 2px;
+    .wa-palomitas { color: #4fc3f7; font-weight: bold; margin-left: 2px; }
   }
 }
 
-.whatsapp-simulador {
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-  border: 10px solid #232d36; // Marco como si fuera un celular
-  border-radius: 30px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-
-  .whatsapp-chat-fondo {
-    background-color: #efeae2;
-    // Imagen de fondo típica de WhatsApp (opcional)
-    background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-    padding: 20px 15px;
-    display: flex;
-    flex-direction: column;
-    min-height: 400px;
+// Botones de Meta (Estilo Lista)
+.wa-botones-contenedor {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  
+  .wa-boton {
+    background: $bubble-white;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #027eb5;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    cursor: default;
+    transition: background 0.2s;
+    
+    &:hover { background: #f0f2f5; }
   }
+}
 
-  .whatsapp-burbuja {
-    background-color: #d9fdd3; // El verde oficial de WhatsApp Web/App
-    border-radius: 8px 8px 8px 0px; // El piquito del mensaje
-    padding: 8px 10px;
-    box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
-    margin-bottom: 5px;
-    position: relative;
-    max-width: 95%;
-
-    .wa-header-texto {
-      margin-bottom: 5px;
-      color: #111b21;
-    }
-
-    .wa-header-imagen {
-      background-color: #cdd9d5;
-      border-radius: 6px;
-      height: 150px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 5px;
-      color: #54656f;
-    }
-
-    .wa-body {
-      font-size: 14.2px;
-      line-height: 19px;
-      color: #111b21;
-    }
-
-    .wa-footer {
-      font-size: 12px;
-      color: #667781;
-      margin-top: 5px;
-    }
-
-    .wa-hora {
-      text-align: right;
-      font-size: 11px;
-      color: #667781;
-      margin-top: 4px;
-      
-      .wa-palomitas {
-        color: #53bdeb; // Palomitas azules
-        font-weight: bold;
-        margin-left: 3px;
-      }
-    }
-  }
-
-  .wa-botones-contenedor {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    .wa-boton {
-      background-color: white;
-      color: #00a884; // Verde texto botones
-      text-align: center;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 14px;
-      box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
-      cursor: default;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-    }
-  }
+// Estado cuando no hay nada seleccionado
+.estado-vacio {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  
+  .icono-vacio { font-size: 3rem; margin-bottom: 1rem; }
 }

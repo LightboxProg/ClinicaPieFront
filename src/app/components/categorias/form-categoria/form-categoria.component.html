@@ -47,16 +47,35 @@
           <small class="form-hint">Menor número = aparece primero</small>
         </div>
 
-        <div class="form-group half toggle-group">
-          <label>Estado de la categoría</label>
+                            <div class="form-group half toggle-group">
+          <label for="categoriaActiva">Estado de la categoría</label>
           <div class="switch-container">
-            <label class="switch">
-              <input type="checkbox" [(ngModel)]="formData.activa" name="activa">
+            <label class="switch" for="categoriaActiva">
+              <input type="checkbox" id="categoriaActiva" [(ngModel)]="formData.activa" name="activa">
               <span class="slider round"></span>
             </label>
             <span class="status-text" [class.active]="formData.activa">
               {{ formData.activa ? 'Activa' : 'Inactiva' }}
             </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" (click)="cancelarForm()" class="btn-secondary">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="!isFormValid()">
+          <i class="fas fa-save"></i> {{ esEdicion ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="esEdicion" class="mode-info">
+    <i class="fas fa-info-circle"></i> ID de sistema: {{ formData._id }}
+  </div>
+</div>
           </div>
         </div>
       </div>

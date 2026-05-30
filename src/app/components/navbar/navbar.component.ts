@@ -79,4 +79,30 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.mobileMenuOpen = !this.mobileMenuOpen;
     console.log('new state:', this.mobileMenuOpen);
   }
+  esSitioPublico(): boolean {
+    const rutasPrivadas = [
+      '/login', 
+      '/lista-pacientes',
+      '/categorias',
+      '/black-list',
+      '/promociones',
+      '/promocion-form',
+      '/sucursales-lista',
+      '/sucursales-formulario',
+      '/lista-preguntones',
+      '/calendario',
+      '/mensajes-masivos',
+      '/estado-google',
+      '/registro',
+      '/registroP',
+      '/lista-usuarios',
+      '/horariosDoctores',
+      '/agenda-doctor',
+      '/chats',
+      '/perfil',
+      '/servicios'
+    ]; 
+    const esconder = rutasPrivadas.some(ruta => this.router.url.includes(ruta));
+    return !esconder;
+}
 }

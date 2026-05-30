@@ -1,219 +1,227 @@
-// ==========================================
-// VARIABLES
-// ==========================================
-$primary: #00a884; // Verde notificación
-$bg-hover: #f5f6f6; // Gris ultra claro al pasar el mouse
-$border-color: #f2f2f2;
-$text-dark: #111b21;
-$text-muted: #667781;
-$text-badge: #ffffff;
+// Variables estandarizadas del CRM
+$primary-color: #ff5a5f;
+$dark-color: #2d2d2d;
+$text-med: #666666;
+$border-color: #f0f0f0;
+$bg-hover: #fcfcfc;
+$transition: all 0.2s ease;
 
-// ==========================================
-// CONTENEDOR DE LA LISTA (Scroll independiente)
-// ==========================================
-.lista-chats {
-  // Toma todo el espacio vertical sobrante de la barra lateral
-  flex: 1;
-  // ¡MAGIA!: Le da su propia barra de scroll para que no mueva toda la página
-  overflow-y: auto;
-  background-color: #ffffff;
-
-  // Personalización de la barra de scroll (Estilo Mac/Web)
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.15);
-    border-radius: 10px;
-  }
-}
-
-// ==========================================
-// CADA RENGLÓN DE CHAT
-// ==========================================
-.chat-item {
+.chat-sidebar-container {
   display: flex;
   flex-direction: column;
-  padding: 12px 15px;
+  height: 100%;
+  background: white;
+  border-right: 1px solid $border-color;
+}
+
+// ==========================================
+// BUSCADOR
+// ==========================================
+.chat-search-box {
+  padding: 1rem;
   border-bottom: 1px solid $border-color;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  background: #fafafa;
 
-  // Efecto visual al pasar el mouse
-  &:hover {
-    background-color: $bg-hover;
-  }
-
-  // Evita que el usuario seleccione el texto por accidente al dar doble clic
-  user-select: none;
-
-  // PRIMERA LÍNEA: Nombre y Hora
-  .info-usuario {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-
-    strong {
-      color: $text-dark;
-      font-size: 1rem;
-      font-weight: 500;
-      // Truco para cortar nombres súper largos
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 75%;
+  .input-icon-wrapper {
+    position: relative;
+    .input-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: #aaa; font-size: 0.9rem;
     }
-
-    .fecha {
-      font-size: 0.75rem;
-      color: $text-muted;
-      white-space: nowrap;
-    }
-  }
-
-  // SEGUNDA LÍNEA: Mensaje y Burbuja de Notificación
-  .mensaje-previo {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    p {
-      margin: 0;
-      font-size: 0.85rem;
-      color: $text-muted;
-      // Truco para cortar mensajes largos con "..."
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex: 1;
-      padding-right: 10px;
-    }
-
-    // La famosa burbujita verde de WhatsApp
-    .badge {
-      background-color: $primary;
-      color: $text-badge;
-      font-size: 0.75rem;
-      font-weight: bold;
-      min-width: 20px;
-      height: 20px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 6px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    .form-control {
+      width: 100%;
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: $transition;
+      
+      &:focus { 
+        border-color: $primary-color; 
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.1); 
+      }
     }
   }
 }
 
-.btn-saludos {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  padding: 4px;
-  margin-left: 5px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
 // ==========================================
-// MENSAJE DE LISTA VACÍA
+// FILTROS
 // ==========================================
-.lista-vacia {
-  padding: 30px 20px;
-  text-align: center;
-  color: $text-muted;
-  font-size: 0.9rem;
-  font-style: italic;
-}
-
-// ==========================================
-// FILTRO DE ESTADOS
-// ==========================================
-.filtro-estado {
+.chat-filters {
   display: flex;
-  padding: 10px;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem;
   border-bottom: 1px solid $border-color;
-  background-color: #ffffff;
+  overflow-x: auto;
+  
+  &::-webkit-scrollbar { display: none; }
 
-  button {
-    flex: 1;
-    padding: 8px 12px;
-    margin: 0 4px;
-    border: none;
-    background: #f0f2f4;
-    border-radius: 20px;
-    cursor: pointer;
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    background: white;
+    color: $text-med;
+    font-size: 0.8rem;
     font-weight: 500;
-    font-size: 0.85rem;
-    transition:
-      background 0.2s,
-      color 0.2s;
+    cursor: pointer;
     white-space: nowrap;
+    transition: $transition;
 
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      &.bg-success { background: #28a745; }
+      &.bg-warning { background: #ffc107; }
+      &.bg-danger { background: #dc3545; }
+    }
+
+    &:hover { background: #f8f9fa; }
+    
     &.active {
-      background: $primary;
-      color: $text-badge;
-    }
-
-    &:hover:not(.active) {
-      background: darken(#f0f2f4, 5%);
+      background: rgba($primary-color, 0.08);
+      border-color: $primary-color;
+      color: $primary-color;
+      font-weight: 600;
     }
   }
 }
 
 // ==========================================
-// INDICADOR DE ESTADO (SEMÁFORO)
+// LISTA DE CHATS
 // ==========================================
-.estado-indicador {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 8px;
-  flex-shrink: 0;
+.lista-chats {
+  flex: 1;
+  overflow-y: auto;
+
+  &.custom-scrollbar {
+    &::-webkit-scrollbar { width: 5px; }
+    &::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
+  }
+
+  .chat-item {
+    display: flex;
+    gap: 12px;
+    padding: 1rem;
+    border-bottom: 1px solid $border-color;
+    cursor: pointer;
+    transition: $transition;
+    -webkit-user-select: none; // Para Safari
+    user-select: none; // De tu código original, muy buena práctica
+  }
 }
 
-.estado-verde {
-  background-color: #4caf50; // Verde
-}
+    &:hover { background: $bg-hover; }
 
-.estado-amarillo {
-  background-color: #ffc107; // Amarillo
-}
+    // Avatar y Semáforo Dinámico
+    .chat-avatar {
+      position: relative;
+      
+      .avatar-circle {
+        width: 45px; height: 45px;
+        border-radius: 50%;
+        background: #f0f2f5;
+        display: flex; align-items: center; justify-content: center;
+        color: #adb5bd;
+        font-size: 1.2rem;
+      }
 
-.estado-rojo {
-  background-color: #f44336; // Rojo
-}
-
-.buscador {
-  padding: 10px;
-  border-bottom: 1px solid $border-color;
-
-  input {
-    width: 80%;
-    padding: 8px 12px;
-    border: 1px solid $border-color;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    outline: none;
-    transition: box-shadow 0.2s;
-
-    &:focus {
-      box-shadow: 0 0 0 2px rgba($primary, 0.2);
-      border-color: $primary;
+      .estado-indicador {
+        position: absolute;
+        bottom: 2px; right: 2px;
+        width: 12px; height: 12px;
+        border-radius: 50%;
+        border: 2px solid white;
+        background: #ccc;
+        
+        // Aquí conectamos con las clases de tu TypeScript
+        &.estado-verde { background-color: #28a745; }
+        &.estado-amarillo { background-color: #ffc107; }
+        &.estado-rojo { background-color: #dc3545; }
+      }
     }
 
-    &::placeholder {
-      color: lighten($text-muted, 20%);
+    // Información del mensaje
+    .chat-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+
+        .chat-name { font-size: 0.95rem; color: $dark-color; font-weight: 600; }
+        .chat-time { font-size: 0.75rem; color: #999; }
+      }
+
+      .chat-preview {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+
+        .mensaje-texto {
+          margin: 0;
+          font-size: 0.85rem;
+          color: $text-med;
+          flex: 1;
+        }
+
+        .chat-actions {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          // La burbuja de notificaciones
+          .badge-primary {
+            background: $primary-color;
+            color: white;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+            &.rounded-pill { border-radius: 50rem; }
+          }
+
+          .btn-saludos {
+            background: transparent;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            padding: 4px;
+            transition: $transition;
+            &:hover { color: #ffb400; transform: scale(1.1); }
+          }
+        }
+      }
     }
   }
+}
+
+// ==========================================
+// UTILIDADES Y ESTADOS VACÍOS
+// ==========================================
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty-state-chat {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: #adb5bd;
+  font-style: italic;
+  
+  .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5; }
+  p { margin: 0; font-size: 0.9rem; }
 }

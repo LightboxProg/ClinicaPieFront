@@ -1,9 +1,14 @@
 <div class="input-contenedor">
   <input 
     type="text" 
+    class="chat-input"
     [(ngModel)]="textoMensaje" 
     (keyup.enter)="enviarMensaje()"
-    placeholder="Escribe un mensaje aquí...">
+    placeholder="Escribe un mensaje aquí..."
+    autocomplete="off">
   
-  <button (click)="enviarMensaje()">Enviar ✈️</button>
+  <button class="btn-enviar" (click)="enviarMensaje()" [disabled]="!textoMensaje">
+    <span class="btn-texto">Enviar</span>
+    <i class="fas fa-paper-plane"></i>
+  </button>
 </div>

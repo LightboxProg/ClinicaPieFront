@@ -1,59 +1,105 @@
-<div class="m-1">
-
-  <button (click)="abrirModal()">Nuevo Paciente</button>
+<div class="m-1 mb-4">
+  <button class="btn-primary" (click)="abrirModal()">
+    <i class="fas fa-user-plus"></i> Nuevo Paciente
+  </button>
 </div>
 
-<!-- Modal para registrar un nuevo paciente -->
 <app-modal [isVisible]="isModalVisible" [title]="esEdicion ? 'Editar Paciente' : 'Registro de Pacientes'" (close)="cerrarModal()">
-  <form (submit)="agregarPaciente(); $event.preventDefault()">
-    <label>
-      Nombre completo:
-      <input type="text" [(ngModel)]="nuevoPaciente.nombre" name="nombre" required />
-    </label>
-    <label>
-      Fecha de nacimiento:
-      <input type="date" [(ngModel)]="nuevoPaciente.fechaNacimiento" name="fechaNacimiento" required />
-    </label>
-    <label>
-      Teléfono:
-      <input type="number" [(ngModel)]="nuevoPaciente.telefono" name="telefono" required />
-    </label>
-    <label>
-      Correo electrónico:
-      <input type="email" [(ngModel)]="nuevoPaciente.correo" name="correo" required />
-    </label>
-    <label>
-      Dirección:
-      <input type="text" [(ngModel)]="nuevoPaciente.direccion" name="direccion" required />
-    </label>
-    <label>
-      Condiciones médicas actuales:
-      <textarea [(ngModel)]="nuevoPaciente.condicionesMedicas" name="condicionesMedicas" required></textarea>
-    </label>
-    <label>
-      Alergias conocidas:
-      <textarea [(ngModel)]="nuevoPaciente.alergias" name="alergias" required></textarea>
-    </label>
-    <label>
-      Cirugías previas o tratamientos médicos importantes:
-      <textarea [(ngModel)]="nuevoPaciente.cirugiasPrevias" name="cirugiasPrevias" required></textarea>
-    </label>
-    <label>
-      Seguro dental:
-      <input type="checkbox" [(ngModel)]="nuevoPaciente.seguroDental" name="seguroDental" />
-    </label>
-    <label>
-      Peso (kg):
-      <input type="number" [(ngModel)]="nuevoPaciente.peso" name="peso" required />
-    </label>
-    <label>
-      Altura (m):
-      <input type="number" [(ngModel)]="nuevoPaciente.altura" name="altura" required />
-    </label>
-    <label>
-      Tensión arterial:
-      <input type="checkbox" [(ngModel)]="nuevoPaciente.tensionArterial" name="tensionArterial" />
-    </label>
-    <button type="submit">{{ esEdicion ? 'Actualizar' : 'Registrar' }}</button>
-  </form>
+  
+  <div class="modal-form-container">
+    <form (submit)="agregarPaciente(); $event.preventDefault()" class="clinica-form">
+      
+      <h4 class="form-section-title"><i class="fas fa-id-card"></i> Datos Personales</h4>
+      
+      <div class="form-group">
+        <label>Nombre completo <span class="required">*</span></label>
+        <input type="text" [(ngModel)]="nuevoPaciente.nombre" name="nombre" class="form-control" required placeholder="Ej. Juan Pérez" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="fechaNacimiento">Fecha de nacimiento <span class="required">*</span></label>
+          <input type="date" id="fechaNacimiento" [(ngModel)]="nuevoPaciente.fechaNacimiento" name="fechaNacimiento" class="form-control" required />
+        </div>
+        <div class="form-group half">
+          <label>Teléfono <span class="required">*</span></label>
+          <input type="tel" [(ngModel)]="nuevoPaciente.telefono" name="telefono" class="form-control" required placeholder="10 dígitos" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <label>Correo electrónico <span class="required">*</span></label>
+          <input type="email" [(ngModel)]="nuevoPaciente.correo" name="correo" class="form-control" required placeholder="ejemplo@correo.com" />
+        </div>
+        <div class="form-group half">
+          <label>Dirección <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="nuevoPaciente.direccion" name="direccion" class="form-control" required placeholder="Calle y número" />
+        </div>
+      </div>
+
+      <hr class="form-divider">
+
+      <h4 class="form-section-title"><i class="fas fa-notes-medical"></i> Datos Médicos</h4>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <label>Peso (kg) <span class="required">*</span></label>
+          <input type="number" step="0.1" [(ngModel)]="nuevoPaciente.peso" name="peso" class="form-control" required placeholder="Ej. 75.5" />
+        </div>
+        <div class="form-group half">
+          <label>Altura (m) <span class="required">*</span></label>
+          <input type="number" step="0.01" [(ngModel)]="nuevoPaciente.altura" name="altura" class="form-control" required placeholder="Ej. 1.75" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Condiciones médicas actuales <span class="required">*</span></label>
+        <textarea [(ngModel)]="nuevoPaciente.condicionesMedicas" name="condicionesMedicas" class="form-control" rows="2" required placeholder="Diabetes, hipertensión, etc..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Alergias conocidas <span class="required">*</span></label>
+        <textarea [(ngModel)]="nuevoPaciente.alergias" name="alergias" class="form-control" rows="2" required placeholder="Medicamentos, látex, etc..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Cirugías previas o tratamientos importantes <span class="required">*</span></label>
+        <textarea [(ngModel)]="nuevoPaciente.cirugiasPrevias" name="cirugiasPrevias" class="form-control" rows="2" required placeholder="Describa brevemente..."></textarea>
+      </div>
+
+      <div class="form-row mt-3">
+        <div class="form-group half toggle-group">
+          <label for="seguroDental">¿Cuenta con Seguro Médico?</label>
+          <div class="switch-container">
+            <label class="switch">
+              <input type="checkbox" id="seguroDental" [(ngModel)]="nuevoPaciente.seguroDental" name="seguroDental">
+              <span class="slider round"></span>
+            </label>
+            <span class="status-text">{{ nuevoPaciente.seguroDental ? 'Sí' : 'No' }}</span>
+          </div>
+        </div>
+
+        <div class="form-group half toggle-group">
+          <label for="tensionArterial">¿Problemas de Tensión Arterial?</label>
+          <div class="switch-container">
+            <label class="switch">
+              <input type="checkbox" id="tensionArterial" [(ngModel)]="nuevoPaciente.tensionArterial" name="tensionArterial">
+              <span class="slider round"></span>
+            </label>
+            <span class="status-text text-danger" *ngIf="nuevoPaciente.tensionArterial">Precaución</span>
+            <span class="status-text" *ngIf="!nuevoPaciente.tensionArterial">Ninguno</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions mt-4">
+        <button type="button" (click)="cerrarModal()" class="btn-outline">Cancelar</button>
+        <button type="submit" class="btn-primary">
+          <i class="fas fa-save"></i> {{ esEdicion ? 'Actualizar Paciente' : 'Registrar Paciente' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
 </app-modal>
