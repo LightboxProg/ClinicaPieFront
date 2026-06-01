@@ -1,5 +1,3 @@
-<app-navbar></app-navbar>
-
 <div class="main-layout" [class.has-sidebar]="mostrarSidebar()" [class.sidebar-collapsed]="sidebarColapsado">
   
   <app-sidebar *ngIf="mostrarSidebar()" 
@@ -12,5 +10,3 @@
   </main>
 
 </div>
-
-<app-footer *ngIf="mostrarElementosPublicos()"></app-footer>

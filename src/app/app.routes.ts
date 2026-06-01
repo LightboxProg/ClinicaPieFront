@@ -28,19 +28,15 @@ import { ContactoComponent } from './pages/contacto/contacto.component';
 import { AgendarCitaComponent } from './pages/agendar-cita/agendar-cita.component';
 
 export const routes: Routes = [
-  // Rutas públicas (sin autenticación)
-  { path: "login", component: UserLoginComponent },
-
-  // Rutas públicas del sitio
+  // Ruta raíz redirige al login
   {
     path: '',
     pathMatch: 'full',
-    component: InicioComponent
+    redirectTo: '/login'
   },
-  { path: 'nosotros', component: NosotrosComponent },
-  { path: 'servicios-publicos', component: ServiciosComponent },
-  { path: 'contacto', component: ContactoComponent },
-  { path: 'agendar-cita', component: AgendarCitaComponent },
+
+  // Rutas públicas (sin autenticación)
+  { path: "login", component: UserLoginComponent },
 
   // Rutas para usuarios autenticados (sin restricción de roles)
   { path: "chats", component: ChatsComponent, canActivate: [authGuard] },

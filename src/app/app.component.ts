@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, RouterOutlet } from '@angular/router'; // Agregamos Router aquí
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -13,12 +11,10 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
   imports: [
     CommonModule,
     RouterOutlet,
-    NavbarComponent,
     SidebarComponent,
     RouterModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FooterComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -28,23 +24,16 @@ export class AppComponent {
 
   constructor(public router: Router) {}
 
-  // Función para decidir si mostramos la barra lateral
-  // La barra lateral debe mostrarse en TODAS las rutas excepto las públicas
   mostrarSidebar(): boolean {
-    // Rutas públicas donde NO debe aparecer la barra lateral
-    const rutasPublicas = ['/login', '/', '/nosotros', '/servicios-publicos', '/contacto', '/agendar-cita'];
+    // Rutas donde NO debe aparecer la barra lateral
+    const rutasSinSidebar = ['/login'];
 
-    // Si la ruta actual está en rutasPublicas, NO mostrar sidebar
-    const esRutaPublica = rutasPublicas.some(ruta => 
+    // Si la ruta actual está en rutasSinSidebar, NO mostrar sidebar
+    const esRutaSinSidebar = rutasSinSidebar.some(ruta => 
       this.router.url === ruta || this.router.url.startsWith(ruta + '/')
     );
     
-    return !esRutaPublica;
-  }
-
-  // Mantener esta función por compatibilidad pero invertida
-  mostrarElementosPublicos(): boolean {
-    return !this.mostrarSidebar();
+    return !esRutaSinSidebar;
   }
 
   sidebarColapsado = true;

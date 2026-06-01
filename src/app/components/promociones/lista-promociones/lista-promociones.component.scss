@@ -57,7 +57,7 @@ $shadow-card: 0 8px 25px rgba(0, 0, 0, 0.06);
     padding: 0.9rem 2rem;
     background: linear-gradient(135deg, $primary, $primary-light);
     color: white;
-    border: none;
+    border: 2px solid rgba($primary, 0.6);
     border-radius: $border-radius;
     font-weight: 600;
     font-size: 1rem;
@@ -70,6 +70,7 @@ $shadow-card: 0 8px 25px rgba(0, 0, 0, 0.06);
     &:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 25px rgba($primary, 0.4);
+      border-color: $primary;
     }
   }
 
@@ -80,7 +81,7 @@ $shadow-card: 0 8px 25px rgba(0, 0, 0, 0.06);
     padding: 0.6rem 1.5rem;
     background: #6c757d;
     color: white;
-    border: none;
+    border: 2px solid rgba(108, 117, 125, 0.5);
     border-radius: $border-radius;
     font-weight: 500;
     font-size: 0.9rem;
@@ -91,6 +92,7 @@ $shadow-card: 0 8px 25px rgba(0, 0, 0, 0.06);
       background: darken(#6c757d, 8%);
       transform: translateY(-2px);
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      border-color: #6c757d;
     }
   }
 
@@ -106,6 +108,7 @@ $shadow-card: 0 8px 25px rgba(0, 0, 0, 0.06);
     box-shadow: $shadow-card;
     margin-bottom: 2.5rem;
     animation: slideDown 0.5s ease;
+    border: 2px solid #e0e0e0;
 
     .filtro-item {
       display: flex;
@@ -123,7 +126,7 @@ $shadow-card: 0 8px 25px rgba(0, 0, 0, 0.06);
 
       select {
         padding: 0.7rem 1rem;
-        border: 2px solid $gray-300;
+        border: 2px solid #d0d0d0;
         border-radius: $border-radius;
         font-size: 0.95rem;
         color: $text-dark;
@@ -147,6 +150,7 @@ $shadow-card: 0 8px 25px rgba(0, 0, 0, 0.06);
     border-radius: $border-radius;
     box-shadow: $shadow-card;
     margin-bottom: 2rem;
+    border: 2px solid #e0e0e0;
 
     .table {
       width: 100%;

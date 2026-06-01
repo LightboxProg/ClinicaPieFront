@@ -22,6 +22,7 @@ $shadow-hover: 0 15px 35px rgba(255, 90, 95, 0.15);
   border-radius: $border-radius;
   box-shadow: $shadow;
   font-family: "Montserrat", sans-serif;
+  border: 2px solid #d0d0d0;
 
   h2 {
     color: $dark;
@@ -63,7 +64,7 @@ $shadow-hover: 0 15px 35px rgba(255, 90, 95, 0.15);
   .form-control {
     width: 90%;
     padding: 0.9rem 1.2rem;
-    border: 2px solid $gray-300;
+    border: 2px solid #d0d0d0;
     border-radius: $border-radius;
     font-size: 1rem;
     color: $text-dark;

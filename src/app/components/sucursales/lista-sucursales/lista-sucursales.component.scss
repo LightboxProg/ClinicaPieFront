@@ -45,7 +45,7 @@ $warning: #F59E0B;       // Naranja para editar
   .btn-create {
     background: linear-gradient(135deg, $primary, $accent);
     color: white;
-    border: none;
+    border: 2px solid rgba($primary, 0.6);
     padding: 0.8rem 1.5rem;
     border-radius: 12px;
     font-size: 1rem;
@@ -62,6 +62,7 @@ $warning: #F59E0B;       // Naranja para editar
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 15px -3px rgba($primary, 0.4);
+      border-color: $primary;
     }
     &:active { transform: translateY(0); }
   }
@@ -78,6 +79,7 @@ $warning: #F59E0B;       // Naranja para editar
   padding: 14px 18px;
   margin-bottom: 1.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 2px solid #e0e0e0;
 }
 
 .search-box {
@@ -87,7 +89,7 @@ $warning: #F59E0B;       // Naranja para editar
   flex: 1;
   min-width: 220px;
   background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  border: 2px solid #e0e0e0;
   border-radius: 10px;
   padding: 8px 14px;
   transition: border-color 0.2s;

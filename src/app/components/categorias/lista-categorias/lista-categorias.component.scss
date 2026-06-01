@@ -76,8 +76,8 @@ button {
   &.btn-outline {
     background: transparent;
     color: $text-med;
-    border: 1px solid #ddd;
-    &:hover { background: #f1f1f1; color: $dark-color; }
+    border: 1px solid #f1eeee;
+    &:hover { background: #f0eded; color: $dark-color; }
   }
 }
 
@@ -88,6 +88,7 @@ button {
   gap: 1.5rem;
   margin-bottom: 2rem;
 
+
   .stat-card {
     background: white;
     padding: 1.5rem;
@@ -97,9 +98,9 @@ button {
     align-items: center;
     gap: 1.5rem;
     transition: $transition;
-    border: 1px solid rgba(0,0,0,0.02);
+    border: 2px solid #e0e0e0;
 
-    &:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
+    &:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.06); border-color: #d0d0d0; }
 
     .stat-icon {
       font-size: 2.5rem;

@@ -1,7 +1,6 @@
-
 .patient-card {
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
   border-radius: 12px;
   display: flex;
   flex-direction: row;
@@ -13,7 +12,8 @@
 
 .patient-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15); 
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
+  border-color: #b0b0b0;
 }
 
 .alert-indicator {

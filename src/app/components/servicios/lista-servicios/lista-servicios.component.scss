@@ -61,6 +61,7 @@ $transition: all 0.3s ease;
       border-radius: $border-radius;
       text-align: center;
       transition: $transition;
+      border: 2px solid #e0e0e0;
       border-left: 4px solid $primary-color;
 
       &:hover {
