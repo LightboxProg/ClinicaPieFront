@@ -18,9 +18,9 @@
     </ul>
   </nav>
   <div class="sidebar-footer">
-    <a (click)="logout()" class="logout-link" title="Cerrar Sesión">
+    <button (click)="logout()" class="logout-link" title="Cerrar Sesión">
       <i class="fas fa-sign-out-alt"></i>
       <span *ngIf="!isCollapsed">Cerrar Sesión</span>
-    </a>
+    </button>
   </div>
 </aside>

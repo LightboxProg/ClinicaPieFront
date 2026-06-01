@@ -173,6 +173,8 @@
       transition: all $transition-base;
       border-radius: $border-radius-base;
       cursor: pointer;
+      background: none;
+      border: 2px solid transparent;
       
       i {
         font-size: $font-size-lg;
@@ -186,6 +188,7 @@
       
       &:hover {
         background-color: rgba($color-error, 0.08);
+        border-color: $color-error;
         
         i {
           color: darken($color-error, 10%);

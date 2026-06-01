@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -39,7 +40,7 @@ export class SidebarComponent {
   }));
 
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private loginService: LoginService) {}
 
   isActive(ruta: string): boolean {
     return this.router.url.includes(ruta);
@@ -49,7 +50,11 @@ export class SidebarComponent {
   onToggle() {
     this.toggle.emit();
   }
+
   logout() {
-  // Código para cerrar sesión
-}
+    // Eliminar usuario del localStorage y actualizar el estado
+    this.loginService.eliminarUsuario();
+    // Redirigir al login
+    this.router.navigate(['/login']);
+  }
 }
