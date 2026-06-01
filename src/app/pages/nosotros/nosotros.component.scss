@@ -1,0 +1,225 @@
+@import 'src/design-system.scss';
+
+.nosotros-hero {
+  text-align: center;
+  padding: $spacing-5xl $container-padding;
+  background: linear-gradient(135deg, $color-surface 0%, $color-surface-secondary 100%);
+  
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    
+    h1 {
+      font-size: $font-size-6xl;
+      margin-bottom: $spacing-lg;
+      color: $color-text-primary;
+      font-weight: $font-weight-bold;
+    }
+  }
+  
+  .hero-subtitle {
+    font-size: $font-size-lg;
+    color: $color-text-secondary;
+    line-height: $line-height-relaxed;
+  }
+}
+
+.about-section {
+  background-color: $color-background;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-4xl;
+  align-items: center;
+  
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+    gap: $spacing-2xl;
+  }
+}
+
+.about-text {
+  h2 {
+    font-size: $font-size-5xl;
+    margin-bottom: $spacing-lg;
+  }
+  
+  p {
+    margin-bottom: $spacing-lg;
+    color: $color-text-secondary;
+    line-height: $line-height-relaxed;
+    font-size: $font-size-lg;
+  }
+}
+
+.about-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-placeholder {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
+  background-color: $color-surface;
+  border: 2px dashed $color-border;
+  border-radius: $border-radius-2xl;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: $color-text-secondary;
+  gap: $spacing-lg;
+}
+
+.values-section {
+  background-color: $color-surface;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-2xl;
+}
+
+.value-card {
+  background-color: $color-background;
+  padding: $spacing-2xl;
+  border-radius: $border-radius-lg;
+  border: 1px solid $color-border;
+  text-align: center;
+  transition: all $transition-base;
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-lg;
+    border-color: $color-primary;
+  }
+  
+  .value-icon {
+    font-size: 3rem;
+    margin-bottom: $spacing-lg;
+  }
+  
+  h3 {
+    font-size: $font-size-2xl;
+    margin-bottom: $spacing-base;
+    color: $color-text-primary;
+  }
+  
+  p {
+    color: $color-text-secondary;
+    line-height: $line-height-relaxed;
+  }
+}
+
+.team-section {
+  background-color: $color-background;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-3xl;
+}
+
+.team-member {
+  background-color: $color-surface;
+  border-radius: $border-radius-lg;
+  border: 1px solid $color-border;
+  overflow: hidden;
+  text-align: center;
+  transition: all $transition-base;
+  
+  &:hover {
+    box-shadow: $shadow-lg;
+    border-color: $color-primary;
+  }
+}
+
+.member-avatar {
+  background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+  padding: $spacing-3xl $spacing-base;
+  
+  .avatar-placeholder {
+    font-size: 4rem;
+  }
+}
+
+.team-member {
+  h3 {
+    padding: $spacing-lg $spacing-lg 0 $spacing-lg;
+    font-size: $font-size-2xl;
+    color: $color-text-primary;
+    margin-bottom: 0;
+  }
+  
+  .member-role {
+    padding: 0 $spacing-lg $spacing-base $spacing-lg;
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-sm;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .member-desc {
+    padding: 0 $spacing-lg $spacing-lg $spacing-lg;
+    color: $color-text-secondary;
+    line-height: $line-height-relaxed;
+    font-size: $font-size-sm;
+    margin-bottom: 0;
+  }
+}
+
+.stats-section {
+  background: linear-gradient(135deg, $color-text-primary 0%, darken($color-text-primary, 5%) 100%);
+  color: $color-surface;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-2xl;
+  text-align: center;
+}
+
+.stat {
+  padding: $spacing-2xl;
+  
+  .stat-number {
+    font-size: $font-size-5xl;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    margin-bottom: $spacing-base;
+  }
+  
+  .stat-label {
+    font-size: $font-size-lg;
+    color: $color-surface;
+    margin-bottom: 0;
+  }
+}
+
+.cta-section {
+  background-color: $color-surface;
+  text-align: center;
+}
+
+.cta-content {
+  max-width: 600px;
+  margin: 0 auto;
+  
+  h2 {
+    font-size: $font-size-5xl;
+    margin-bottom: $spacing-lg;
+  }
+  
+  p {
+    font-size: $font-size-lg;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-2xl;
+  }
+}

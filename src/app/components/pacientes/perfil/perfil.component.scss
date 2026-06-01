@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
 
 // Variables de color optimizadas
-$primary-color: #ff5a5f;
+$primary-color: #ffb400 ;
 $secondary-color: #00a699;
 $accent-color: #ffb400;
 $dark-color: #2d2d2d;
@@ -205,6 +205,7 @@ body {
 
   .meta-item {
     background: rgba(255, 255, 255, 0.25);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     padding: 0.4rem 0.8rem;
     border-radius: 16px;
@@ -448,6 +449,7 @@ textarea {
     align-items: center;
     gap: 0.75rem;
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
     font-size: 0.9rem;
 
@@ -1321,6 +1323,7 @@ textarea {
   justify-content: center;
   z-index: 10000;
   padding: 1rem;
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   animation: fadeIn $transition-base;
 }
@@ -1574,6 +1577,7 @@ textarea {
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 500;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 

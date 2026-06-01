@@ -97,21 +97,21 @@
             <tr *ngFor="let dia of semanaFiltrada">
               <td>{{ dia.diaSemana }}</td>
               <td>
-                <label class="switch" [for]="'toggle-' + dia.diaSemana">
+                <label class="switch" [for]="'toggle-' + dia.diaSemana" [attr.title]="'Activar o desactivar ' + dia.diaSemana">
                   <input type="checkbox" [id]="'toggle-' + dia.diaSemana" [(ngModel)]="dia.activo" (ngModelChange)="onDiaActivoChange(dia)" [attr.aria-label]="'Activar o desactivar ' + dia.diaSemana">
                   <span class="slider round"></span>
                 </label>
               </td>
               <td>
                 <div class="time-inputs" *ngIf="dia.activo">
-                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.manana.inicio" [disabled]="!dia.activo" (change)="onHorarioChange()" aria-label="Hora de inicio turno matutino para {{dia.diaSemana}}">
-                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.manana.fin" [disabled]="!dia.activo" (change)="onHorarioChange()" aria-label="Hora de fin turno matutino para {{dia.diaSemana}}">
+                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.manana.inicio" [disabled]="!dia.activo" (change)="onHorarioChange()" [attr.aria-label]="'Hora de inicio turno matutino para ' + dia.diaSemana" [attr.title]="'Hora de inicio turno matutino para ' + dia.diaSemana">
+                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.manana.fin" [disabled]="!dia.activo" (change)="onHorarioChange()" [attr.aria-label]="'Hora de fin turno matutino para ' + dia.diaSemana" [attr.title]="'Hora de fin turno matutino para ' + dia.diaSemana">
                 </div>
               </td>
               <td>
                 <div class="time-inputs" *ngIf="dia.activo">
-                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.tarde.inicio" [disabled]="!dia.activo" (change)="onHorarioChange()" aria-label="Hora de inicio turno vespertino para {{dia.diaSemana}}">
-                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.tarde.fin" [disabled]="!dia.activo" (change)="onHorarioChange()" aria-label="Hora de fin turno vespertino para {{dia.diaSemana}}">
+                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.tarde.inicio" [disabled]="!dia.activo" (change)="onHorarioChange()" [attr.aria-label]="'Hora de inicio turno vespertino para ' + dia.diaSemana" [attr.title]="'Hora de inicio turno vespertino para ' + dia.diaSemana">
+                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.tarde.fin" [disabled]="!dia.activo" (change)="onHorarioChange()" [attr.aria-label]="'Hora de fin turno vespertino para ' + dia.diaSemana" [attr.title]="'Hora de fin turno vespertino para ' + dia.diaSemana">
                 </div>
               </td>
             </tr>
@@ -124,136 +124,3 @@
     <button class="btn-primary" (click)="guardarHorarios()" [disabled]="!horarioSeleccionado">Guardar Cambios</button>
   </div>
 </div>
-
-        </div>
-        <button class="btn-outline" *ngIf="busquedaDia || filtroEstadoDia !== 'todos'" (click)="limpiarFiltrosDias()" title="Limpiar Filtros">
-          <i class="fas fa-eraser"></i>
-        </button>
-      </div>
-
-    </div>
-
-    <div class="admin-card-body bg-light">
-      
-      <div class="empty-state py-4" *ngIf="diasFiltrados.length === 0">
-        <i class="fas fa-calendar-times empty-icon"></i>
-        <p>No hay días que coincidan con los filtros aplicados.</p>
-      </div>
-
-      <div class="semana-grid" *ngIf="diasFiltrados.length > 0">
-        <div *ngFor="let dia of diasFiltrados" class="dia-card shadow-sm" [class.inactivo]="!dia.activo">
-          
-          <div class="dia-header flex-between">
-            <div class="switch-container">
-              <label class="switch">
-                <input type="checkbox" [id]="'toggle-' + dia.diaSemana" [(ngModel)]="dia.activo">
-                <span class="slider round"></span>
-              </label>
-              <span class="font-medium ml-2" [class.text-muted]="!dia.activo">{{ dia.nombreDia }}</span>
-            </div>
-            <button *ngIf="dia.activo" class="btn-icon text-primary" (click)="agregarTurno(dia)" title="Agregar Turno">
-              <i class="fas fa-plus-circle"></i>
-            </button>
-          </div>
-
-          <div class="turnos-lista mt-3" *ngIf="dia.activo">
-            <p *ngIf="dia.turnos.length === 0" class="text-muted text-sm italic text-center">
-              Sin turnos. Clic en "+" para agregar.
-            </p>
-
-<div *ngFor="let turno of dia.turnos; let i = index" class="turno-fila flex-row gap-2 align-end mb-2"></div>
-```
-````
-This is the description of what the code block changes:
-<changeDescription>
-He añadido un `aria-label` al campo de búsqueda de día para corregir el error de accesibilidad.
-</changeDescription>
-
-This is the code block that represents the suggested code change:
-```html
-// ...existing code...
-      <div class="search-dia-box flex-row align-center gap-2">
-        <div class="input-icon-wrapper">
-          <i class="fas fa-calendar-day input-icon"></i>
-                    <input type="text" class="form-control pl-4" placeholder="Buscar día..." [(ngModel)]="busquedaDia" aria-label="Buscar día de la semana" />
-        </div>
-      </div>
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Día</th>
-              <th>Estado</th>
-              <th>Horario Matutino</th>
-              <th>Horario Vespertino</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let dia of semanaFiltrada">
-              <td>{{ dia.diaSemana }}</td>
-              <td>
-                <label class="switch" [for]="'toggle-' + dia.diaSemana">
-                  <input type="checkbox" [id]="'toggle-' + dia.diaSemana" [(ngModel)]="dia.activo" (ngModelChange)="onDiaActivoChange(dia)" [attr.aria-label]="'Activar o desactivar ' + dia.diaSemana">
-                  <span class="slider round"></span>
-                </label>
-              </td>
-              <td>
-                <div class="time-inputs" *ngIf="dia.activo">
-                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.manana.inicio" [disabled]="!dia.activo" (change)="onHorarioChange()" aria-label="Hora de inicio turno matutino para {{dia.diaSemana}}">
-                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.manana.fin" [disabled]="!dia.activo" (change)="onHorarioChange()" aria-label="Hora de fin turno matutino para {{dia.diaSemana}}">
-                </div>
-              </td>
-              <td>
-                <div class="time-inputs" *ngIf="dia.activo">
-                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.tarde.inicio" [disabled]="!dia.activo" (change)="onHorarioChange()" aria-label="Hora de inicio turno vespertino para {{dia.diaSemana}}">
-                  <input type="time" class="form-control" [(ngModel)]="dia.horarios.tarde.fin" [disabled]="!dia.activo" (change)="onHorarioChange()" aria-label="Hora de fin turno vespertino para {{dia.diaSemana}}">
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div class="card-footer">
-    <button class="btn-primary" (click)="guardarHorarios()" [disabled]="!horarioSeleccionado">Guardar Cambios</button>
-  </div>
-</div>
-
-        </div>
-        <button class="btn-outline" *ngIf="busquedaDia || filtroEstadoDia !== 'todos'" (click)="limpiarFiltrosDias()" title="Limpiar Filtros">
-          <i class="fas fa-eraser"></i>
-        </button>
-      </div>
-
-    </div>
-
-    <div class="admin-card-body bg-light">
-      
-      <div class="empty-state py-4" *ngIf="diasFiltrados.length === 0">
-        <i class="fas fa-calendar-times empty-icon"></i>
-        <p>No hay días que coincidan con los filtros aplicados.</p>
-      </div>
-
-      <div class="semana-grid" *ngIf="diasFiltrados.length > 0">
-        <div *ngFor="let dia of diasFiltrados" class="dia-card shadow-sm" [class.inactivo]="!dia.activo">
-          
-          <div class="dia-header flex-between">
-            <div class="switch-container">
-              <label class="switch">
-                <input type="checkbox" [id]="'toggle-' + dia.diaSemana" [(ngModel)]="dia.activo">
-                <span class="slider round"></span>
-              </label>
-              <span class="font-medium ml-2" [class.text-muted]="!dia.activo">{{ dia.nombreDia }}</span>
-            </div>
-            <button *ngIf="dia.activo" class="btn-icon text-primary" (click)="agregarTurno(dia)" title="Agregar Turno">
-              <i class="fas fa-plus-circle"></i>
-            </button>
-          </div>
-
-          <div class="turnos-lista mt-3" *ngIf="dia.activo">
-            <p *ngIf="dia.turnos.length === 0" class="text-muted text-sm italic text-center">
-              Sin turnos. Clic en "+" para agregar.
-            </p>
-
-<div *ngFor="let turno of dia.turnos; let i = index" class="turno-fila flex-row gap-2 align-end mb-2"></div>

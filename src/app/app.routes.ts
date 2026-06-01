@@ -22,10 +22,25 @@ import { PreguntonesComponent } from './pages/preguntones/preguntones.component'
 import { FormHorariosComponent } from './components/horarios/form-horarios/form-horarios.component';
 import { TokenComponent } from './components/token/token.component';
 import { InicioComponent } from './pages/inicio/inicio.component';
+import { NosotrosComponent } from './pages/nosotros/nosotros.component';
+import { ServiciosComponent } from './pages/servicios/servicios.component';
+import { ContactoComponent } from './pages/contacto/contacto.component';
+import { AgendarCitaComponent } from './pages/agendar-cita/agendar-cita.component';
 
 export const routes: Routes = [
   // Rutas públicas (sin autenticación)
   { path: "login", component: UserLoginComponent },
+
+  // Rutas públicas del sitio
+  {
+    path: '',
+    pathMatch: 'full',
+    component: InicioComponent
+  },
+  { path: 'nosotros', component: NosotrosComponent },
+  { path: 'servicios-publicos', component: ServiciosComponent },
+  { path: 'contacto', component: ContactoComponent },
+  { path: 'agendar-cita', component: AgendarCitaComponent },
 
   // Rutas para usuarios autenticados (sin restricción de roles)
   { path: "chats", component: ChatsComponent, canActivate: [authGuard] },
@@ -149,12 +164,6 @@ export const routes: Routes = [
     data: { roles: ['Doctor', 'Administrador', 'Recepcionista'] }
   },
 
-  // Ruta principal de la Clínica
-  {
-    path: '',
-    pathMatch: 'full',
-    component: InicioComponent
-  },
   // Ruta para página no encontrada (opcional)
   { path: '**', redirectTo: '/login' }
 ];

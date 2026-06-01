@@ -1,8 +1,8 @@
 <app-navbar></app-navbar>
 
-<div class="main-layout" [class.has-sidebar]="!mostrarElementosPublicos()" [class.sidebar-collapsed]="sidebarColapsado">
+<div class="main-layout" [class.has-sidebar]="mostrarSidebar()" [class.sidebar-collapsed]="sidebarColapsado">
   
-  <app-sidebar *ngIf="!mostrarElementosPublicos()" 
+  <app-sidebar *ngIf="mostrarSidebar()" 
                [isCollapsed]="sidebarColapsado" 
                (toggle)="toggleSidebar()">
   </app-sidebar>

@@ -1,0 +1,176 @@
+<section class="contacto-hero fade-in-up">
+  <div class="hero-content">
+    <h1>Contáctanos</h1>
+    <p class="hero-subtitle">Estamos aquí para responder tus preguntas y brindarte la mejor atención.</p>
+  </div>
+</section>
+
+<section class="contact-section section fade-in-up">
+  <div class="container">
+    <div class="contact-grid">
+      
+      <!-- Información de Contacto -->
+      <div class="contact-info">
+        <h2>Información de Contacto</h2>
+        
+        <div class="info-item">
+          <div class="info-icon">📍</div>
+          <div class="info-content">
+            <h4>Ubicación</h4>
+            <p>Tijuana, Baja California<br>Mexico</p>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">📞</div>
+          <div class="info-content">
+            <h4>Teléfono</h4>
+            <p><a href="tel:+526641234567">(664) 123-4567</a><br><a href="tel:+526641234568">(664) 123-4568</a></p>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">✉️</div>
+          <div class="info-content">
+            <h4>Email</h4>
+            <p><a href="mailto:info@clinicadelpiettijuana.com">info@clinicadelpiettijuana.com</a><br><a href="mailto:citas@clinicadelpiettijuana.com">citas@clinicadelpiettijuana.com</a></p>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">🕐</div>
+          <div class="info-content">
+            <h4>Horario de Atención</h4>
+            <p>Lunes a Viernes: 8:00 AM - 6:00 PM<br>Sábado: 9:00 AM - 2:00 PM<br>Domingo: Cerrado</p>
+          </div>
+        </div>
+
+        <div class="social-section">
+          <h4>Síguenos</h4>
+          <div class="social-links">
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            </a>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><circle cx="17.5" cy="6.5" r="1.5"></circle></svg>
+            </a>
+            <a href="https://www.whatsapp.com/" target="_blank" rel="noopener" aria-label="WhatsApp">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2h-19C1.12 2 0 3.12 0 4.5v15C0 20.88 1.12 22 2.5 22h19c1.38 0 2.5-1.12 2.5-2.5v-15C24 3.12 22.88 2 21.5 2z"></path></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario de Contacto -->
+      <div class="contact-form">
+        <h2>Envíanos un Mensaje</h2>
+        <p class="form-subtitle">Nos gustaría saber de ti. Completa el formulario y nos pondremos en contacto pronto.</p>
+        
+        <div *ngIf="mensajeExito" class="success-message">
+          {{ mensajeExito }}
+        </div>
+        
+        <form (ngSubmit)="enviarMensaje()">
+          
+          <div class="form-group">
+            <label for="nombre">Nombre Completo *</label>
+            <input 
+              type="text" 
+              id="nombre" 
+              class="form-control" 
+              [(ngModel)]="formData.nombre" 
+              name="nombre"
+              placeholder="Tu nombre"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input 
+              type="email" 
+              id="email" 
+              class="form-control" 
+              [(ngModel)]="formData.email" 
+              name="email"
+              placeholder="tu@email.com"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="telefono">Teléfono *</label>
+            <input 
+              type="tel" 
+              id="telefono" 
+              class="form-control" 
+              [(ngModel)]="formData.telefono" 
+              name="telefono"
+              placeholder="(664) 123-4567"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="asunto">Asunto</label>
+            <input 
+              type="text" 
+              id="asunto" 
+              class="form-control" 
+              [(ngModel)]="formData.asunto" 
+              name="asunto"
+              placeholder="Tema de tu consulta">
+          </div>
+
+          <div class="form-group">
+            <label for="mensaje">Mensaje *</label>
+            <textarea 
+              id="mensaje" 
+              class="form-control" 
+              [(ngModel)]="formData.mensaje" 
+              name="mensaje"
+              placeholder="Cuéntanos cómo podemos ayudarte..."
+              rows="6"
+              required></textarea>
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn-primary btn-lg w-full"
+            [disabled]="cargando">
+            {{ cargando ? 'Enviando...' : 'Enviar Mensaje' }}
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="faq-section section fade-in-up">
+  <div class="container">
+    <div class="section-header">
+      <h2>Preguntas Frecuentes</h2>
+      <p>Respuestas a las dudas más comunes.</p>
+    </div>
+    
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h4>¿Cuál es tu horario de atención?</h4>
+        <p>Lunes a Viernes de 8:00 AM a 6:00 PM, Sábado de 9:00 AM a 2:00 PM. Los domingos estamos cerrados.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>¿Necesito agendar cita con anticipación?</h4>
+        <p>Sí, recomendamos agendar con al menos 24 horas de anticipación para garantizar disponibilidad.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>¿Qué debo llevar a mi primera cita?</h4>
+        <p>Llevar identificación, información de seguro médico (si aplica) y descripción de síntomas actuales.</p>
+      </div>
+      
+      <div class="faq-item">
+        <h4>¿Aceptan todos los seguros médicos?</h4>
+        <p>Contacta directamente para verificar tu cobertura. También ofrecemos opciones de pago flexible.</p>
+      </div>
+    </div>
+  </div>
+</section>

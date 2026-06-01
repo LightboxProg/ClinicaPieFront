@@ -1,6 +1,6 @@
 /* --- Variables de Diseño (Paleta ProPigment) --- */
-$primary: #ff5a5f;       // Rojo coral (igual que navbar)
-$primary-hover: #e04a4f; // Rojo más oscuro para hover
+$primary: #ffb400 ;       // Rojo coral (igual que navbar)
+$primary-hover:   #f5bb3e ; // Rojo más oscuro para hover
 $primary-light: #fff0f0; // Fondo rojo muy claro
 $accent: #ff7e5f;        // Naranja-coral (gradiente secundario)
 $bg-app: #F3F4F6;        // Gris muy claro de fondo
@@ -296,6 +296,7 @@ $danger: #EF4444;        // Rojo error
       font-weight: 600;
       color: #92400E; // Marrón oscuro
       cursor: pointer;
+      -webkit-user-select: none;
       user-select: none;
     }
 

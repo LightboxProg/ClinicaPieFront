@@ -56,49 +56,13 @@
       </div>
 
             <div class="form-group">
-        <label for="audiencia">Seleccionar Audiencia</label>
-        <select id="audiencia" [(ngModel)]="audienciaSeleccionada" class="form-control">
-          <option value="todos">Todos los Pacientes</option>
-          <option value="seguimiento">Pacientes en Seguimiento</option>
-          <option value="nuevos">Pacientes Nuevos (últimos 30 días)</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="plantilla">Seleccionar Plantilla de Mensaje</label>
-        <select id="plantilla" (change)="onPlantillaSeleccionada($event)" class="form-control">
-          <option value="">Seleccione una plantilla</option>
-          <option *ngFor="let plantilla of plantillas" [value]="plantilla.name">{{ plantilla.name }}</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="preview-card">
-        <h5><i class="fab fa-whatsapp"></i> Vista Previa del Mensaje</h5>
-        <div class="wa-preview">
-          <div class="wa-header">
-            <strong>{{ plantillaSeleccionada?.name || 'Nombre de Plantilla' }}</strong>
-          </div>
-          <div class="wa-body">
-            <p>{{ getBodyPreview() }}</p>
-          </div>
-          <div class="wa-footer">
-            <small>{{ plantillaSeleccionada?.components?.find(c => c.type === 'FOOTER')?.text || 'Texto de pie de página' }}</small>
-          </div>
+        <label for="boton-envio">Acción</label>
+        <div class="d-flex gap-2">
+          <button class="btn-lanzar" (click)="lanzarCampana()" [disabled]="enviando || !plantillaSeleccionada">
+            {{ enviando ? 'Procesando Envíos...' : '📢 Lanzar Campaña Ahora' }}
+          </button>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="card-footer">
-    <button class="btn-primary" (click)="enviarMensajes()" [disabled]="!audienciaSeleccionada || !plantillaSeleccionada">
-      <i class="fas fa-paper-plane"></i> Enviar a {{ audienciaSeleccionada }}
-    </button>
-  </div>
-</div>
-
-
-      <button class="btn-lanzar" (click)="lanzarCampana()" [disabled]="enviando || !plantillaSeleccionada">
-        {{ enviando ? 'Procesando Envíos...' : '📢 Lanzar Campaña Ahora' }}
-      </button>
 
     </div>
 

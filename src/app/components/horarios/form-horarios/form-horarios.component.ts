@@ -14,6 +14,10 @@ interface DiaHorario {
   nombreDia: string;
   activo: boolean;
   turnos: Turno[];
+  horarios: {
+    manana: { inicio: string; fin: string };
+    tarde: { inicio: string; fin: string };
+  };
 }
 
 type FiltroDia = 'todos' | 'con-turno' | 'sin-turno';
@@ -72,7 +76,11 @@ export class FormHorariosComponent implements OnInit {
       diaSemana: index,
       nombreDia: nombre,
       activo: false,
-      turnos: []
+      turnos: [],
+      horarios: {
+        manana: { inicio: '', fin: '' },
+        tarde: { inicio: '', fin: '' }
+      }
     }));
   }
 
@@ -220,5 +228,24 @@ export class FormHorariosComponent implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  // Propiedades y métodos para compatibilidad con el template
+  horarioSeleccionado: boolean = false;
+
+  get semanaFiltrada(): DiaHorario[] {
+    return this.semana;
+  }
+
+  onDiaActivoChange(dia: DiaHorario): void {
+    // Callback cuando se activa/desactiva un día
+  }
+
+  onHorarioChange(): void {
+    // Callback cuando cambian los horarios
+  }
+
+  guardarHorarios(): void {
+    this.guardarConfiguracion();
   }
 }

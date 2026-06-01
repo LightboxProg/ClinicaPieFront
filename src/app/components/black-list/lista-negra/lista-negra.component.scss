@@ -18,7 +18,7 @@
 
 .alert-indicator {
   width: 6px;
-  background-color: #ef4444; 
+  background-color: #ffb400; 
   flex-shrink: 0;
 }
 
@@ -48,7 +48,7 @@
   height: 50px;
   border-radius: 50%;
   background-color: #fee2e2;
-  color: #ef4444; 
+  color:#ffb400; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,7 +72,7 @@
 }
 
 .badge-alert {
-  background-color: #ef4444;
+  background-color: #ffb400;
   color: white;
   padding: 0.3rem 0.8rem;
   border-radius: 50px;
@@ -110,7 +110,7 @@
 .status-badge {
   font-weight: 600;
 }
-.status-badge.permanente { color: #ef4444; } 
+.status-badge.permanente { color: #ffb400; } 
 .status-badge.temporal { color: #f59e0b; } 
 .expandable-section {
   border-top: 1px dashed var(--color-border);

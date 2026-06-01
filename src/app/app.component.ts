@@ -28,24 +28,29 @@ export class AppComponent {
 
   constructor(public router: Router) {}
 
-  // Función para decidir si mostramos el menú y el pie de página
-  mostrarElementosPublicos(): boolean {
-    // Lista de las páginas del sistema donde NO queremos que salgan
-    const rutasOcultas = [
-      '/login', 
-      '/lista-pacientes',
-      '/categorias',
-      '/black-list' // Puedes agregar más rutas aquí en el futuro
-    ]; 
+  // Función para decidir si mostramos la barra lateral
+  // La barra lateral debe mostrarse en TODAS las rutas excepto las públicas
+  mostrarSidebar(): boolean {
+    // Rutas públicas donde NO debe aparecer la barra lateral
+    const rutasPublicas = ['/login', '/', '/nosotros', '/servicios-publicos', '/contacto', '/agendar-cita'];
 
-    // Verificamos si la ruta actual está en nuestra lista
-    const esconder = rutasOcultas.some(ruta => this.router.url.includes(ruta));
+    // Si la ruta actual está en rutasPublicas, NO mostrar sidebar
+    const esRutaPublica = rutasPublicas.some(ruta => 
+      this.router.url === ruta || this.router.url.startsWith(ruta + '/')
+    );
     
-    return !esconder; 
+    return !esRutaPublica;
   }
-  sidebarColapsado = true; 
+
+  // Mantener esta función por compatibilidad pero invertida
+  mostrarElementosPublicos(): boolean {
+    return !this.mostrarSidebar();
+  }
+
+  sidebarColapsado = true;
 
   toggleSidebar() {
     this.sidebarColapsado = !this.sidebarColapsado;
   }
+
 }

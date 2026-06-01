@@ -108,6 +108,7 @@
   border: 1.5px solid transparent;
   font-size: 0.8rem;
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
   transition: all 0.18s ease;
   font-weight: 500;

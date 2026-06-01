@@ -1,110 +1,262 @@
-$sidebar-bg: #1e293b;
-$sidebar-hover: #334155;
-$sidebar-active: #ff5a5f; // Tu color primario
-$text-light: #f8fafc;
-$text-muted: #94a3b8;
+@import 'src/design-system.scss';
 
-.admin-sidebar {
-  width: 250px;
-  height: calc(100vh - 70px); // Restamos la altura de tu Navbar superior
-  background-color: $sidebar-bg;
-  color: $text-light;
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SIDEBAR - Barra Lateral Administrativa
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.sidebar {
+  width: 280px;
+  height: calc(100vh - 80px);
+  background-color: $color-surface;
+  color: $color-text-primary;
   display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
-  top: 70px; // Empieza justo debajo del Navbar
+  top: 80px;
+  border-right: 1px solid $color-border;
   overflow-y: auto;
-  box-shadow: 4px 0 15px rgba(0,0,0,0.05);
-  z-index: 100;
+  transition: width $transition-base;
+  z-index: $z-dropdown;
 
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
 
-  .sidebar-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+  &::-webkit-scrollbar-thumb {
+    background: $color-primary;
+    border-radius: $border-radius-base;
     
-    .panel-title {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: $text-muted;
-      font-weight: 700;
+    &:hover {
+      background: darken($color-primary, 10%);
     }
   }
 
-  .sidebar-nav {
-    flex: 1;
-    padding: 1rem 0;
+  /* ─────────────────────────────────────────────────────────────────────────────
+     Header del Sidebar
+     ───────────────────────────────────────────────────────────────────────────── */
+  
+  .sidebar-header {
     display: flex;
-    flex-direction: column;
-
-    .nav-item {
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg;
+    border-bottom: 1px solid $color-border;
+    gap: $spacing-base;
+    
+    .logo-container {
+      flex: 1;
       display: flex;
       align-items: center;
-      padding: 0.85rem 1.5rem;
-      color: #cbd5e1;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      gap: 1rem;
-
-      i { width: 20px; text-align: center; font-size: 1.1rem; opacity: 0.8; }
-      .nav-text { font-size: 0.95rem; font-weight: 500; }
-
-      &:hover {
-        background-color: $sidebar-hover;
-        color: white;
-        i { opacity: 1; }
+      
+      .logo {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
       }
-
-      &.active {
-        background-color: rgba($sidebar-active, 0.15);
-        color: white;
-        border-right: 4px solid $sidebar-active;
-        i { color: $sidebar-active; opacity: 1; }
+    }
+    
+    .btn-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background-color: $color-background;
+      border: 1px solid $color-border;
+      border-radius: $border-radius-base;
+      color: $color-text-primary;
+      font-size: $font-size-lg;
+      cursor: pointer;
+      transition: all $transition-base;
+      
+      &:hover {
+        background-color: $color-primary;
+        color: $color-surface;
+        border-color: $color-primary;
       }
     }
   }
 
-  .sidebar-footer {
-    padding: 1rem 0;
-    border-top: 1px solid rgba(255,255,255,0.05);
+  /* ─────────────────────────────────────────────────────────────────────────────
+     Navegación del Sidebar
+     ───────────────────────────────────────────────────────────────────────────── */
+  
+  .sidebar-nav {
+    flex: 1;
+    padding: $spacing-base 0;
+    display: flex;
+    flex-direction: column;
     
-    .status-link {
-      i { color: #4285F4; }
-      &:hover i { color: #ea4335; }
+    ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-xs;
+    }
+    
+    li {
+      a {
+        display: flex;
+        align-items: center;
+        gap: $spacing-lg;
+        padding: $spacing-lg $spacing-lg;
+        color: $color-text-primary;
+        text-decoration: none;
+        transition: all $transition-base;
+        border-left: 4px solid transparent;
+        position: relative;
+        
+        .nav-icon {
+          font-size: $font-size-xl;
+          width: 24px;
+          text-align: center;
+          color: $color-text-secondary;
+          transition: color $transition-base;
+        }
+        
+        .nav-text {
+          font-size: $font-size-base;
+          font-weight: $font-weight-regular;
+          color: $color-text-primary;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        
+        &:hover {
+          background-color: rgba($color-primary, 0.08);
+          border-left-color: $color-primary;
+          
+          .nav-icon {
+            color: $color-primary;
+          }
+        }
+        
+        &.active {
+          background-color: rgba($color-primary, 0.12);
+          border-left-color: $color-primary;
+          
+          .nav-icon {
+            color: $color-primary;
+            font-weight: $font-weight-semibold;
+          }
+          
+          .nav-text {
+            color: $color-text-primary;
+            font-weight: $font-weight-semibold;
+          }
+        }
+      }
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────────
+     Footer del Sidebar
+     ───────────────────────────────────────────────────────────────────────────── */
+  
+  .sidebar-footer {
+    padding: $spacing-base;
+    border-top: 1px solid $color-border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .logout-link {
+      display: flex;
+      align-items: center;
+      gap: $spacing-lg;
+      width: 100%;
+      padding: $spacing-lg;
+      color: $color-text-primary;
+      text-decoration: none;
+      transition: all $transition-base;
+      border-radius: $border-radius-base;
+      cursor: pointer;
+      
+      i {
+        font-size: $font-size-lg;
+        color: $color-error;
+      }
+      
+      span {
+        font-size: $font-size-base;
+        font-weight: $font-weight-regular;
+      }
+      
+      &:hover {
+        background-color: rgba($color-error, 0.08);
+        
+        i {
+          color: darken($color-error, 10%);
+        }
+      }
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────────
+     Estado Colapsado
+     ───────────────────────────────────────────────────────────────────────────── */
+  
+  &.collapsed {
+    width: 80px;
+    
+    .sidebar-header {
+      justify-content: center;
+      padding: $spacing-base;
+      
+      .logo-container {
+        display: none;
+      }
+    }
+    
+    .sidebar-nav {
+      ul {
+        gap: 0;
+      }
+      
+      li a {
+        justify-content: center;
+        padding: $spacing-lg $spacing-base;
+        border-left: none;
+        border-top: 3px solid transparent;
+        
+        .nav-text {
+          display: none;
+        }
+        
+        &:hover,
+        &.active {
+          border-left: none;
+          border-top-color: $color-primary;
+        }
+      }
+    }
+    
+    .sidebar-footer {
+      padding: $spacing-base 0;
+      
+      .logout-link {
+        width: auto;
+        padding: $spacing-lg $spacing-base;
+        justify-content: center;
+        
+        span {
+          display: none;
+        }
+      }
     }
   }
 }
-.admin-sidebar {
-  transition: width 0.3s ease;
-  
-  .btn-toggle {
-    background: transparent;
-    border: none;
-    color: #cbd5e1;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: color 0.2s;
-    
-    &:hover { color: white; }
+
+/* Ajuste del layout principal cuando existe sidebar */
+:host-context(app-root) {
+  .main-container {
+    margin-left: 280px;
+    transition: margin-left $transition-base;
   }
-
-  &.collapsed {
-    width: 70px; 
-
-    .sidebar-header {
-      justify-content: center;
-      padding: 1.5rem 0;
-    }
-
-    .nav-item {
-      justify-content: center;
-      padding: 0.85rem 0;
-      
-      i { width: auto; font-size: 1.3rem; margin: 0; }
-    }
+  
+  .main-container.collapsed {
+    margin-left: 80px;
   }
 }

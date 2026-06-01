@@ -10,9 +10,10 @@ import { RouterModule, Router } from '@angular/router';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
-  
+
   // Recibe la orden de si debe estar encogido o no
   @Input() isCollapsed = false;
+
   
   // Emite un evento cuando oprimes el botón
   @Output() toggle = new EventEmitter<void>();
@@ -29,7 +30,14 @@ export class SidebarComponent {
     { titulo: 'Preguntones', ruta: '/lista-preguntones', icono: 'fas fa-question-circle' },
     { titulo: 'Chats', ruta: '/chats', icono: 'fas fa-comments' },
     { titulo: 'Mensajes Masivos', ruta: '/mensajes-masivos', icono: 'fab fa-whatsapp' }
-  ];
+  ].map(item => ({
+    // Alias para que el template pueda usar item.path / item.title / item.icon
+    path: item.ruta,
+    title: item.titulo,
+    icon: item.icono,
+    ...item,
+  }));
+
 
   constructor(private router: Router) {}
 
@@ -41,4 +49,7 @@ export class SidebarComponent {
   onToggle() {
     this.toggle.emit();
   }
+  logout() {
+  // Código para cerrar sesión
+}
 }

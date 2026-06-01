@@ -224,6 +224,7 @@ $shadow-hover: 0 15px 35px rgba(255, 90, 95, 0.15);
     transition: $transition;
     opacity: 0;
     transform: scale(0.8);
+    -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
 
     &:hover {

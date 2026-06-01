@@ -4,11 +4,12 @@
 
   &.has-sidebar {
     .content-area {
-      margin-left: 250px; 
-      width: calc(100% - 250px);
+      margin-left: 280px; 
+      width: calc(100% - 280px);
     }
   }
 }
+
 
 .content-area {
   width: 100%;
@@ -25,6 +26,7 @@
   }
 }
 .main-layout.has-sidebar.sidebar-collapsed .content-area {
-  margin-left: 70px;
-  width: calc(100% - 70px);
+  margin-left: 80px;
+  width: calc(100% - 80px);
 }
+

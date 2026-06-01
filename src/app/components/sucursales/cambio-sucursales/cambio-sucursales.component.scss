@@ -74,7 +74,7 @@
   /* Pequeño truco para ajustar estilos del formulario hijo dentro del modal */
   ::ng-deep .main-container {
     padding: 0 !important;
-    min-height: auto !important;
+    min-height: 0 !important;
     background: transparent !important;
   }
   

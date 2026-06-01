@@ -76,23 +76,3 @@
     <i class="fas fa-info-circle"></i> ID de sistema: {{ formData._id }}
   </div>
 </div>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="esEdicion" class="mode-info">
-        <i class="fas fa-info-circle"></i> ID de sistema: {{ formData._id }}
-      </div>
-
-      <div class="form-actions">
-        <button type="button" (click)="cancelarForm()" class="btn-outline">
-          Cancelar
-        </button>
-        <button type="submit" class="btn-primary">
-          <i class="fas fa-save"></i> {{ esEdicion ? 'Actualizar' : 'Guardar' }} Categoría
-        </button>
-      </div>
-
-    </form>
-  </div>
-</div>

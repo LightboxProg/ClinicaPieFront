@@ -1,0 +1,203 @@
+@import 'src/design-system.scss';
+
+.contacto-hero {
+  text-align: center;
+  padding: $spacing-5xl $container-padding;
+  background: linear-gradient(135deg, $color-surface 0%, $color-surface-secondary 100%);
+  
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    
+    h1 {
+      font-size: $font-size-6xl;
+      margin-bottom: $spacing-lg;
+      color: $color-text-primary;
+      font-weight: $font-weight-bold;
+    }
+  }
+  
+  .hero-subtitle {
+    font-size: $font-size-lg;
+    color: $color-text-secondary;
+    line-height: $line-height-relaxed;
+  }
+}
+
+.contact-section {
+  background-color: $color-background;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-4xl;
+  
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+    gap: $spacing-2xl;
+  }
+}
+
+.contact-info {
+  h2 {
+    font-size: $font-size-4xl;
+    margin-bottom: $spacing-2xl;
+  }
+}
+
+.info-item {
+  display: flex;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-2xl;
+  padding: $spacing-lg;
+  background-color: $color-surface;
+  border-radius: $border-radius-lg;
+  border: 1px solid $color-border;
+  transition: all $transition-base;
+  
+  &:hover {
+    box-shadow: $shadow-md;
+    border-color: $color-primary;
+  }
+  
+  .info-icon {
+    font-size: $font-size-3xl;
+    flex-shrink: 0;
+  }
+  
+  .info-content {
+    h4 {
+      font-size: $font-size-lg;
+      margin-bottom: $spacing-sm;
+      color: $color-text-primary;
+    }
+    
+    p {
+      color: $color-text-secondary;
+      font-size: $font-size-base;
+      margin-bottom: 0;
+      line-height: $line-height-relaxed;
+      
+      a {
+        color: $color-primary;
+        font-weight: $font-weight-semibold;
+        text-decoration: none;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.social-section {
+  margin-top: $spacing-3xl;
+  padding-top: $spacing-2xl;
+  border-top: 1px solid $color-border;
+  
+  h4 {
+    margin-bottom: $spacing-lg;
+    color: $color-text-primary;
+  }
+  
+  .social-links {
+    display: flex;
+    gap: $spacing-lg;
+    
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background-color: rgba($color-primary, 0.1);
+      border-radius: $border-radius-full;
+      color: $color-primary;
+      transition: all $transition-base;
+      
+      &:hover {
+        background-color: $color-primary;
+        color: $color-text-primary;
+        transform: translateY(-4px);
+      }
+      
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+.contact-form {
+  background-color: $color-surface;
+  padding: $spacing-2xl;
+  border-radius: $border-radius-lg;
+  border: 1px solid $color-border;
+  height: fit-content;
+  
+  h2 {
+    font-size: $font-size-3xl;
+    margin-bottom: $spacing-base;
+  }
+  
+  .form-subtitle {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-2xl;
+  }
+}
+
+.success-message {
+  background-color: rgba($color-success, 0.1);
+  border: 1px solid $color-success;
+  color: darken($color-success, 20%);
+  padding: $spacing-lg;
+  border-radius: $border-radius-base;
+  margin-bottom: $spacing-2xl;
+  font-weight: $font-weight-semibold;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-base;
+}
+
+.faq-section {
+  background-color: $color-surface;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-2xl;
+}
+
+.faq-item {
+  background-color: $color-background;
+  padding: $spacing-2xl;
+  border-radius: $border-radius-lg;
+  border: 1px solid $color-border;
+  transition: all $transition-base;
+  
+  &:hover {
+    box-shadow: $shadow-md;
+    border-color: $color-primary;
+  }
+  
+  h4 {
+    font-size: $font-size-lg;
+    margin-bottom: $spacing-base;
+    color: $color-text-primary;
+  }
+  
+  p {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin-bottom: 0;
+    line-height: $line-height-relaxed;
+  }
+}

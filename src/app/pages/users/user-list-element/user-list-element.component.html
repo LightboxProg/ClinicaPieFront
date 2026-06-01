@@ -21,7 +21,7 @@
         <label class="filter-label">Filtrar por Rol</label>
         <div class="input-icon">
           <span class="input-icon-svg user-icon" aria-hidden="true"></span>
-          <select [(ngModel)]="selectedRole" (change)="onRoleChange()" class="filter-select">
+          <select [(ngModel)]="selectedRole" (change)="onRoleChange()" class="filter-select" [attr.aria-label]="'Filtrar usuarios por rol'">
             <option value="">Todos los roles</option>
             <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
           </select>

@@ -4,52 +4,38 @@
 </div>
 
 <div *ngIf="plantilla" class="whatsapp-simulador">
-
     <div class="whatsapp-chat-fondo">
-
         <div class="whatsapp-burbuja">
-
+            
+            <!-- HEADER -->
             <ng-container *ngIf="getComponente('HEADER') as header">
-
                 <div class="wa-header-texto" *ngIf="header.format === 'TEXT'">
                     <strong>{{ header.text }}</strong>
                 </div>
-
                 <div class="wa-header-imagen" *ngIf="header.format === 'IMAGE'">
                     <div class="placeholder-img">
                         <span>📷 Imagen adjunta</span>
                     </div>
                 </div>
-
             </ng-container>
 
-                      <div class="wa-header">
-            <strong>{{ plantilla.name }}</strong>
-            <span class="wa-category">{{ plantilla.category }}</span>
-          </div>
-          <div class="wa-body">{{ getBodyConVariables() }}</div>
-          <div class="wa-footer">
-            <small>{{ getFooter() }}</small>
-          </div>
-        </div>
-        <div class="plantilla-actions">
-          <button class="btn-secondary" (click)="editarPlantilla(plantilla)">Editar</button>
-          <button class="btn-danger" (click)="eliminarPlantilla(plantilla.id)">Eliminar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-            <div class="wa-footer" *ngIf="getComponente('FOOTER') as footer">
-                {{ footer.text }}
+            <!-- BODY -->
+            <div class="wa-body">
+                {{ getBodyConVariables() }}
             </div>
+
+            <!-- FOOTER -->
+            <ng-container *ngIf="getComponente('FOOTER') as footer">
+                <div class="wa-footer">
+                    {{ footer.text }}
+                </div>
+            </ng-container>
 
             <div class="wa-hora">12:00 PM <span class="wa-palomitas">✓✓</span></div>
 
         </div>
 
+        <!-- BUTTONS -->
         <ng-container *ngIf="getComponente('BUTTONS') as botones">
             <div class="wa-botones-contenedor">
                 <div class="wa-boton" *ngFor="let btn of botones.buttons">

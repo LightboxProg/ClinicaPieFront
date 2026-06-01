@@ -67,4 +67,8 @@ export class FormCategoriaComponent implements OnInit {
   cancelarForm(): void {
     this.cancelar.emit();
   }
+
+  isFormValid(): boolean {
+    return this.formData.nombre && this.formData.nombre.trim() !== '' && this.formData.orden !== null;
+  }
 }

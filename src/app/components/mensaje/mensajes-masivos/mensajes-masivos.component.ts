@@ -18,9 +18,11 @@ export class MensajesMasivosComponent implements OnInit, OnDestroy {
   diasSinContacto: number | null = null;
   mesesSinContacto: number | null = null;
   
-  // Plantillas
+  // Plantillas (los nombres deben coincidir con el template)
+  plantillas: any[] = [];
   plantillasDisponibles: any[] = [];
   plantillaSeleccionada: any = null;
+
   
   // Variables Dinámicas
   variablesDinamicas: string[] = [];
@@ -41,8 +43,11 @@ export class MensajesMasivosComponent implements OnInit, OnDestroy {
     this.sub.add(
       this.chatService.plantillas$.subscribe((data: any[]) => {
         this.plantillasDisponibles = data;
+        // Alias para que el template use `plantillas`
+        this.plantillas = data;
       })
     );
+
 
     // Si entramos a la pantalla y no hay plantillas cargadas, las pedimos al backend
     if (this.plantillasDisponibles.length === 0) {

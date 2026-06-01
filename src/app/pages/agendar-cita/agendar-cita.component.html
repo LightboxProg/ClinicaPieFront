@@ -1,0 +1,225 @@
+<section class="agendar-hero fade-in-up">
+  <div class="hero-content">
+    <h1>Agendar Cita</h1>
+    <p class="hero-subtitle">Reserva tu consulta con nuestros especialistas</p>
+  </div>
+</section>
+
+<section class="agendar-section section fade-in-up">
+  <div class="container">
+    <div class="agendar-wrapper">
+      
+      <!-- Indicador de Pasos -->
+      <div class="steps-indicator">
+        <div class="step" [class.active]="paso >= 1" [class.completed]="paso > 1">
+          <div class="step-number">1</div>
+          <div class="step-label">Datos Personales</div>
+        </div>
+        <div class="step-line" [class.completed]="paso > 1"></div>
+        
+        <div class="step" [class.active]="paso >= 2" [class.completed]="paso > 2">
+          <div class="step-number">2</div>
+          <div class="step-label">Servicio</div>
+        </div>
+        <div class="step-line" [class.completed]="paso > 2"></div>
+        
+        <div class="step" [class.active]="paso >= 3" [class.completed]="paso > 3">
+          <div class="step-number">3</div>
+          <div class="step-label">Fecha y Hora</div>
+        </div>
+        <div class="step-line" [class.completed]="paso > 3"></div>
+        
+        <div class="step" [class.active]="paso >= 4" [class.completed]="paso > 4">
+          <div class="step-number">4</div>
+          <div class="step-label">Confirmación</div>
+        </div>
+      </div>
+
+      <!-- Formulario Multi-Paso -->
+      <div class="form-container">
+        
+        <!-- Paso 1: Datos Personales -->
+        <div class="form-step" *ngIf="paso === 1" [@slideInOut]>
+          <h2>Datos Personales</h2>
+          
+          <div class="form-group">
+            <label for="nombre">Nombre Completo *</label>
+            <input 
+              type="text" 
+              id="nombre" 
+              class="form-control" 
+              [(ngModel)]="formData.nombre"
+              placeholder="Tu nombre">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input 
+              type="email" 
+              id="email" 
+              class="form-control" 
+              [(ngModel)]="formData.email"
+              placeholder="tu@email.com">
+          </div>
+
+          <div class="form-group">
+            <label for="telefono">Teléfono *</label>
+            <input 
+              type="tel" 
+              id="telefono" 
+              class="form-control" 
+              [(ngModel)]="formData.telefono"
+              placeholder="(664) 123-4567">
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-primary btn-lg" (click)="siguientePaso()" [disabled]="!validarPasoActual()">
+              Siguiente
+            </button>
+          </div>
+        </div>
+
+        <!-- Paso 2: Servicio -->
+        <div class="form-step" *ngIf="paso === 2" [@slideInOut]>
+          <h2>Selecciona el Servicio</h2>
+          
+          <div class="servicios-grid">
+            <label class="servicio-option" *ngFor="let servicio of servicios">
+              <input 
+                type="radio" 
+                [value]="servicio.id" 
+                [(ngModel)]="formData.servicio"
+                name="servicio">
+              <div class="servicio-card">
+                <h4>{{ servicio.nombre }}</h4>
+                <p class="duracion">~ {{ servicio.duracion }} minutos</p>
+              </div>
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-outline btn-lg" (click)="pasoAnterior()">Atrás</button>
+            <button class="btn-primary btn-lg" (click)="siguientePaso()" [disabled]="!validarPasoActual()">
+              Siguiente
+            </button>
+          </div>
+        </div>
+
+        <!-- Paso 3: Fecha y Hora -->
+        <div class="form-step" *ngIf="paso === 3" [@slideInOut]>
+          <h2>Selecciona Fecha y Hora</h2>
+          
+          <div class="form-group">
+            <label for="fecha">Fecha *</label>
+            <input 
+              type="date" 
+              id="fecha" 
+              class="form-control" 
+              [(ngModel)]="formData.fecha"
+              [min]="fechaMinima">
+          </div>
+
+          <div class="form-group">
+            <label for="hora">Hora *</label>
+            <select 
+              id="hora" 
+              class="form-control" 
+              [(ngModel)]="formData.hora">
+              <option value="">Selecciona una hora</option>
+              <option *ngFor="let hora of horarios" [value]="hora">{{ hora }}</option>
+            </select>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-outline btn-lg" (click)="pasoAnterior()">Atrás</button>
+            <button class="btn-primary btn-lg" (click)="siguientePaso()" [disabled]="!validarPasoActual()">
+              Siguiente
+            </button>
+          </div>
+        </div>
+
+        <!-- Paso 4: Confirmación -->
+        <div class="form-step" *ngIf="paso === 4" [@slideInOut]>
+          <h2>Confirmación de Cita</h2>
+          
+          <div *ngIf="!mensajeExito" class="confirmacion-content">
+            <div class="confirmacion-item">
+              <label>Nombre:</label>
+              <p>{{ formData.nombre }}</p>
+            </div>
+            
+            <div class="confirmacion-item">
+              <label>Email:</label>
+              <p>{{ formData.email }}</p>
+            </div>
+            
+            <div class="confirmacion-item">
+              <label>Teléfono:</label>
+              <p>{{ formData.telefono }}</p>
+            </div>
+            
+            <div class="confirmacion-item">
+              <label>Servicio:</label>
+              <p>{{ obtenerNombreServicio() }}</p>
+            </div>
+            
+            <div class="confirmacion-item">
+              <label>Fecha:</label>
+              <p>{{ formatearFecha(formData.fecha) }}</p>
+            </div>
+            
+            <div class="confirmacion-item">
+              <label>Hora:</label>
+              <p>{{ formData.hora }}</p>
+            </div>
+
+            <div class="info-box">
+              <strong>Nota:</strong> Recibirás una confirmación por email. Si necesitas cambios, contacta con nosotros.
+            </div>
+          </div>
+
+          <div *ngIf="mensajeExito" class="success-message">
+            {{ mensajeExito }}
+          </div>
+
+          <div class="form-actions" *ngIf="!mensajeExito">
+            <button class="btn-outline btn-lg" (click)="pasoAnterior()">Atrás</button>
+            <button class="btn-primary btn-lg" (click)="confirmarCita()" [disabled]="cargando">
+              {{ cargando ? 'Confirmando...' : 'Confirmar Cita' }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="info-section section fade-in-up">
+  <div class="container">
+    <div class="section-header">
+      <h2>Información Importante</h2>
+    </div>
+    
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-icon">⏰</div>
+        <h3>Horario de Atención</h3>
+        <p>Lunes a Viernes: 8:00 AM - 6:00 PM<br>Sábado: 9:00 AM - 2:00 PM</p>
+      </div>
+      
+      <div class="info-card">
+        <div class="info-card-icon">📍</div>
+        <h3>Ubicación</h3>
+        <p>Clínica del Pie Tijuana<br>Tijuana, Baja California</p>
+      </div>
+      
+      <div class="info-card">
+        <div class="info-card-icon">❓</div>
+        <h3>Preguntas</h3>
+        <p>¿Dudas? Contáctanos por teléfono o email en cualquier momento.</p>
+      </div>
+    </div>
+  </div>
+</section>

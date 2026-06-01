@@ -1,5 +1,5 @@
 // Variables estandarizadas del CRM
-$primary-color: #ff5a5f;
+$primary-color: #ffb400  ;
 $dark-color: #2d2d2d;
 $text-med: #666666;
 $border-color: #f0f0f0;
@@ -111,9 +111,7 @@ $transition: all 0.2s ease;
     transition: $transition;
     -webkit-user-select: none; // Para Safari
     user-select: none; // De tu código original, muy buena práctica
-  }
-}
-
+    
     &:hover { background: $bg-hover; }
 
     // Avatar y Semáforo Dinámico
@@ -202,7 +200,7 @@ $transition: all 0.2s ease;
             &:hover { color: #ffb400; transform: scale(1.1); }
           }
         }
-      }
+      }  
     }
   }
 }
