@@ -55,18 +55,7 @@
                     </select>
                 </div>
 
-                <div class="campo full"
-                    *ngIf="citaForm.get('itemTipo')?.value === 'srv' && promocionesDisponibles.length > 0">
-                    <label>Aplicar Promoción (opcional)</label>
-                    <select formControlName="promocionId">
-                        <option value="">Sin promoción</option>
-                        <option *ngFor="let promo of promocionesDisponibles" [value]="promo._id">
-                            {{ promo.nombre }} –
-                            {{ promo.tipoDescuento === 'porcentaje' ? promo.valorDescuento + '%' : '$' +
-                            promo.valorDescuento }}
-                        </option>
-                    </select>
-                </div>
+
 
                 <div class="campo">
                     <label>Fecha</label>

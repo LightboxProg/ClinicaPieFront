@@ -1,41 +1,42 @@
-// Variables del sistema
-$primary-color: #ffb400 ;
-$border-color: #e5e5e5;
-$bg-light: #f4f6f8;
-$text-dark: #2d2d2d;
-$transition: all 0.2s ease;
+@use 'src/design-system' as ds;
+
+// Variables adaptadas al Design System
+$primary-color: ds.$color-primary;
+$secondary-color: ds.$color-secondary;
+$border-color: ds.$color-border;
+$bg-light: ds.$color-surface-secondary;
+$text-dark: ds.$color-text-primary;
+$transition: ds.$transition-fast;
 
 .input-contenedor {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 1rem 1.5rem;
-  background-color: white;
-  // Una pequeña sombra superior para separarlo visualmente de las burbujas
+  padding: ds.$spacing-base ds.$spacing-lg;
+  background-color: ds.$color-surface;
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.02);
   border-top: 1px solid $border-color;
 
   .chat-input {
     flex: 1;
     padding: 0.85rem 1.25rem;
-    border: 1px solid #d1d5db;
-    border-radius: 24px; // Forma de píldora
-    font-size: 0.95rem;
+    border: 1px solid ds.$color-border-dark;
+    border-radius: ds.$border-radius-full;
+    font-size: ds.$font-size-sm;
     color: $text-dark;
     background-color: $bg-light;
     transition: $transition;
     outline: none;
-    font-family: 'Inter', sans-serif;
+    font-family: ds.$font-family-base;
 
     &::placeholder {
-      color: #9ca3af;
+      color: ds.$color-text-light;
     }
 
-    // Efecto al darle clic para escribir
     &:focus {
-      background-color: white;
-      border-color: $primary-color;
-      box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
+      background-color: ds.$color-surface;
+      border-color: $secondary-color;
+      box-shadow: 0 0 0 3px rgba($secondary-color, 0.15);
     }
   }
 
@@ -44,36 +45,35 @@ $transition: all 0.2s ease;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background-color: $primary-color;
-    color: white;
+    background-color: $secondary-color; // Usamos teal para el botón de enviar para que se vea más fresco e integrado
+    color: ds.$color-surface;
     border: none;
     padding: 0.85rem 1.5rem;
-    border-radius: 24px; // Hace match con el input
-    font-weight: 600;
-    font-size: 0.95rem;
-    font-family: 'Montserrat', sans-serif;
+    border-radius: ds.$border-radius-full;
+    font-weight: ds.$font-weight-semibold;
+    font-size: ds.$font-size-sm;
+    font-family: ds.$font-family-base;
     cursor: pointer;
     transition: $transition;
-    box-shadow: 0 4px 10px rgba($primary-color, 0.25);
+    box-shadow: 0 4px 10px rgba($secondary-color, 0.25);
 
     i {
-      font-size: 1rem;
+      font-size: ds.$font-size-base;
     }
 
     &:hover:not(:disabled) {
-      background-color: darken($primary-color, 5%);
-      transform: translateY(-2px); // Se levanta un poquito
-      box-shadow: 0 6px 14px rgba($primary-color, 0.35);
+      background-color: ds.$color-primary; // Al pasar el mouse cambia al amarillo de la marca, creando una micro-animación espectacular
+      box-shadow: 0 6px 14px rgba(ds.$color-primary, 0.35);
+      transform: translateY(-2px);
     }
 
     &:active:not(:disabled) {
       transform: translateY(0);
     }
     
-    // Estilo cuando el input está vacío y el botón se desactiva
     &:disabled {
-      background-color: #e5e7eb;
-      color: #9ca3af;
+      background-color: ds.$color-disabled;
+      color: ds.$color-text-light;
       box-shadow: none;
       cursor: not-allowed;
       transform: none;
@@ -81,26 +81,24 @@ $transition: all 0.2s ease;
   }
 }
 
-// Adaptación para celulares
 @media (max-width: 480px) {
   .input-contenedor {
-    padding: 0.8rem 1rem;
+    padding: ds.$spacing-sm ds.$spacing-base;
     gap: 8px;
 
     .btn-enviar {
       padding: 0.85rem;
-      border-radius: 50%; // Se vuelve un círculo perfecto en móvil
+      border-radius: ds.$border-radius-full;
       width: 45px;
       height: 45px;
       
-      // Ocultamos la palabra "Enviar" en celular para ahorrar espacio
       .btn-texto {
         display: none; 
       }
       
       i {
         margin: 0;
-        font-size: 1.1rem;
+        font-size: ds.$font-size-lg;
       }
     }
   }

@@ -1,223 +1,364 @@
-// ==========================================
-// VARIABLES DE COLOR Y ESTILO
-// ==========================================
-$bg-fondo: #f4f7f6;
-$text-dark: #2c3e50;
-$text-muted: #7f8c8d;
-$primary: #00a884; // Verde estilo tu chat
-$borde: #e0e6ed;
+@use 'src/design-system' as ds;
 
+/* =========================================
+   CONTENEDOR PRINCIPAL
+   ========================================= */
 .contenedor-calendario {
-    padding: 24px;
-    background-color: $bg-fondo;
-    min-height: 100vh;
-    font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+  font-family: ds.$font-family-base;
 }
 
-.cabecera {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
+/* =========================================
+   BARRA DE FILTROS
+   ========================================= */
+.barra-filtros {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: ds.$color-surface;
+  padding: 16px 24px;
+  border-radius: ds.$border-radius-xl;
+  box-shadow: ds.$shadow-sm;
+  border: 1px solid ds.$color-border;
+  margin-bottom: ds.$spacing-lg;
+  flex-wrap: wrap;
+  gap: 16px;
 
-    h2 {
-        margin: 0;
-        color: $text-dark;
-        font-size: 1.5rem;
-    }
-
-    .btn-recargar {
-        background-color: white;
-        border: 1px solid $borde;
-        padding: 8px 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        color: $text-dark;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-        &:hover {
-            background-color: #f8fafc;
-            transform: translateY(-1px);
-        }
-    }
-}
-
-// ==========================================
-// ESTADOS DE CARGA Y VACÍO
-// ==========================================
-.estado-mensaje {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    background: white;
-    border-radius: 12px;
-    border: 1px dashed $borde;
-    color: $text-muted;
-
-    .spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid rgba($primary, 0.2);
-        border-top-color: $primary;
-        border-radius: 50%;
-        animation: girar 1s linear infinite;
-        margin-bottom: 16px;
-    }
-}
-
-@keyframes girar {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-// ==========================================
-// GRID DE TARJETAS DE EVENTOS
-// ==========================================
-.grid-eventos {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
-}
-
-.tarjeta-evento {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
-    display: flex;
-    overflow: hidden;
-    transition: transform 0.2s;
-
-    &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
-    }
-
-    // Barrita indicadora de color a la izquierda
-    .barra-color {
-        width: 6px;
-        background-color: #cbd5e1; // Gris por defecto
-
-        &.paciente {
-            background-color: #10b981;
-        }
-
-        // Verde
-        &.lead {
-            background-color: #f59e0b;
-        }
-
-        // Amarillo
-    }
-
-    .contenido-evento {
-        padding: 16px;
-        flex: 1;
-
-        .titulo {
-            margin: 0 0 12px 0;
-            font-size: 1.1rem;
-            color: $text-dark;
-            line-height: 1.3;
-        }
-
-        .detalles {
-            font-size: 0.85rem;
-            color: #475569;
-            margin-bottom: 12px;
-
-            .fecha {
-                margin: 4px 0;
-
-                strong {
-                    color: $text-dark;
-                }
-            }
-        }
-
-        .descripcion {
-            font-size: 0.8rem;
-            color: $text-muted;
-            background-color: #f8fafc;
-            padding: 10px;
-            border-radius: 6px;
-            white-space: pre-wrap; // Respeta los saltos de línea de tu CRM
-            margin: 0;
-
-            p {
-                margin: 0;
-            }
-        }
-    }
-}
-
-// Estilos para la barra de fechas
-.filtros-fecha {
+  .filtros-izq {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: white;
-    padding: 8px 16px;
-    border-radius: 10px;
-    border: 1px solid $borde;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 
-    .campo-fecha {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-
-        label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: $text-muted;
-        }
-
-        input[type="date"] {
-            border: 1px solid $borde;
-            border-radius: 6px;
-            padding: 6px 10px;
-            color: $text-dark;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s;
-
-            &:focus {
-                border-color: $primary;
-            }
-        }
+    h2 {
+      margin: 0;
+      font-size: ds.$font-size-lg;
+      font-weight: ds.$font-weight-bold;
+      color: ds.$color-text-primary;
+      letter-spacing: -0.01em;
     }
 
-    .separador {
-        color: $borde;
-        font-weight: bold;
+    .badge-total {
+      background: rgba(0, 166, 153, 0.08);
+      color: ds.$color-secondary;
+      font-size: ds.$font-size-xs;
+      font-weight: ds.$font-weight-bold;
+      padding: 4px 12px;
+      border-radius: ds.$border-radius-full;
+      border: 1px solid rgba(0, 166, 153, 0.15);
     }
+  }
+
+  .filtros-fecha {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .grupo-fecha {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    label {
+      font-size: 11px;
+      font-weight: ds.$font-weight-bold;
+      color: ds.$color-text-light;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input[type="date"] {
+      border: 1.5px solid ds.$color-border;
+      border-radius: ds.$border-radius-base;
+      padding: 8px 14px;
+      color: ds.$color-text-primary;
+      font-family: inherit;
+      font-size: ds.$font-size-sm;
+      font-weight: ds.$font-weight-semibold;
+      outline: none;
+      background: ds.$color-surface;
+      transition: all ds.$transition-fast;
+      min-width: 150px;
+
+      &:focus {
+        border-color: ds.$color-secondary;
+        box-shadow: 0 0 0 3px rgba(0, 166, 153, 0.1);
+      }
+
+      &:hover {
+        border-color: ds.$color-border-dark;
+      }
+    }
+  }
+
+  .separador-fecha {
+    color: ds.$color-text-light;
+    font-size: ds.$font-size-xs;
+    padding-bottom: 10px;
+  }
+
+  .btn-recargar {
+    width: 38px;
+    height: 38px;
+    border-radius: ds.$border-radius-base;
+    border: 1.5px solid ds.$color-border;
+    background: ds.$color-surface;
+    color: ds.$color-text-secondary;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all ds.$transition-fast;
+
+    &:hover {
+      background: ds.$color-secondary;
+      border-color: ds.$color-secondary;
+      color: ds.$color-surface;
+      transform: rotate(90deg);
+      box-shadow: 0 4px 12px rgba(0, 166, 153, 0.2);
+    }
+  }
 }
 
-.btn-reagendar-global {
-  margin-top: 14px;
-  padding: 8px 16px;
-  background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #475569;
-  transition: all 0.2s ease;
-  display: inline-flex;
+/* =========================================
+   ESTADO CENTRAL (Cargando / Vacio)
+   ========================================= */
+.estado-central {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  padding: ds.$spacing-4xl ds.$spacing-xl;
+  background: ds.$color-surface;
+  border-radius: ds.$border-radius-xl;
+  border: 2px dashed ds.$color-border-dark;
+  text-align: center;
+  min-height: 300px;
+
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: ds.$font-size-lg;
+    font-weight: ds.$font-weight-bold;
+    color: ds.$color-text-primary;
+  }
+
+  p {
+    margin: 0;
+    font-size: ds.$font-size-sm;
+    color: ds.$color-text-secondary;
+    max-width: 380px;
+    line-height: ds.$line-height-normal;
+  }
+
+  &.vacio {
+    .icono-estado {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: ds.$color-surface-secondary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: ds.$spacing-lg;
+
+      i {
+        font-size: 1.75rem;
+        color: ds.$color-border-dark;
+      }
+    }
+  }
+
+  .spinner-grande {
+    width: 44px;
+    height: 44px;
+    border: 4px solid rgba(0, 166, 153, 0.15);
+    border-top-color: ds.$color-secondary;
+    border-radius: 50%;
+    animation: girar 0.8s linear infinite;
+    margin-bottom: ds.$spacing-lg;
+  }
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+/* =========================================
+   GRID DE EVENTOS
+   ========================================= */
+.grid-eventos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+/* =========================================
+   TARJETA DE EVENTO
+   ========================================= */
+.tarjeta-evento {
+  display: flex;
+  background: ds.$color-surface;
+  border-radius: ds.$border-radius-lg;
+  box-shadow: ds.$shadow-sm;
+  border: 1px solid ds.$color-border;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: fadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 
   &:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-    color: #0f172a;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    transform: translateY(-3px);
+    box-shadow: ds.$shadow-md;
+    border-color: rgba(0, 166, 153, 0.3);
+  }
+
+  .barra-lateral {
+    width: 5px;
+    flex-shrink: 0;
+    background: ds.$color-disabled;
+
+    &.paciente { background: ds.$color-success; }
+    &.lead { background: ds.$color-warning; }
+    &.general { background: ds.$color-secondary; }
+  }
+
+  .cuerpo-evento {
+    flex: 1;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .fila-superior {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+
+    .titulo-evento {
+      margin: 0;
+      font-size: ds.$font-size-base;
+      font-weight: ds.$font-weight-bold;
+      color: ds.$color-text-primary;
+      line-height: ds.$line-height-tight;
+    }
+
+    .chip-doctor {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: ds.$color-surface-secondary;
+      color: ds.$color-text-secondary;
+      font-size: 11px;
+      font-weight: ds.$font-weight-semibold;
+      padding: 4px 10px;
+      border-radius: ds.$border-radius-full;
+      white-space: nowrap;
+      border: 1px solid ds.$color-border;
+      flex-shrink: 0;
+
+      i { font-size: 10px; color: ds.$color-secondary; }
+    }
+  }
+
+  .fila-horario {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: ds.$font-size-sm;
+    color: ds.$color-text-secondary;
+
+    .bloque-hora {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      i { color: ds.$color-secondary; font-size: ds.$font-size-xs; }
+    }
+
+    .divisor-hora {
+      color: ds.$color-border-dark;
+    }
+  }
+
+  .descripcion-evento {
+    font-size: ds.$font-size-xs;
+    color: ds.$color-text-secondary;
+    background: ds.$color-surface-secondary;
+    padding: 10px 14px;
+    border-radius: ds.$border-radius-base;
+    margin: 0;
+    line-height: ds.$line-height-normal;
+    white-space: pre-wrap;
+    border: 1px solid ds.$color-border-light;
+  }
+
+  .fila-acciones {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+
+    .btn-accion {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: ds.$color-surface;
+      border: 1.5px solid ds.$color-border;
+      border-radius: ds.$border-radius-full;
+      font-size: 12px;
+      font-weight: ds.$font-weight-bold;
+      color: ds.$color-text-secondary;
+      cursor: pointer;
+      transition: all ds.$transition-fast;
+      font-family: ds.$font-family-base;
+
+      i { font-size: 11px; }
+
+      &:hover {
+        background: rgba(0, 166, 153, 0.06);
+        border-color: ds.$color-secondary;
+        color: ds.$color-secondary;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media #{ds.$media-max-md} {
+  .barra-filtros {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+
+    .filtros-fecha {
+      flex-wrap: wrap;
+    }
+
+    .grupo-fecha input[type="date"] {
+      min-width: 130px;
+    }
+  }
+
+  .grid-eventos {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta-evento .fila-superior {
+    flex-direction: column;
+    gap: 8px;
   }
 }

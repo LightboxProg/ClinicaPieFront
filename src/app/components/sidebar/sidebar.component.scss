@@ -1,58 +1,68 @@
 @import 'src/design-system.scss';
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   SIDEBAR - Barra Lateral Administrativa
-   ═══════════════════════════════════════════════════════════════════════════════ */
+/* =============================================================================
+   SIDEBAR - Barra Lateral Administrativa Rediseñada
+   ============================================================================= */
 
 .sidebar {
   width: 280px;
-  height: calc(100vh - 80px);
-  background-color: $color-surface;
+  height: 100vh;
+  background-color: rgba($color-surface, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   color: $color-text-primary;
   display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
-  top: 80px;
-  border-right: 1px solid $color-border;
+  top: 0;
+  border-right: 1px solid rgba($color-border, 0.8);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
   overflow-y: auto;
-  transition: width $transition-base;
+  transition: width $transition-base, background-color $transition-base;
   z-index: $z-dropdown;
 
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: $color-primary;
-    border-radius: $border-radius-base;
+    background: rgba($color-primary, 0.2);
+    border-radius: $border-radius-full;
+    transition: background $transition-fast;
     
     &:hover {
-      background: darken($color-primary, 10%);
+      background: $color-primary;
     }
   }
 
-  /* ─────────────────────────────────────────────────────────────────────────────
+  /* =============================================================================
      Header del Sidebar
-     ───────────────────────────────────────────────────────────────────────────── */
+     ============================================================================= */
   
   .sidebar-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $spacing-lg;
-    border-bottom: 1px solid $color-border;
+    padding: $spacing-lg $spacing-base;
+    border-bottom: 1px solid rgba($color-border, 0.5);
     gap: $spacing-base;
     
     .logo-container {
       flex: 1;
       display: flex;
       align-items: center;
+      padding-left: $spacing-sm;
       
       .logo {
-        width: 40px;
+        width: 140px;
         height: 40px;
         object-fit: contain;
+        transition: opacity $transition-base;
       }
     }
     
@@ -60,27 +70,30 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
-      background-color: $color-background;
+      width: 32px;
+      height: 32px;
+      background-color: rgba($color-surface, 0.8);
       border: 1px solid $color-border;
-      border-radius: $border-radius-base;
-      color: $color-text-primary;
-      font-size: $font-size-lg;
+      border-radius: 50%;
+      color: $color-text-secondary;
+      font-size: $font-size-sm;
       cursor: pointer;
       transition: all $transition-base;
+      box-shadow: $shadow-sm;
       
       &:hover {
         background-color: $color-primary;
-        color: $color-surface;
+        color: white;
         border-color: $color-primary;
+        box-shadow: 0 4px 12px rgba($color-primary, 0.25);
+        transform: scale(1.05);
       }
     }
   }
 
-  /* ─────────────────────────────────────────────────────────────────────────────
+  /* =============================================================================
      Navegación del Sidebar
-     ───────────────────────────────────────────────────────────────────────────── */
+     ============================================================================= */
   
   .sidebar-nav {
     flex: 1;
@@ -92,72 +105,92 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: $spacing-xs;
+      gap: 4px;
     }
     
     li {
       a {
         display: flex;
         align-items: center;
-        gap: $spacing-lg;
-        padding: $spacing-lg $spacing-lg;
-        color: $color-text-primary;
+        gap: $spacing-base;
+        padding: $spacing-base $spacing-lg;
+        margin: 0 $spacing-sm;
+        border-radius: $border-radius-base;
+        color: $color-text-secondary;
         text-decoration: none;
         transition: all $transition-base;
-        border-left: 4px solid transparent;
         position: relative;
         
         .nav-icon {
-          font-size: $font-size-xl;
+          font-size: $font-size-lg;
           width: 24px;
           text-align: center;
-          color: $color-text-secondary;
-          transition: color $transition-base;
+          color: $color-text-light;
+          transition: all $transition-base;
         }
         
         .nav-text {
-          font-size: $font-size-base;
-          font-weight: $font-weight-regular;
-          color: $color-text-primary;
+          font-size: $font-size-sm;
+          font-weight: $font-weight-medium;
+          color: $color-text-secondary;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          transition: transform $transition-base, color $transition-base;
         }
         
         &:hover {
-          background-color: rgba($color-primary, 0.08);
-          border-left-color: $color-primary;
+          background-color: rgba($color-primary, 0.06);
+          color: $color-primary;
           
           .nav-icon {
             color: $color-primary;
+            transform: scale(1.1);
+          }
+          
+          .nav-text {
+            color: $color-primary;
+            transform: translateX(4px);
           }
         }
         
         &.active {
-          background-color: rgba($color-primary, 0.12);
-          border-left-color: $color-primary;
+          background: linear-gradient(135deg, rgba($color-primary, 0.08) 0%, rgba($color-primary, 0.15) 100%);
+          color: $color-primary;
+          box-shadow: 0 2px 8px rgba($color-primary, 0.05);
           
           .nav-icon {
             color: $color-primary;
-            font-weight: $font-weight-semibold;
+            font-weight: $font-weight-bold;
           }
           
           .nav-text {
             color: $color-text-primary;
             font-weight: $font-weight-semibold;
           }
+          
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 25%;
+            height: 50%;
+            width: 4px;
+            background-color: $color-primary;
+            border-radius: 0 4px 4px 0;
+          }
         }
       }
     }
   }
 
-  /* ─────────────────────────────────────────────────────────────────────────────
+  /* =============================================================================
      Footer del Sidebar
-     ───────────────────────────────────────────────────────────────────────────── */
+     ============================================================================= */
   
   .sidebar-footer {
     padding: $spacing-base;
-    border-top: 1px solid $color-border;
+    border-top: 1px solid rgba($color-border, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -165,41 +198,49 @@
     .logout-link {
       display: flex;
       align-items: center;
-      gap: $spacing-lg;
+      gap: $spacing-base;
       width: 100%;
-      padding: $spacing-lg;
-      color: $color-text-primary;
+      padding: $spacing-base $spacing-lg;
+      color: $color-text-secondary;
       text-decoration: none;
       transition: all $transition-base;
       border-radius: $border-radius-base;
       cursor: pointer;
-      background: none;
-      border: 2px solid transparent;
+      background: transparent;
+      border: 1px solid transparent;
       
       i {
         font-size: $font-size-lg;
         color: $color-error;
+        transition: transform $transition-base;
       }
       
       span {
-        font-size: $font-size-base;
-        font-weight: $font-weight-regular;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        transition: transform $transition-base;
       }
       
       &:hover {
-        background-color: rgba($color-error, 0.08);
-        border-color: $color-error;
+        background-color: rgba($color-error, 0.06);
+        border-color: rgba($color-error, 0.15);
+        color: $color-error;
         
         i {
-          color: darken($color-error, 10%);
+          color: $color-error;
+          transform: scale(1.1) translateX(-2px);
+        }
+        
+        span {
+          transform: translateX(2px);
         }
       }
     }
   }
 
-  /* ─────────────────────────────────────────────────────────────────────────────
+  /* =============================================================================
      Estado Colapsado
-     ───────────────────────────────────────────────────────────────────────────── */
+     ============================================================================= */
   
   &.collapsed {
     width: 80px;
@@ -215,14 +256,13 @@
     
     .sidebar-nav {
       ul {
-        gap: 0;
+        gap: 6px;
       }
       
       li a {
         justify-content: center;
-        padding: $spacing-lg $spacing-base;
-        border-left: none;
-        border-top: 3px solid transparent;
+        padding: $spacing-base 0;
+        margin: 0 $spacing-sm;
         
         .nav-text {
           display: none;
@@ -230,8 +270,17 @@
         
         &:hover,
         &.active {
-          border-left: none;
-          border-top-color: $color-primary;
+          background-color: rgba($color-primary, 0.08);
+          color: $color-primary;
+          
+          .nav-icon {
+            color: $color-primary;
+            transform: scale(1.15);
+          }
+        }
+
+        &::before {
+          display: none;
         }
       }
     }
@@ -240,12 +289,20 @@
       padding: $spacing-base 0;
       
       .logout-link {
-        width: auto;
-        padding: $spacing-lg $spacing-base;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
+        margin: 0 auto;
         justify-content: center;
         
         span {
           display: none;
+        }
+
+        &:hover {
+          background-color: rgba($color-error, 0.08);
+          border-color: rgba($color-error, 0.2);
         }
       }
     }

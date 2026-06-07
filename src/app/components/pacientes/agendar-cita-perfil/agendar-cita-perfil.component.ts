@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CalendarioService } from 'src/app/services/calendario.service';
 import { ServiciosService } from 'src/app/services/servicios.service';
-import { PromocionService } from 'src/app/services/promocion.service';
 import { SucursalesService } from 'src/app/services/sucursales.service';
 import { LoginService } from 'src/app/services/login.service';
 
@@ -30,8 +29,6 @@ export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
   sucursales: any[] = [];
   doctoresDisponibles: any[] = [];
   servicios: any[] = [];
-  promociones: any[] = [];
-  promocionesDisponibles: any[] = [];
 
   diasLaborales: string[] = [];
   bloquesDisponibles: any[] = [];
@@ -44,7 +41,6 @@ export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private calendarioService: CalendarioService,
     private serviciosService: ServiciosService,
-    private promocionService: PromocionService,
     private sucursalesService: SucursalesService,
     private loginService: LoginService
   ) {
@@ -56,8 +52,7 @@ export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
       itemId: ['', Validators.required],
       fechaCita: [{ value: '', disabled: true }, Validators.required],
       horaInicio: [{ value: '', disabled: true }, Validators.required],
-      observaciones: [''],
-      promocionId: ['']
+      observaciones: ['']
     });
   }
 
@@ -159,24 +154,6 @@ export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
     this.citaForm.get('horaInicio')?.valueChanges.subscribe(() => {
       this.validarAjusteTiempo();
     });
-
-    this.citaForm.get('itemId')?.valueChanges.subscribe(itemId => {
-      this.citaForm.patchValue({ promocionId: '' });
-      this.promocionesDisponibles = [];
-      if (itemId && this.citaForm.get('itemTipo')?.value === 'srv') {
-        this.cargarPromocionesParaServicio(itemId);
-      }
-    });
-  }
-
-  cargarPromocionesParaServicio(servicioId: string): void {
-    this.promocionService.obtenerPromocionesParaServicio(servicioId, this.citaForm.get('sucursalId')?.value)
-      .subscribe({
-        next: (res: any) => {
-          this.promocionesDisponibles = res.data || [];
-        },
-        error: (err) => console.error('Error al cargar promociones', err)
-      });
   }
 
   // Utiliza el LoginService para cargar los doctores asignados a la sucursal
@@ -343,8 +320,7 @@ export class AgendarCitaPerfilComponent implements OnInit, OnChanges {
       horaInicio: raw.horaInicio,
       observaciones: raw.observaciones,
       itemTipo: raw.itemTipo,
-      itemId: raw.itemId,
-      promocionId: raw.promocionId || null
+      itemId: raw.itemId
     };
 
     this.calendarioService.agendarCita(payload).subscribe({

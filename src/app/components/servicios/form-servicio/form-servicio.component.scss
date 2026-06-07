@@ -1,131 +1,380 @@
-// Variables unificadas
-$primary-color: #ff5a5f;
-$secondary-color: #00a699;
-$dark-color: #2d2d2d;
-$text-dark: #333333;
-$text-med: #666666;
-$border-color: #e5e7eb;
-$border-radius: 8px; // Uniforme en todo el sistema
-$transition: all 0.3s ease;
+@use 'src/design-system' as *;
 
 .form-container {
   max-width: 100%;
-  padding: 1.5rem;
-  background: white;
-  border-radius: 12px;
-  border: 2px solid #d0d0d0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: $spacing-lg;
+  background: $color-surface;
+  border-radius: $border-radius-lg;
+  border: 1px solid $color-border;
+  font-family: $font-family-base;
 
   .form-row {
     display: flex;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
+    gap: $spacing-xl;
+    margin-bottom: $spacing-lg;
 
-    @media (max-width: 768px) { flex-direction: column; }
+    @media #{$media-max-md} { flex-direction: column; }
   }
 
   .form-column {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: $spacing-base;
   }
 
-  // Estilos de campos unificados
+  .form-row-half {
+    display: flex;
+    gap: $spacing-base;
+    @media #{$media-max-sm} { flex-direction: column; }
+  }
+
   .form-group {
     label {
       display: block;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: $text-dark;
-      font-size: 0.9rem;
+      font-weight: $font-weight-semibold;
+      margin-bottom: $spacing-xs;
+      color: $color-text-primary;
+      font-size: $font-size-sm;
     }
 
     .form-control {
       width: 100%;
-      padding: 0.8rem 1rem;
-      border: 2px solid #d0d0d0;
-      border-radius: $border-radius;
-      font-size: 0.95rem;
-      transition: $transition;
+      padding: 0.65rem $spacing-base;
+      border: 1px solid $color-border;
+      border-radius: $border-radius-base;
+      font-size: $font-size-sm;
+      transition: border-color $transition-fast, box-shadow $transition-fast;
+      font-family: $font-family-base;
+      background: $color-surface;
+      color: $color-text-primary;
 
       &:focus {
-        border-color: $primary-color;
+        border-color: $color-primary;
         outline: none;
-        box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+        box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+      }
+
+      &::placeholder {
+        color: $color-text-light;
       }
     }
   }
 
-  // Ajustes de botones y listas
+  .checkbox-group {
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      cursor: pointer;
+      font-weight: $font-weight-medium;
+      font-size: $font-size-sm;
+      color: $color-text-primary;
+
+      input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: $color-primary;
+      }
+    }
+  }
+
+  .panel-info {
+    padding: $spacing-base;
+    background: rgba($color-info, 0.04);
+    border: 1px solid rgba($color-info, 0.15);
+    border-radius: $border-radius-base;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  .input-with-btn {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
   .btn-icon {
-    background: $primary-color;
+    background: linear-gradient(135deg, $color-primary, $color-accent);
     color: white;
-    border: 2px solid rgba($primary-color, 0.6);
-    padding: 0.8rem 1.2rem;
-    border-radius: $border-radius;
+    border: none;
+    padding: 0.65rem $spacing-base;
+    border-radius: $border-radius-base;
     cursor: pointer;
-    transition: $transition;
-    &:hover { background: darken($primary-color, 10%); border-color: $primary-color; }
+    transition: all $transition-fast;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba($color-primary, 0.3);
+    }
   }
 
   .list-container {
-    margin-top: 0.75rem;
-    border: 2px solid #d0d0d0;
-    border-radius: $border-radius;
-    padding: 0.5rem;
-    max-height: 200px;
+    margin-top: $spacing-sm;
+    border: 1px solid $color-border-light;
+    border-radius: $border-radius-base;
+    padding: $spacing-xs;
+    max-height: 180px;
     overflow-y: auto;
+
+    &:empty { display: none; }
   }
 
   .list-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem;
-    border-bottom: 1px solid #f9f9f9;
-    font-size: 0.9rem;
+    padding: $spacing-xs $spacing-sm;
+    border-bottom: 1px solid $color-divider;
+    font-size: $font-size-sm;
+
+    &:last-child { border-bottom: none; }
 
     .btn-remove {
       background: transparent;
       border: none;
-      color: #ef4444;
+      color: $color-error;
       cursor: pointer;
+      padding: 4px;
+      transition: opacity $transition-fast;
+
+      &:hover { opacity: 0.7; }
     }
   }
 
-  // Footer del form
+  .faq-item {
+    .faq-content {
+      flex: 1;
+
+      strong {
+        font-size: $font-size-sm;
+        color: $color-text-primary;
+      }
+
+      p {
+        margin: 2px 0 0;
+        font-size: $font-size-xs;
+        color: $color-text-secondary;
+      }
+    }
+  }
+
+  .faqs-section {
+    margin-top: $spacing-base;
+    padding-top: $spacing-base;
+    border-top: 1px solid $color-border-light;
+  }
+
+  .faq-input-group {
+    display: flex;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-sm;
+
+    @media #{$media-max-md} { flex-direction: column; }
+  }
+
+  .btn-icon-primary {
+    background: $color-secondary;
+    color: white;
+    border: none;
+    padding: 0.65rem $spacing-base;
+    border-radius: $border-radius-base;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: darken($color-secondary, 8%);
+    }
+  }
+
   .form-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 2px solid #d0d0d0;
+    margin-top: $spacing-xl;
+    padding-top: $spacing-lg;
+    border-top: 1px solid $color-border;
 
-    .actions { display: flex; gap: 1rem; }
+    .active-toggle {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      cursor: pointer;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $color-text-primary;
+
+      input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: $color-success;
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: $spacing-base;
+    }
 
     .btn-primary {
-      background: $primary-color;
+      background: linear-gradient(135deg, $color-primary, $color-accent);
       color: white;
-      padding: 0.8rem 2rem;
-      border-radius: $border-radius;
-      border: 2px solid rgba($primary-color, 0.6);
-      font-weight: 600;
+      padding: 0.7rem $spacing-xl;
+      border-radius: $border-radius-base;
+      border: none;
+      font-weight: $font-weight-semibold;
       cursor: pointer;
+      font-family: $font-family-base;
+      font-size: $font-size-sm;
+      transition: all $transition-fast;
 
-      &:hover { border-color: $primary-color; }
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba($color-primary, 0.3);
+      }
     }
 
     .btn-secondary {
-      background: #f3f4f6;
-      color: $text-med;
-      padding: 0.8rem 2rem;
-      border-radius: $border-radius;
-      border: 2px solid #d0d0d0;
+      background: $color-surface-secondary;
+      color: $color-text-secondary;
+      padding: 0.7rem $spacing-xl;
+      border-radius: $border-radius-base;
+      border: 1px solid $color-border;
       cursor: pointer;
+      font-family: $font-family-base;
+      font-size: $font-size-sm;
+      transition: all $transition-fast;
 
-      &:hover { border-color: #b0b0b0; }
+      &:hover {
+        border-color: $color-border-dark;
+        background: darken($color-surface-secondary, 3%);
+      }
+    }
+
+    @media #{$media-max-sm} {
+      flex-direction: column;
+      gap: $spacing-base;
+    }
+  }
+}
+
+// Seccion de Precios por Sucursal
+.precios-sucursal-section {
+  margin-top: $spacing-lg;
+  padding-top: $spacing-lg;
+  border-top: 1px solid $color-border-light;
+
+  .section-header {
+    margin-bottom: $spacing-base;
+
+    h4 {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      margin: 0 0 $spacing-xs;
+
+      i {
+        color: $color-info;
+        font-size: $font-size-base;
+      }
+    }
+
+    .section-hint {
+      font-size: $font-size-xs;
+      color: $color-text-light;
+      margin: 0;
+    }
+  }
+
+  .precios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: $spacing-base;
+    margin-bottom: $spacing-base;
+  }
+
+  .precio-sucursal-card {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    transition: box-shadow $transition-fast;
+
+    &:hover {
+      box-shadow: $shadow-base;
+    }
+
+    .precio-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: $spacing-sm $spacing-base;
+      background: rgba($color-info, 0.05);
+      border-bottom: 1px solid $color-border-light;
+
+      .precio-card-number {
+        background: $color-info;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: $border-radius-full;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: $font-size-xs;
+        font-weight: $font-weight-bold;
+      }
+
+      .btn-remove-card {
+        background: transparent;
+        border: none;
+        color: $color-error;
+        cursor: pointer;
+        padding: 4px;
+        font-size: $font-size-sm;
+        transition: opacity $transition-fast;
+
+        &:hover { opacity: 0.7; }
+      }
+    }
+
+    .precio-card-body {
+      padding: $spacing-base;
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+
+      .form-row-half {
+        display: flex;
+        gap: $spacing-sm;
+      }
+    }
+  }
+
+  .btn-add-sucursal {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: 0.6rem $spacing-lg;
+    background: transparent;
+    border: 1px dashed $color-info;
+    border-radius: $border-radius-base;
+    color: $color-info;
+    cursor: pointer;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    font-family: $font-family-base;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: rgba($color-info, 0.06);
+      border-style: solid;
     }
   }
 }

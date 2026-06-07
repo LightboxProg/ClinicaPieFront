@@ -1,76 +1,257 @@
-// Variables del sistema
-$primary-color: #ff5a5f;
-$border-color: #e5e7eb;
-$bg-page: #f5f7fa;
+@use 'src/design-system' as ds;
 
-// Contenedor general (Ajuste para que coincida con el layout del CRM)
-.admin-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  border: 1px solid $border-color;
-  overflow: hidden;
-  margin-top: 1rem;
-}
+$primary-color: ds.$color-primary;
+$secondary-color: ds.$color-secondary;
+$dark-color: ds.$color-text-primary;
+$text-med: ds.$color-text-secondary;
+$border-color: ds.$color-border-light;
+$bg-hover: ds.$color-surface-secondary;
+$transition: ds.$transition-fast;
 
-// El encabezado que ahora es rojo, lo haremos más elegante
-.admin-card-header {
-  padding: 1.25rem 1.5rem;
-  background: white; // Cambiamos el fondo rojo por blanco
-  border-bottom: 1px solid $border-color;
-  
-  h2 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: $primary-color; // Usamos tu color principal para el texto en lugar del fondo
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-}
-
-// Tarjeta individual de cada Lead
-.lead-item {
+.chat-sidebar-container {
   display: flex;
-  align-items: center;
-  padding: 1rem 1.5rem;
+  flex-direction: column;
+  height: 100%;
+  background: ds.$color-surface;
+  border-right: 1px solid $border-color;
+}
+
+.chat-search-box {
+  padding: ds.$spacing-base;
   border-bottom: 1px solid $border-color;
-  transition: background 0.2s;
+  background: ds.$color-surface-secondary;
 
-  &:last-child { border-bottom: none; }
-  &:hover { background: #fcfcfc; }
+  .input-icon-wrapper {
+    position: relative;
+    
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: ds.$color-text-light;
+      font-size: ds.$font-size-sm;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border: 1px solid ds.$color-border-dark;
+      border-radius: ds.$border-radius-full;
+      font-size: ds.$font-size-sm;
+      outline: none;
+      transition: $transition;
+      background: ds.$color-surface;
+      color: $dark-color;
+      
+      &:focus { 
+        border-color: $secondary-color; 
+        box-shadow: 0 0 0 3px rgba($secondary-color, 0.1); 
+      }
+    }
+  }
+}
 
-  .lead-info {
-    flex: 1;
-    display: flex;
+.chat-filters {
+  display: flex;
+  gap: ds.$spacing-sm;
+  padding: ds.$spacing-sm ds.$spacing-base;
+  border-bottom: 1px solid $border-color;
+  overflow-x: auto;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-pill {
+    display: inline-flex;
     align-items: center;
-    gap: 15px;
+    gap: 6px;
+    padding: 0.4rem 0.8rem;
+    border-radius: ds.$border-radius-full;
+    border: 1px solid ds.$color-border-dark;
+    background: ds.$color-surface;
+    color: $text-med;
+    font-size: ds.$font-size-xs;
+    font-weight: ds.$font-weight-medium;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: $transition;
 
-    .avatar {
-      width: 40px; height: 40px;
-      background: #f3f4f6;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      color: #9ca3af;
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: ds.$border-radius-full;
+      
+      &.bg-success { background: ds.$color-success; }
+      &.bg-warning { background: ds.$color-warning; }
+      &.bg-danger { background: ds.$color-error; }
     }
 
-    .details {
-      strong { display: block; font-size: 0.95rem; color: #1f2937; }
-      span { font-size: 0.85rem; color: #6b7280; }
+    &:hover {
+      background: ds.$color-surface-secondary;
+    }
+    
+    &.active {
+      background: rgba($secondary-color, 0.08);
+      border-color: $secondary-color;
+      color: $secondary-color;
+      font-weight: ds.$font-weight-semibold;
+    }
+  }
+}
+
+.lista-chats {
+  flex: 1;
+  overflow-y: auto;
+
+  &.custom-scrollbar {
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: ds.$color-border-dark;
+      border-radius: ds.$border-radius-full;
     }
   }
 
-  .btn-danger {
-    background: white;
-    border: 1px solid #fee2e2;
-    color: #ef4444;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
+  .chat-item {
+    display: flex;
+    gap: 12px;
+    padding: ds.$spacing-base;
+    border-bottom: 1px solid $border-color;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: $transition;
+    user-select: none;
+    
+    &:hover {
+      background: $bg-hover;
+    }
 
-    &:hover { background: #ef4444; color: white; }
+    .chat-avatar {
+      position: relative;
+      
+      .avatar-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: ds.$border-radius-full;
+        background: ds.$color-surface-secondary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: ds.$color-text-light;
+        font-size: ds.$font-size-lg;
+      }
+
+      .estado-indicador {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 12px;
+        height: 12px;
+        border-radius: ds.$border-radius-full;
+        border: 2px solid ds.$color-surface;
+        background: ds.$color-disabled;
+        
+        &.estado-verde { background-color: ds.$color-success; }
+        &.estado-amarillo { background-color: ds.$color-warning; }
+        &.estado-rojo { background-color: ds.$color-error; }
+      }
+    }
+
+    .chat-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+
+        .chat-name {
+          font-size: ds.$font-size-sm;
+          color: $dark-color;
+          font-weight: ds.$font-weight-semibold;
+        }
+        
+        .chat-time {
+          font-size: ds.$font-size-xs;
+          color: ds.$color-text-light;
+        }
+      }
+
+      .chat-preview {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+
+        .mensaje-texto {
+          margin: 0;
+          font-size: ds.$font-size-xs;
+          color: $text-med;
+          flex: 1;
+        }
+
+        .chat-actions {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .badge-primary {
+            background: $primary-color;
+            color: ds.$color-surface;
+            padding: 2px 6px;
+            font-size: ds.$font-size-xs;
+            font-weight: ds.$font-weight-bold;
+            min-width: 20px;
+            text-align: center;
+            border-radius: ds.$border-radius-full;
+          }
+
+          .btn-saludos {
+            background: transparent;
+            border: none;
+            color: ds.$color-text-light;
+            cursor: pointer;
+            padding: 4px;
+            transition: $transition;
+            
+            &:hover {
+              color: $primary-color;
+              transform: scale(1.1);
+            }
+          }
+        }
+      }  
+    }
+  }
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty-state-chat {
+  padding: ds.$spacing-2xl ds.$spacing-lg;
+  text-align: center;
+  color: ds.$color-text-light;
+  font-style: italic;
+  
+  .empty-icon {
+    font-size: ds.$font-size-3xl;
+    margin-bottom: ds.$spacing-base;
+    opacity: 0.5;
+  }
+  
+  p {
+    margin: 0;
+    font-size: ds.$font-size-sm;
   }
 }

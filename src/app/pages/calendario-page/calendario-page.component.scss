@@ -1,132 +1,347 @@
+@use 'src/design-system' as ds;
+
+/* =========================================
+   PAGINA PRINCIPAL - CENTRO DE AGENDAS
+   ========================================= */
 .pagina-calendario {
-  padding: 24px;
-  background-color: #f1f5f9;
+  padding: ds.$spacing-xl ds.$spacing-lg;
+  background-color: ds.$color-background;
   min-height: 100vh;
+  font-family: ds.$font-family-base;
 }
 
-/* --- TABS SUPERIORES --- */
+/* =========================================
+   ENCABEZADO
+   ========================================= */
+.encabezado-pagina {
+  margin-bottom: ds.$spacing-lg;
+
+  .titulo-area {
+    h1 {
+      margin: 0;
+      font-size: ds.$font-size-2xl;
+      font-weight: ds.$font-weight-bold;
+      color: ds.$color-text-primary;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: -0.02em;
+
+      i {
+        color: ds.$color-secondary;
+        font-size: ds.$font-size-xl;
+      }
+    }
+
+    .subtitulo {
+      margin: 6px 0 0 0;
+      color: ds.$color-text-secondary;
+      font-size: ds.$font-size-sm;
+      font-weight: ds.$font-weight-regular;
+    }
+  }
+}
+
+/* =========================================
+   TABS DE NAVEGACION
+   ========================================= */
 .tabs-navegacion {
   display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-  border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 12px;
+  gap: 10px;
+  margin-bottom: ds.$spacing-xl;
+  background: ds.$color-surface;
+  padding: 6px;
+  border-radius: ds.$border-radius-xl;
+  box-shadow: ds.$shadow-sm;
+  border: 1px solid ds.$color-border;
 
   button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
     background: transparent;
-    border: none;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #64748b;
-    padding: 10px 20px;
+    border: 2px solid transparent;
+    border-radius: ds.$border-radius-lg;
     cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.2s;
+    transition: all ds.$transition-base;
+    text-align: left;
 
-    &:hover { background: #e2e8f0; }
+    .tab-icono {
+      width: 40px;
+      height: 40px;
+      border-radius: ds.$border-radius-base;
+      background: ds.$color-surface-secondary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all ds.$transition-base;
+
+      i {
+        font-size: ds.$font-size-base;
+        color: ds.$color-text-light;
+        transition: color ds.$transition-base;
+      }
+    }
+
+    .tab-texto {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .tab-label {
+        font-size: ds.$font-size-sm;
+        font-weight: ds.$font-weight-bold;
+        color: ds.$color-text-secondary;
+        line-height: 1.2;
+        transition: color ds.$transition-base;
+      }
+
+      .tab-desc {
+        font-size: ds.$font-size-xs;
+        color: ds.$color-text-light;
+        font-weight: ds.$font-weight-regular;
+        line-height: 1.2;
+      }
+    }
+
+    &:hover {
+      background: ds.$color-surface-secondary;
+
+      .tab-icono {
+        background: ds.$color-border;
+      }
+
+      .tab-texto .tab-label {
+        color: ds.$color-text-primary;
+      }
+    }
 
     &.activo {
-      background: white;
-      color: #0ea5e9;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
+      background: ds.$color-surface;
+      border-color: ds.$color-secondary;
+      box-shadow: 0 2px 12px rgba(0, 166, 153, 0.12);
+
+      .tab-icono {
+        background: rgba(0, 166, 153, 0.1);
+
+        i {
+          color: ds.$color-secondary;
+        }
+      }
+
+      .tab-texto .tab-label {
+        color: ds.$color-secondary;
+      }
     }
   }
 }
 
-/* --- PANEL DE SELECCIÓN DE DOCTORES --- */
-.panel-doctores {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.04);
-  margin-bottom: 24px;
-
-  h3 { margin: 0 0 16px 0; color: #334155; font-size: 1.1rem; }
-
-  .botones-doctores {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .btn-doctor {
-    background: #f8fafc;
-    border: 1px solid #cbd5e1;
-    padding: 10px 18px;
-    border-radius: 30px;
-    color: #475569;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-
-    &:hover { background: #e2e8f0; transform: translateY(-1px); }
-
-    &.btn-activo {
-      background: #0ea5e9;
-      color: white;
-      border-color: #0284c7;
-      box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
-    }
-  }
-}
-
-.mensaje-selecciona {
-  text-align: center;
-  padding: 40px;
-  color: #64748b;
-  font-size: 1.1rem;
-  background: white;
-  border-radius: 12px;
-  border: 1px dashed #cbd5e1;
-}
-
-/* Animación suave al cambiar de pestaña */
-.fade-in {
-  animation: fadeIn 0.3s ease-in;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/* =========================================
+   PANEL DE SELECCION (Doctores / Sucursales)
+   ========================================= */
 .panel-seleccion {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.04);
-  margin-bottom: 24px;
+  background: ds.$color-surface;
+  padding: ds.$spacing-lg;
+  border-radius: ds.$border-radius-xl;
+  box-shadow: ds.$shadow-sm;
+  margin-bottom: ds.$spacing-lg;
+  border: 1px solid ds.$color-border;
 
-  h3 { margin: 0 0 16px 0; color: #334155; font-size: 1.1rem; }
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: ds.$spacing-base;
+
+    h3 {
+      margin: 0;
+      color: ds.$color-text-primary;
+      font-size: ds.$font-size-base;
+      font-weight: ds.$font-weight-bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      i {
+        color: ds.$color-secondary;
+      }
+    }
+
+    .badge-count {
+      background: rgba(0, 166, 153, 0.08);
+      color: ds.$color-secondary;
+      font-size: ds.$font-size-xs;
+      font-weight: ds.$font-weight-bold;
+      padding: 4px 12px;
+      border-radius: ds.$border-radius-full;
+      border: 1px solid rgba(0, 166, 153, 0.15);
+    }
+  }
 
   .botones-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
   }
 
   .btn-item {
-    background: #f8fafc;
-    border: 1px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: ds.$color-surface-secondary;
+    border: 1.5px solid ds.$color-border;
     padding: 10px 18px;
-    border-radius: 30px;
-    color: #475569;
-    font-weight: 600;
+    border-radius: ds.$border-radius-full;
+    color: ds.$color-text-secondary;
+    font-weight: ds.$font-weight-semibold;
+    font-size: ds.$font-size-sm;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all ds.$transition-fast;
+    font-family: ds.$font-family-base;
 
-    &:hover { background: #e2e8f0; transform: translateY(-1px); }
+    .avatar-mini {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: ds.$color-border;
+      color: ds.$color-text-secondary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: ds.$font-size-xs;
+      font-weight: ds.$font-weight-bold;
+      flex-shrink: 0;
+      transition: all ds.$transition-fast;
+    }
+
+    &:hover {
+      background: ds.$color-border;
+      transform: translateY(-1px);
+      color: ds.$color-text-primary;
+      box-shadow: ds.$shadow-sm;
+    }
 
     &.btn-activo {
-      background: #0ea5e9;
-      color: white;
-      border-color: #0284c7;
-      box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+      background: ds.$color-secondary;
+      color: ds.$color-surface;
+      border-color: ds.$color-secondary;
+      box-shadow: 0 4px 12px rgba(0, 166, 153, 0.25);
+
+      .avatar-mini {
+        background: rgba(255, 255, 255, 0.2);
+        color: ds.$color-surface;
+      }
     }
     
     &.btn-sucursal.btn-activo {
-      background: #10b981; // Verde para sucursales si quieres diferenciarlas
-      border-color: #059669;
-      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+      background: ds.$color-success;
+      border-color: ds.$color-success;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
     }
+  }
+
+  .estado-cargando {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: ds.$color-text-secondary;
+    font-size: ds.$font-size-sm;
+    padding: ds.$spacing-base 0;
+  }
+}
+
+/* =========================================
+   PLACEHOLDER DE SELECCION
+   ========================================= */
+.placeholder-seleccion {
+  text-align: center;
+  padding: ds.$spacing-3xl ds.$spacing-xl;
+  color: ds.$color-text-secondary;
+  background: ds.$color-surface;
+  border-radius: ds.$border-radius-xl;
+  border: 2px dashed ds.$color-border-dark;
+  box-shadow: ds.$shadow-sm;
+
+  i {
+    font-size: 2.5rem;
+    color: ds.$color-border-dark;
+    margin-bottom: ds.$spacing-base;
+    display: block;
+  }
+
+  p {
+    margin: 0;
+    font-size: ds.$font-size-base;
+    max-width: 400px;
+    margin-inline: auto;
+    line-height: ds.$line-height-normal;
+  }
+}
+
+/* =========================================
+   ANIMACIONES
+   ========================================= */
+.slide-up {
+  animation: slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   SPINNER MINI
+   ========================================= */
+.spinner-mini {
+  width: 20px;
+  height: 20px;
+  border: 3px solid ds.$color-border;
+  border-top-color: ds.$color-secondary;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media #{ds.$media-max-md} {
+  .pagina-calendario {
+    padding: ds.$spacing-base ds.$spacing-sm;
+  }
+
+  .tabs-navegacion {
+    flex-direction: column;
+    gap: 4px;
+
+    button {
+      padding: 12px 16px;
+    }
+  }
+
+  .encabezado-pagina .titulo-area h1 {
+    font-size: ds.$font-size-xl;
+  }
+
+  .panel-seleccion .botones-grid {
+    gap: 8px;
+  }
+
+  .panel-seleccion .btn-item {
+    font-size: ds.$font-size-xs;
+    padding: 8px 14px;
   }
 }

@@ -10,7 +10,6 @@ import { LoginService } from 'src/app/services/login.service';
 import Swal from 'sweetalert2';
 import { ServicioContratadoService } from 'src/app/services/servicio-contratado.service';
 import { ServiciosService } from 'src/app/services/servicios.service';
-import { PromocionService, Promocion } from 'src/app/services/promocion.service';
 import { AgendarCitaPerfilComponent } from '../agendar-cita-perfil/agendar-cita-perfil.component';
 
 @Component({
@@ -37,8 +36,6 @@ export class PerfilComponent implements OnInit {
   imagenSeleccionada: any = null;
   mostrarModalGaleria: boolean = false;
   indiceImagenActual: number = 0;
-  promocionesDisponibles: Promocion[] = [];
-  mostrarModalPromocion: boolean = false;
 
   serviciosContratados: any[] = [];
   serviciosDisponibles: any[] = [];
@@ -74,7 +71,6 @@ export class PerfilComponent implements OnInit {
     private listaNegraService: ListaNegraService,
     private servicioContratadoService: ServicioContratadoService,
     private serviciosService: ServiciosService,
-    private promocionService: PromocionService,
     private citaService: CitaService) {
     if (!this.loginService.existeUsuario()) {
       this.router.navigate(['/login']);
@@ -899,98 +895,6 @@ export class PerfilComponent implements OnInit {
     return Array.isArray(observaciones) && observaciones.length > 0;
   }
 
-  // Inicializa seccion general interactiva para agregar beneficios promocionales
-  abrirModalContratarPromocion() {
-    this.cargarPromocionesDisponibles();
-    this.mostrarModalPromocion = true;
-  }
-
-  // Restringe busqueda para ignorar beneficios unitarios
-  cargarPromocionesDisponibles() {
-    // Si los servicios aún no se han cargado, los cargamos ahora
-    if (this.serviciosDisponibles.length === 0) {
-      this.serviciosService.obtenerServicios('', 'true').subscribe({
-        next: (res) => {
-          this.serviciosDisponibles = res.data.filter((servicio: any) => servicio.tieneSesiones);
-          this.procesarPromociones(); // una vez cargados, procesamos promociones
-        },
-        error: (err) => {
-          console.error(err);
-          Swal.fire('Error', 'No se pudieron cargar los servicios', 'error');
-        }
-      });
-    } else {
-      this.procesarPromociones();
-    }
-  }
-
-  procesarPromociones() {
-    this.promocionService.obtenerPromociones({ activa: true, vigente: true }).subscribe({
-      next: (res: any) => {
-        let promociones = res.data.filter((p: Promocion) =>
-          p.tipoAnclaje === 'servicio' &&
-          p.servicios &&
-          p.servicios.length > 0
-        );
-
-        // Enriquecer cada promoción con los nombres de los servicios
-        promociones = promociones.map((promo: Promocion) => {
-          // Si promo.servicios existe, lo mapeamos; si no, array vacío
-          const serviciosEnriquecidos = promo.servicios?.map((item: any) => {
-            // Buscar el servicio completo en la lista local usando item.servicio (ID)
-            const servicioCompleto = this.serviciosDisponibles.find(s => s._id === item.servicio);
-            return {
-              ...item,
-              servicio: servicioCompleto ? servicioCompleto : { nombre: 'Servicio desconocido' }
-            };
-          }) || [];
-
-          return { ...promo, servicios: serviciosEnriquecidos };
-        });
-
-        this.promocionesDisponibles = promociones;
-      },
-      error: (err: any) => {
-        console.error(err);
-        Swal.fire('Error', 'No se pudieron cargar las promociones', 'error');
-      }
-    });
-  }
-
-  contratarPromocion(promocion: Promocion) {
-    // 1. Cerrar el modal de promociones
-    this.mostrarModalPromocion = false;
-
-    // 2. Mostrar confirmación
-    Swal.fire({
-      title: 'Confirmar contratación',
-      html: `Deseas contratar la promoción <strong>${promocion.nombre}</strong>?<br>
-           Se agregarán las sesiones correspondientes a los servicios incluidos.`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, contratar',
-      cancelButtonText: 'Cancelar'
-    }).then(result => {
-      if (result.isConfirmed) {
-        // 3. Realizar la contratación
-        const payload = {
-          pacienteId: this.paciente._id,
-          sucursalId: null
-        };
-        this.promocionService.contratarPromocion(promocion._id!, payload).subscribe({
-          next: (res: any) => {
-            Swal.fire('Éxito', 'Promoción contratada correctamente', 'success');
-            this.cargarServiciosContratados();
-          },
-          error: (err: any) => {
-            console.error(err);
-            Swal.fire('Error', err.error?.message || 'No se pudo contratar la promoción', 'error');
-          }
-        });
-      }
-      // Si cancela, no hacemos nada, el modal ya está cerrado.
-    });
-  }
 
   // Realiza purga individual del servicio seleccionado
   eliminarServicioContratado(servicio: any) {

@@ -15,11 +15,8 @@ export class ServiciosService {
   }
 
   // Obtener todos los servicios
-  obtenerServicios(categoria?: string, activo: string = 'true', incluirInactivos: string = 'false'): Observable<any> {
-    let params: any = { activo, incluirInactivos };
-    if (categoria) {
-      params.categoria = categoria;
-    }
+  obtenerServicios(activo: string = 'true', incluirInactivos: string = 'false'): Observable<any> {
+    const params: any = { activo, incluirInactivos };
     return this.http.get(this.api.getApiUrl() + '/servicios', { params });
   }
 
@@ -42,16 +39,6 @@ export class ServiciosService {
     return this.http.delete(this.api.getApiUrl() + '/servicio/' + id, { params });
   }
 
-  // Obtener servicios por categoría
-  obtenerServiciosPorCategoria(categoriaId: string): Observable<any> {
-    return this.http.get(this.api.getApiUrl() + '/servicios/categoria/' + categoriaId);
-  }
-
-  // Obtener servicios agrupados por categoría
-  obtenerServiciosAgrupados(): Observable<any> {
-    return this.http.get(this.api.getApiUrl() + '/servicios-agrupados');
-  }
-
   // Importar servicios iniciales
   importarServiciosIniciales(): Observable<any> {
     return this.http.post(this.api.getApiUrl() + '/servicios/importar-iniciales', {});
@@ -60,5 +47,10 @@ export class ServiciosService {
   // Obtener servicios individuales para citas
   obtenerServiciosIndividuales(): Observable<any> {
     return this.http.get(this.api.getApiUrl() + '/servicios-individuales');
+  }
+
+  // Obtener precio de un servicio para una sucursal
+  obtenerPrecioPorSucursal(servicioId: string, sucursalId: string): Observable<any> {
+    return this.http.get(this.api.getApiUrl() + '/servicio/' + servicioId + '/precio-sucursal/' + sucursalId);
   }
 }

@@ -1,24 +1,38 @@
 <div class="container">
-    <h2>Gestión de Servicios</h2>
+    <div class="page-header">
+        <h2>Gestion de Servicios</h2>
+        <p class="page-subtitle">Administra los servicios y precios de Clinica del Pie</p>
+    </div>
 
-    <!-- Panel de estadísticas y filtros -->
+    <!-- Panel de estadisticas y filtros -->
     <div class="dashboard-panel">
         <div class="stats">
-            <div class="stat-card">
-                <span class="stat-number">{{ totalServicios }}</span>
-                <span class="stat-label">Total Servicios</span>
+            <div class="stat-card stat-total">
+                <div class="stat-icon">
+                    <i class="fas fa-briefcase-medical"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ totalServicios }}</span>
+                    <span class="stat-label">Total Servicios</span>
+                </div>
             </div>
-            <div class="stat-card">
-                <span class="stat-number">{{ serviciosActivos }}</span>
-                <span class="stat-label">Activos</span>
+            <div class="stat-card stat-active">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ serviciosActivos }}</span>
+                    <span class="stat-label">Activos</span>
+                </div>
             </div>
-            <div class="stat-card">
-                <span class="stat-number">{{ serviciosInactivos }}</span>
-                <span class="stat-label">Inactivos</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">{{ categoriasDisponibles.length }}</span>
-                <span class="stat-label">Categorías</span>
+            <div class="stat-card stat-inactive">
+                <div class="stat-icon">
+                    <i class="fas fa-pause-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ serviciosInactivos }}</span>
+                    <span class="stat-label">Inactivos</span>
+                </div>
             </div>
         </div>
 
@@ -33,34 +47,27 @@
             </div>
 
             <div class="filter-group">
-                <label for="filtroCategoria">Filtrar por categoría:</label>
-                <select id="filtroCategoria" [(ngModel)]="filtroCategoria" (change)="onFiltroCategoriaChange()">
-                    <option value="">Todas las categorías</option>
-                    <option *ngFor="let categoria of categoriasDisponibles" [value]="categoria._id">
-                        {{ categoria.nombre }}
-                    </option>
-                </select>
-            </div>
-
-            <div class="filter-group">
                 <label for="buscarTexto">Buscar:</label>
-                <input type="text" id="buscarTexto" [(ngModel)]="buscarTexto" (input)="onBuscarChange()"
-                    placeholder="Buscar por nombre o descripción...">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="buscarTexto" [(ngModel)]="buscarTexto" (input)="onBuscarChange()"
+                        placeholder="Buscar por nombre o descripcion...">
+                </div>
             </div>
 
-            <button (click)="limpiarFiltros()" class="btn-secondary">
-                <i class="fas fa-times"></i> Limpiar filtros
+            <button (click)="limpiarFiltros()" class="btn-clear">
+                <i class="fas fa-times"></i> Limpiar
             </button>
         </div>
     </div>
 
-    <!-- Botones de acción -->
+    <!-- Botones de accion -->
     <div class="actions">
         <button (click)="abrirModal()" class="btn-primary">
             <i class="fas fa-plus"></i> Nuevo Servicio
         </button>
-        <button (click)="inicializarServicios()" class="btn-secondary">
-            <i class="fas fa-download"></i> Importar Servicios Iniciales
+        <button (click)="inicializarServicios()" class="btn-outline">
+            <i class="fas fa-download"></i> Importar Iniciales
         </button>
     </div>
 
@@ -69,11 +76,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Duración</th>
-                    <th>Costo</th>
-                    <th>Costo Paquete</th>
+                    <th>Servicio</th>
+                    <th>Duracion</th>
+                    <th>Precio Base</th>
+                    <th>Paquete</th>
+                    <th>Precios por Sucursal</th>
                     <th>Sesiones</th>
                     <th>Estado</th>
                     <th>Acciones</th>
@@ -82,19 +89,18 @@
             <tbody>
                 <tr *ngFor="let servicio of serviciosFiltrados" [class.inactive-row]="!servicio.activo">
                     <td>
-                        <strong>{{ servicio.nombre }}</strong>
+                        <strong class="servicio-nombre">{{ servicio.nombre }}</strong>
                         <div *ngIf="servicio.descripcionCorta" class="descripcion-corta">
                             {{ servicio.descripcionCorta }}
                         </div>
                     </td>
                     <td>
-                        <span class="badge-categoria">
-                            {{ servicio.categoria?.nombre || 'Sin categoría' }}
+                        <span class="duracion-badge">
+                            <i class="fas fa-clock"></i> {{ servicio.duracion }} min
                         </span>
                     </td>
-                    <td>{{ servicio.duracion }} min</td>
                     <td>
-                        <span *ngIf="servicio.costo !== null && servicio.costo !== undefined">
+                        <span *ngIf="servicio.costo !== null && servicio.costo !== undefined" class="precio">
                             ${{ servicio.costo | number:'1.0-2' }}
                         </span>
                         <span *ngIf="servicio.costo === null || servicio.costo === undefined" class="text-muted">
@@ -102,7 +108,8 @@
                         </span>
                     </td>
                     <td>
-                        <span *ngIf="servicio.costoPaquete !== null && servicio.costoPaquete !== undefined">
+                        <span *ngIf="servicio.costoPaquete !== null && servicio.costoPaquete !== undefined"
+                            class="precio paquete">
                             ${{ servicio.costoPaquete | number:'1.0-2' }}
                         </span>
                         <span *ngIf="servicio.costoPaquete === null || servicio.costoPaquete === undefined"
@@ -111,11 +118,24 @@
                         </span>
                     </td>
                     <td>
+                        <div *ngIf="servicio.preciosPorSucursal && servicio.preciosPorSucursal.length > 0"
+                            class="precios-sucursal-list">
+                            <div *ngFor="let ps of servicio.preciosPorSucursal" class="precio-sucursal-item">
+                                <span class="sucursal-name">{{ ps.sucursal?.nombre || 'N/A' }}</span>
+                                <span class="sucursal-price">${{ ps.costo | number:'1.0-2' }}</span>
+                            </div>
+                        </div>
+                        <span *ngIf="!servicio.preciosPorSucursal || servicio.preciosPorSucursal.length === 0"
+                            class="text-muted">
+                            Precio unico
+                        </span>
+                    </td>
+                    <td>
                         <span *ngIf="servicio.tieneSesiones" class="badge-sesiones">
-                            {{ servicio.sesiones?.numero || 1 }} sesión(es)
+                            {{ servicio.sesiones?.numero || 1 }} sesion(es)
                         </span>
                         <span *ngIf="!servicio.tieneSesiones" class="text-muted">
-                            Única
+                            Unica
                         </span>
                     </td>
                     <td>
@@ -124,24 +144,23 @@
                         </span>
                     </td>
                     <td class="actions-cell">
-                        <button (click)="editarServicio(servicio)" class="btn-edit">
-                            <i class="fas fa-edit"></i> Editar
+                        <button (click)="editarServicio(servicio)" class="btn-edit" title="Editar">
+                            <i class="fas fa-edit"></i>
                         </button>
 
-                        <!-- Botón Desactivar (solo si está activo) -->
                         <button *ngIf="servicio.activo" (click)="desactivarServicio(servicio._id, servicio.nombre)"
-                            class="btn-warning">
-                            <i class="fas fa-power-off"></i> Desactivar
+                            class="btn-warning" title="Desactivar">
+                            <i class="fas fa-power-off"></i>
                         </button>
 
-                        <!-- Botón Reactivar (solo si está inactivo) -->
-                        <button *ngIf="!servicio.activo" (click)="reactivarServicio(servicio._id)" class="btn-success">
-                            <i class="fas fa-check"></i> Reactivar
+                        <button *ngIf="!servicio.activo" (click)="reactivarServicio(servicio._id)" class="btn-success"
+                            title="Reactivar">
+                            <i class="fas fa-check"></i>
                         </button>
 
-                        <!-- Botón Eliminar permanentemente (siempre visible) -->
-                        <button (click)="eliminarPermanentemente(servicio._id, servicio.nombre)" class="btn-delete">
-                            <i class="fas fa-trash"></i> Eliminar
+                        <button (click)="eliminarPermanentemente(servicio._id, servicio.nombre)" class="btn-delete"
+                            title="Eliminar">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </td>
                 </tr>
@@ -149,11 +168,12 @@
         </table>
 
         <div *ngIf="serviciosFiltrados.length === 0" class="empty-table">
+            <i class="fas fa-inbox empty-icon"></i>
             <p>No se encontraron servicios con los filtros aplicados.</p>
         </div>
     </div>
 
-    <!-- Mostrar contador de resultados filtrados -->
+    <!-- Contador de resultados -->
     <div class="results-count">
         Mostrando {{ serviciosFiltrados.length }} de {{ totalServicios }} servicios
     </div>
@@ -161,7 +181,7 @@
 
 <app-modal [isVisible]="isModalVisible" [title]="esEdicion ? 'Editar Servicio' : 'Nuevo Servicio'"
     (close)="cerrarModal()">
-    <app-form-servicio [servicio]="servicioSeleccionado" [categorias]="categoriasDisponibles"
+    <app-form-servicio [servicio]="servicioSeleccionado"
         (guardar)="onGuardarServicio($event)" (cancelar)="cerrarModal()">
     </app-form-servicio>
 </app-modal>

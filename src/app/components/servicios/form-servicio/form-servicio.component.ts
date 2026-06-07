@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SucursalesService } from 'src/app/services/sucursales.service';
 
 @Component({
   selector: 'app-form-servicio',
@@ -11,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class FormServicioComponent implements OnInit {
   @Input() servicio: any = null;
-  @Input() categorias: any[] = [];
   @Output() guardar = new EventEmitter<any>();
   @Output() cancelar = new EventEmitter<void>();
 
@@ -19,8 +19,12 @@ export class FormServicioComponent implements OnInit {
   formData: any = {};
   esEdicion: boolean = false;
   nuevoBeneficio: string = '';
+  sucursalesDisponibles: any[] = [];
+
+  constructor(private sucursalesService: SucursalesService) {}
 
   ngOnInit(): void {
+    this.cargarSucursales();
     this.inicializarFormulario();
   }
 
@@ -28,6 +32,20 @@ export class FormServicioComponent implements OnInit {
     if (changes['servicio']) {
       this.inicializarFormulario();
     }
+  }
+
+  // Cargar lista de sucursales activas
+  cargarSucursales(): void {
+    this.sucursalesService.obtenerSucursales().subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          this.sucursalesDisponibles = response.data.filter((s: any) => s.activo);
+        }
+      },
+      error: (error: any) => {
+        console.error('Error al cargar sucursales:', error);
+      }
+    });
   }
 
   inicializarFormulario(): void {
@@ -41,15 +59,18 @@ export class FormServicioComponent implements OnInit {
         costoPaquete: this.servicio.costoPaquete !== undefined ? this.servicio.costoPaquete : null,
         tieneSesiones: this.servicio.tieneSesiones || false,
         sesiones: this.servicio.sesiones || { numero: 1, descripcion: '' },
-        categoria: this.servicio.categoria || '',
         descripcionCorta: this.servicio.descripcionCorta || '',
         beneficios: this.servicio.beneficios || [],
         activo: this.servicio.activo !== undefined ? this.servicio.activo : true,
         orden: this.servicio.orden || 0,
-        faqs: this.servicio.faqs || []
+        faqs: this.servicio.faqs || [],
+        preciosPorSucursal: (this.servicio.preciosPorSucursal || []).map((p: any) => ({
+          sucursal: p.sucursal?._id || p.sucursal,
+          costo: p.costo,
+          costoPaquete: p.costoPaquete
+        }))
       };
     } else {
-      // Modo creación
       this.esEdicion = false;
       this.formData = {
         nombre: '',
@@ -58,14 +79,39 @@ export class FormServicioComponent implements OnInit {
         costoPaquete: null,
         tieneSesiones: false,
         sesiones: { numero: 1, descripcion: '' },
-        categoria: '',
         descripcionCorta: '',
         beneficios: [],
         activo: true,
         orden: 0,
-        faqs: []
+        faqs: [],
+        preciosPorSucursal: []
       };
     }
+  }
+
+  // Agregar precio para una sucursal
+  agregarPrecioSucursal(): void {
+    if (!this.formData.preciosPorSucursal) {
+      this.formData.preciosPorSucursal = [];
+    }
+    this.formData.preciosPorSucursal.push({
+      sucursal: '',
+      costo: null,
+      costoPaquete: null
+    });
+  }
+
+  // Eliminar un precio por sucursal
+  eliminarPrecioSucursal(index: number): void {
+    this.formData.preciosPorSucursal.splice(index, 1);
+  }
+
+  // Sucursales que aun no han sido asignadas
+  getSucursalesDisponiblesParaFila(currentSucursalId: string): any[] {
+    const usadas = this.formData.preciosPorSucursal
+      .map((p: any) => p.sucursal)
+      .filter((id: string) => id && id !== currentSucursalId);
+    return this.sucursalesDisponibles.filter(s => !usadas.includes(s._id));
   }
 
   agregarBeneficio(): void {
@@ -85,39 +131,29 @@ export class FormServicioComponent implements OnInit {
   guardarForm(event?: Event): void {
     if (event) event.preventDefault();
 
-    // Validaciones básicas
     if (!this.formData.nombre || this.formData.nombre.trim() === '') {
-      console.error('El nombre es requerido');
       alert('El nombre es requerido');
       return;
     }
 
     if (!this.formData.duracion || this.formData.duracion <= 0) {
-      console.error('La duración es requerida');
-      alert('La duración es requerida y debe ser mayor a 0');
+      alert('La duracion es requerida y debe ser mayor a 0');
       return;
     }
 
-    if (!this.formData.categoria) {
-      console.error('La categoría es requerida');
-      alert('Debes seleccionar una categoría');
-      return;
-    }
-
-    // Convertir valores numéricos
+    // Limpiar valores vacios
     if (this.formData.costo === '') this.formData.costo = null;
     if (this.formData.costoPaquete === '') this.formData.costoPaquete = null;
 
-    // Emitir los datos
+    // Limpiar precios por sucursal vacios
+    this.formData.preciosPorSucursal = (this.formData.preciosPorSucursal || [])
+      .filter((p: any) => p.sucursal && p.costo !== null && p.costo !== undefined);
+
     this.guardar.emit(this.formData);
   }
 
   cancelarForm(): void {
     this.cancelar.emit();
-  }
-
-  trackByIndex(index: number, item: any): number {
-    return index;
   }
 
   agregarFaq(): void {
@@ -128,7 +164,7 @@ export class FormServicioComponent implements OnInit {
       this.formData.faqs.push({
         pregunta: this.nuevaFaq.pregunta.trim(),
         respuesta: this.nuevaFaq.respuesta.trim(),
-        orden: this.formData.faqs.length // opcional, puedes gestionar orden después
+        orden: this.formData.faqs.length
       });
       this.nuevaFaq = { pregunta: '', respuesta: '' };
     } else {
@@ -139,5 +175,4 @@ export class FormServicioComponent implements OnInit {
   eliminarFaq(index: number): void {
     this.formData.faqs.splice(index, 1);
   }
-  
 }

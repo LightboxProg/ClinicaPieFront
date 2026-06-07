@@ -1,46 +1,97 @@
 <div class="pagina-calendario">
 
-  <div class="tabs-navegacion">
-    <button [class.activo]="vistaActual === 'general'" (click)="cambiarVista('general')">
-      🌐 Agenda General
-    </button>
-    <button [class.activo]="vistaActual === 'individual'" (click)="cambiarVista('individual')">
-      👨‍⚕️ Agenda por Especialista
-    </button>
-    <button [class.activo]="vistaActual === 'sucursales'" (click)="cambiarVista('sucursales')">
-      🏥 Agenda por Sucursal
-    </button>
+  <div class="encabezado-pagina">
+    <div class="titulo-area">
+      <h1><i class="fas fa-calendar-alt"></i> Centro de Agendas</h1>
+      <p class="subtitulo">Gestiona citas, disponibilidad y sucursales desde un solo lugar.</p>
+    </div>
   </div>
 
-  <div *ngIf="vistaActual === 'general'" class="vista-contenedor fade-in">
+  <nav class="tabs-navegacion" role="tablist">
+    <button role="tab"
+            [attr.aria-selected]="vistaActual === 'general'"
+            [class.activo]="vistaActual === 'general'"
+            (click)="cambiarVista('general')">
+      <span class="tab-icono"><i class="fas fa-globe"></i></span>
+      <span class="tab-texto">
+        <span class="tab-label">Agenda General</span>
+        <span class="tab-desc">Todos los especialistas</span>
+      </span>
+    </button>
+    <button role="tab"
+            [attr.aria-selected]="vistaActual === 'individual'"
+            [class.activo]="vistaActual === 'individual'"
+            (click)="cambiarVista('individual')">
+      <span class="tab-icono"><i class="fas fa-user-md"></i></span>
+      <span class="tab-texto">
+        <span class="tab-label">Por Especialista</span>
+        <span class="tab-desc">Agenda individual</span>
+      </span>
+    </button>
+    <button role="tab"
+            [attr.aria-selected]="vistaActual === 'sucursales'"
+            [class.activo]="vistaActual === 'sucursales'"
+            (click)="cambiarVista('sucursales')">
+      <span class="tab-icono"><i class="fas fa-clinic-medical"></i></span>
+      <span class="tab-texto">
+        <span class="tab-label">Por Sucursal</span>
+        <span class="tab-desc">Vista semanal</span>
+      </span>
+    </button>
+  </nav>
+
+  <!-- VISTA GENERAL -->
+  <section *ngIf="vistaActual === 'general'" class="vista-contenedor slide-up">
     <app-calendario-completo></app-calendario-completo>
-  </div>
+  </section>
 
-  <div *ngIf="vistaActual === 'individual'" class="vista-contenedor fade-in">
+  <!-- VISTA INDIVIDUAL -->
+  <section *ngIf="vistaActual === 'individual'" class="vista-contenedor slide-up">
     <div class="panel-seleccion">
-      <h3>Selecciona un Especialista:</h3>
-      <div class="botones-grid">
+      <div class="panel-header">
+        <h3><i class="fas fa-stethoscope"></i> Selecciona un Especialista</h3>
+        <span class="badge-count" *ngIf="doctores.length > 0">{{ doctores.length }} disponibles</span>
+      </div>
+      <div class="botones-grid" *ngIf="doctores.length > 0">
         <button *ngFor="let doc of doctores"
-                (click)="seleccionarDoctor(doc.id)"
-                [class.btn-activo]="doctorIdSeleccionado === doc.id"
+                (click)="seleccionarDoctor(doc._id || doc.id)"
+                [class.btn-activo]="doctorIdSeleccionado === (doc._id || doc.id)"
                 class="btn-item">
-          {{ doc.nombre }}
+          <span class="avatar-mini">{{ (doc.nombre || '?')[0] }}</span>
+          <span>{{ doc.nombre }}</span>
         </button>
+      </div>
+      <div *ngIf="doctores.length === 0" class="estado-cargando">
+        <div class="spinner-mini"></div>
+        <span>Cargando especialistas...</span>
       </div>
     </div>
     <app-calendario-doctor *ngIf="doctorIdSeleccionado" [doctorIdExterno]="doctorIdSeleccionado"></app-calendario-doctor>
-  </div>
+    <div *ngIf="!doctorIdSeleccionado && doctores.length > 0" class="placeholder-seleccion">
+      <i class="fas fa-hand-pointer"></i>
+      <p>Selecciona un especialista de la lista para ver su agenda diaria.</p>
+    </div>
+  </section>
 
-  <div *ngIf="vistaActual === 'sucursales'" class="vista-contenedor fade-in">
+  <!-- VISTA SUCURSALES -->
+  <section *ngIf="vistaActual === 'sucursales'" class="vista-contenedor slide-up">
     <div class="panel-seleccion">
-      <h3>Selecciona una Sucursal:</h3>
-      <div class="botones-grid">
+      <div class="panel-header">
+        <h3><i class="fas fa-map-marker-alt"></i> Selecciona una Sucursal</h3>
+        <span class="badge-count" *ngIf="sucursales.length > 0">{{ sucursales.length }} sucursales</span>
+      </div>
+      <div class="botones-grid" *ngIf="sucursales.length > 0">
         <button *ngFor="let suc of sucursales"
                 (click)="seleccionarSucursal(suc._id)"
                 [class.btn-activo]="sucursalIdSeleccionada === suc._id"
                 class="btn-item btn-sucursal">
-          📍 {{ suc.nombre }}
+          <i class="fas fa-building"></i>
+          <span>{{ suc.nombre }}</span>
         </button>
+      </div>
+      <div *ngIf="sucursales.length === 0" class="estado-cargando">
+        <div class="spinner-mini"></div>
+        <span>Cargando sucursales...</span>
       </div>
     </div>
 
@@ -49,9 +100,10 @@
       [sucursalIdExterno]="sucursalIdSeleccionada">
     </app-agenda-sucursales>
 
-    <div *ngIf="!sucursalIdSeleccionada" class="mensaje-selecciona">
-      <p>☝️ Selecciona una clínica para ver la agenda semanal de sus doctores.</p>
+    <div *ngIf="!sucursalIdSeleccionada && sucursales.length > 0" class="placeholder-seleccion">
+      <i class="fas fa-hand-pointer"></i>
+      <p>Selecciona una clinica para ver la agenda semanal de sus doctores.</p>
     </div>
-  </div>
+  </section>
 
 </div>

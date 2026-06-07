@@ -83,10 +83,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     const rutasPrivadas = [
       '/login', 
       '/lista-pacientes',
-      '/categorias',
       '/black-list',
-      '/promociones',
-      '/promocion-form',
       '/sucursales-lista',
       '/sucursales-formulario',
       '/lista-preguntones',

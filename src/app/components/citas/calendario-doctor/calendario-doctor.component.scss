@@ -1,215 +1,391 @@
+@use 'src/design-system' as ds;
+
 /* =========================================
    CONTENEDOR PRINCIPAL
    ========================================= */
 .agenda-doctor-container {
-  background: #f8fafc;
-  padding: 24px;
-  border-radius: 20px;
-  min-height: 500px;
+  background: ds.$color-background;
+  font-family: ds.$font-family-base;
 }
 
 /* =========================================
-   HEADER DE LA AGENDA
+   CABECERA DE LA AGENDA
    ========================================= */
 .cabecera-agenda {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
+  background: ds.$color-surface;
   padding: 20px 24px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-  margin-bottom: 24px;
+  border-radius: ds.$border-radius-xl;
+  box-shadow: ds.$shadow-sm;
+  margin-bottom: ds.$spacing-lg;
+  border: 1px solid ds.$color-border;
+  flex-wrap: wrap;
+  gap: 16px;
 
   .info-doctor {
     h2 { 
       margin: 0; 
-      color: #0f172a; 
-      font-size: 1.4rem; 
-      font-weight: 800; 
-      letter-spacing: -0.02em;
+      color: ds.$color-text-primary; 
+      font-size: ds.$font-size-lg; 
+      font-weight: ds.$font-weight-bold;
+      letter-spacing: -0.01em;
     }
     .nombre-doc { 
-      margin: 4px 0 0 0; 
-      color: #3b82f6; 
-      font-weight: 600; 
-      font-size: 1rem; 
+      margin: 6px 0 0 0; 
+      color: ds.$color-secondary; 
+      font-weight: ds.$font-weight-semibold; 
+      font-size: ds.$font-size-sm;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      i {
+        font-size: ds.$font-size-xs;
+      }
     }
   }
 
   .filtro-fecha {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-direction: column;
+    gap: 4px;
     
     label { 
-      font-size: 0.85rem; 
-      font-weight: 700; 
-      color: #64748b; 
-      text-transform: uppercase; 
+      font-size: 11px; 
+      font-weight: ds.$font-weight-bold; 
+      color: ds.$color-text-light; 
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
-    
-    input[type="date"] {
-      padding: 10px 16px;
-      background-color: #f1f5f9;
-      border: 2px solid transparent;
-      border-radius: 12px;
-      outline: none;
-      font-size: 0.95rem;
-      color: #1e293b;
-      font-weight: 600;
-      transition: all 0.25s ease;
-      cursor: pointer;
 
-      &:focus, &:hover { 
-        background-color: #ffffff;
-        border-color: #3b82f6; 
+    .input-fecha-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: ds.$color-surface-secondary;
+      border: 1.5px solid ds.$color-border;
+      border-radius: ds.$border-radius-base;
+      padding: 0 14px;
+      transition: all ds.$transition-fast;
+
+      i {
+        color: ds.$color-text-light;
+        font-size: ds.$font-size-sm;
+      }
+
+      input[type="date"] {
+        padding: 10px 0;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: ds.$font-size-sm;
+        color: ds.$color-text-primary;
+        font-weight: ds.$font-weight-semibold;
+        font-family: ds.$font-family-base;
+        cursor: pointer;
+        min-width: 140px;
+      }
+
+      &:focus-within {
+        border-color: ds.$color-secondary;
+        box-shadow: 0 0 0 3px rgba(0, 166, 153, 0.1);
+        
+        i { color: ds.$color-secondary; }
+      }
+
+      &:hover {
+        border-color: ds.$color-border-dark;
       }
     }
   }
 }
 
 /* =========================================
-   ESTADOS (VACÍO Y CARGANDO)
+   ESTADOS PLACEHOLDER
    ========================================= */
-.estado-vacio {
+.estado-placeholder {
   text-align: center;
-  padding: 60px 20px;
-  color: #64748b;
-  background: white;
-  border-radius: 16px;
-  border: 2px dashed #e2e8f0;
-  font-weight: 500;
+  padding: ds.$spacing-4xl ds.$spacing-xl;
+  color: ds.$color-text-secondary;
+  background: ds.$color-surface;
+  border-radius: ds.$border-radius-xl;
+  border: 2px dashed ds.$color-border-dark;
+  font-weight: ds.$font-weight-medium;
+
+  .icono-placeholder {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: ds.$color-surface-secondary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto ds.$spacing-base auto;
+
+    i {
+      font-size: 1.5rem;
+      color: ds.$color-border-dark;
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: ds.$font-size-sm;
+    max-width: 340px;
+    margin-inline: auto;
+    line-height: ds.$line-height-normal;
+  }
   
-  &.inactivo {
-    background: #fef2f2;
-    border-color: #fecaca;
-    color: #991b1b;
+  &.sin-horario {
+    background: #fef7ed;
+    border-color: rgba(245, 158, 11, 0.3);
+
+    .icono-placeholder {
+      background: rgba(245, 158, 11, 0.1);
+
+      i { color: ds.$color-warning; }
+    }
+
+    p { color: ds.$color-text-secondary; }
   }
 
   .spinner {
-    width: 36px; height: 36px;
-    border: 4px solid #e2e8f0;
-    border-top-color: #3b82f6;
+    width: 36px; 
+    height: 36px;
+    border: 4px solid rgba(0, 166, 153, 0.15);
+    border-top-color: ds.$color-secondary;
     border-radius: 50%;
-    animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    margin: 0 auto 16px auto;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto ds.$spacing-base auto;
   }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* =========================================
-   LÍNEA DE TIEMPO (TIMELINE)
+   TIMELINE
    ========================================= */
 .timeline {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 /* =========================================
-   BLOQUES DE TURNOS (Disponibles y Ocupados)
+   BLOQUES DE TURNO
    ========================================= */
 .bloque-turno {
   display: flex;
-  background: white;
-  border-radius: 16px;
+  align-items: stretch;
+  background: ds.$color-surface;
+  border-radius: ds.$border-radius-lg;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-  transition: all 0.2s ease;
-  border: 1px solid #f1f5f9;
+  box-shadow: ds.$shadow-sm;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  border: 1px solid ds.$color-border;
+  animation: fadeSlideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    box-shadow: ds.$shadow-md;
   }
 
-  /* Columna de la Hora (Izquierda) */
+  /* Indicador de estado (punto lateral) */
+  .indicador-estado {
+    width: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .punto {
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      &.disponible { background: ds.$color-success; }
+      &.ocupado { background: ds.$color-error; }
+    }
+  }
+
+  /* Columna de la Hora */
   .hora-col {
-    padding: 16px 24px;
+    padding: 16px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 120px;
-    border-right: 1px solid rgba(0,0,0,0.05);
+    min-width: 110px;
+    border-right: 1px solid ds.$color-border;
     
-    .hora { font-weight: 800; font-size: 1.05rem; letter-spacing: -0.02em; }
-    .hasta { font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; margin: 2px 0; }
+    .hora-inicio, .hora-fin {
+      font-weight: ds.$font-weight-bold;
+      font-size: ds.$font-size-sm;
+      color: ds.$color-text-primary;
+    }
+
+    .hora-separador {
+      font-size: 10px;
+      color: ds.$color-text-light;
+      font-weight: ds.$font-weight-bold;
+      text-transform: uppercase;
+      margin: 1px 0;
+    }
   }
 
-  /* Columna de Detalles (Derecha) */
+  /* Columna de Detalles */
   .info-col {
-    padding: 16px 24px;
+    padding: 16px 20px;
     flex: 1;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
+    align-items: center;
 
-    h4 { margin: 0 0 6px 0; font-size: 1.1rem; font-weight: 700; }
-  }
-
-  /* --- ESTILO: DISPONIBLE (Verde) --- */
-  &.disponible {
-    border-left: 6px solid #10b981;
-    
-    .hora-col { background: #f0fdf4; color: #065f46; }
-    .info-col h4 { color: #059669; }
-
-    .btn-agendar {
-      margin-top: 8px;
-      padding: 8px 16px;
-      background: #10b981;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: background 0.2s;
-      
-      &:hover { background: #059669; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2); }
-    }
-  }
-
-  /* --- ESTILO: OCUPADO (Rojo/Rosado) --- */
-  &.ocupado {
-    border-left: 6px solid #f43f5e;
-    background: #fffbfa;
-    
-    .hora-col { background: #fff1f2; color: #9f1239; }
-    .info-col h4 { color: #be123c; }
-    
-    .detalles-cita { 
-      margin: 0 0 12px 0; 
-      font-size: 0.9rem; 
-      color: #881337; 
-      opacity: 0.8;
-      line-height: 1.4;
-    }
-
-    /* 🌟 EL NUEVO BOTÓN DE REAGENDAR */
-    .btn-reagendar {
-      padding: 8px 16px;
-      background: white;
-      color: #475569;
-      border: 2px solid #e2e8f0;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s;
+    h4 { 
+      margin: 0 0 4px 0; 
+      font-size: ds.$font-size-sm; 
+      font-weight: ds.$font-weight-bold;
       display: flex;
       align-items: center;
       gap: 6px;
+    }
+  }
+
+  /* Disponible */
+  &.disponible {
+    .hora-col { 
+      background: rgba(16, 185, 129, 0.04);
+      
+      .hora-inicio, .hora-fin { color: ds.$color-success; }
+    }
+
+    .info-disponible {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 16px;
+
+      h4 { 
+        color: ds.$color-success;
+        i { font-size: ds.$font-size-xs; }
+      }
+    }
+
+    .btn-agendar {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: ds.$color-success;
+      color: ds.$color-surface;
+      border: none;
+      border-radius: ds.$border-radius-full;
+      font-weight: ds.$font-weight-bold;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all ds.$transition-fast;
+      font-family: ds.$font-family-base;
+      white-space: nowrap;
       
       &:hover { 
-        background: #f8fafc; 
-        border-color: #cbd5e1; 
-        color: #0f172a;
+        background: darken(#10b981, 8%); 
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+        transform: translateY(-1px);
       }
+    }
+  }
+
+  /* Ocupado */
+  &.ocupado {
+    background: #fffbfa;
+
+    .hora-col { 
+      background: rgba(239, 68, 68, 0.03);
+
+      .hora-inicio, .hora-fin { color: ds.$color-error; }
+    }
+    
+    .info-ocupado {
+      h4 { color: ds.$color-text-primary; }
+    }
+
+    .detalles-cita { 
+      margin: 2px 0 10px 0; 
+      font-size: ds.$font-size-xs; 
+      color: ds.$color-text-secondary; 
+      line-height: ds.$line-height-normal;
+    }
+
+    .btn-reagendar {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: ds.$color-surface;
+      color: ds.$color-text-secondary;
+      border: 1.5px solid ds.$color-border;
+      border-radius: ds.$border-radius-full;
+      font-weight: ds.$font-weight-bold;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all ds.$transition-fast;
+      font-family: ds.$font-family-base;
+
+      i { font-size: 11px; }
+      
+      &:hover { 
+        background: rgba(0, 166, 153, 0.05);
+        border-color: ds.$color-secondary; 
+        color: ds.$color-secondary;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media #{ds.$media-max-md} {
+  .cabecera-agenda {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+
+  .bloque-turno {
+    flex-direction: column;
+    
+    .hora-col {
+      flex-direction: row;
+      min-width: unset;
+      padding: 12px 16px;
+      border-right: none;
+      border-bottom: 1px solid ds.$color-border;
+      gap: 8px;
+    }
+
+    .info-col {
+      padding: 14px 16px;
+    }
+
+    &.disponible .info-disponible {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
     }
   }
 }

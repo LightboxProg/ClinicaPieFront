@@ -1,23 +1,31 @@
+@use 'src/design-system' as ds;
+
 // Variables de diseño
-$primary-color: #ff5a5f;
-$bg-doctor: #fff0f1;      // Un rosa/coral pastel muy sutil para tus mensajes
-$bg-cliente: #ffffff;     // Blanco puro para los mensajes que recibes
-$text-dark: #2d2d2d;
-$text-muted: #8e9aa6;
-$transition: all 0.2s ease;
+$primary-color: ds.$color-primary;
+$secondary-color: ds.$color-secondary;
+$bg-doctor: #e6f6f5;       // Un teal pastel muy sutil y elegante
+$bg-cliente: ds.$color-surface; // Blanco puro para los mensajes que recibes
+$text-dark: ds.$color-text-primary;
+$text-muted: ds.$color-text-light;
+$transition: ds.$transition-fast;
 
 .burbujas-contenedor {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 1.5rem;
+  padding: ds.$spacing-lg;
   height: 100%;
   overflow-y: auto;
-  background-color: #f4f6f8; // Fondo gris claro que hace resaltar las burbujas
+  background-color: ds.$color-background;
 
   // Barra de scroll sutil
-  &::-webkit-scrollbar { width: 5px; }
-  &::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 10px; }
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: ds.$color-border-dark;
+    border-radius: ds.$border-radius-full;
+  }
 }
 
 // Contenedor de la línea completa
@@ -26,38 +34,37 @@ $transition: all 0.2s ease;
   width: 100%;
   animation: bubbleAppear 0.25s ease-out forwards;
 
-  // ¡Aquí está el truco de alineación!
   &.fila-doctor {
-    justify-content: flex-end; // Empuja el mensaje a la derecha
+    justify-content: flex-end;
   }
 
   &.fila-cliente {
-    justify-content: flex-start; // Empuja el mensaje a la izquierda
+    justify-content: flex-start;
   }
 }
 
 // Estilo base de cualquier burbuja
 .burbuja {
-  max-width: 65%; // Evita que los mensajes cortos se estiren o los largos ocupen toda la pantalla
+  max-width: 65%;
   padding: 0.65rem 0.85rem;
   position: relative;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  box-shadow: ds.$shadow-sm;
   display: flex;
   flex-direction: column;
   gap: 2px;
 
   .texto-mensaje {
     margin: 0;
-    font-size: 0.92rem;
-    line-height: 1.4;
+    font-size: ds.$font-size-sm;
+    line-height: ds.$line-height-normal;
     color: $text-dark;
-    word-break: break-word; // Rompe palabras largas para que no se desborde el texto
+    word-break: break-word;
   }
 
   .quien-envia {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: $primary-color;
+    font-size: ds.$font-size-xs;
+    font-weight: ds.$font-weight-bold;
+    color: $secondary-color;
     margin-bottom: 2px;
   }
 }
@@ -65,9 +72,8 @@ $transition: all 0.2s ease;
 // Personalización para los mensajes que ENVIAS (Doctor)
 .burbuja-doctor {
   background-color: $bg-doctor;
-  border: 1px solid rgba($primary-color, 0.08);
-  // Redondeado asimétrico: esquina inferior derecha recta estilo WhatsApp
-  border-radius: 12px 12px 2px 12px; 
+  border: 1px solid rgba($secondary-color, 0.15);
+  border-radius: ds.$border-radius-lg ds.$border-radius-lg ds.$border-radius-sm ds.$border-radius-lg; 
   align-items: flex-end;
 
   .texto-mensaje {
@@ -78,9 +84,8 @@ $transition: all 0.2s ease;
 // Personalización para los mensajes que RECIBES (Cliente)
 .burbuja-cliente {
   background-color: $bg-cliente;
-  border: 1px solid #eef0f2;
-  // Redondeado asimétrico: esquina inferior izquierda recta
-  border-radius: 12px 12px 12px 2px;
+  border: 1px solid ds.$color-border;
+  border-radius: ds.$border-radius-lg ds.$border-radius-lg ds.$border-radius-lg ds.$border-radius-sm;
   align-items: flex-start;
 }
 
@@ -89,28 +94,24 @@ $transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 4px;
-  align-self: flex-end; // Siempre alineado a la esquina inferior derecha de la burbuja
+  align-self: flex-end;
   margin-top: 2px;
 
   .hora {
-    font-size: 0.7rem;
+    font-size: ds.$font-size-xs;
     color: $text-muted;
-    -webkit-user-select: none;
     user-select: none;
   }
 
-  // Las dos palomitas estilo WhatsApp Leyendo
   .check {
-    font-size: 0.8rem;
-    color: #4fc3f7; // Color azul claro de mensaje visto/entregado
-    font-weight: bold;
+    font-size: ds.$font-size-sm;
+    color: $secondary-color;
+    font-weight: ds.$font-weight-bold;
     line-height: 1;
-    -webkit-user-select: none;
     user-select: none;
   }
 }
 
-// Animación suave cuando van apareciendo mensajes nuevos en la pantalla
 @keyframes bubbleAppear {
   from {
     opacity: 0;
@@ -122,9 +123,8 @@ $transition: all 0.2s ease;
   }
 }
 
-// Ajuste para pantallas pequeñas (Móviles)
 @media (max-width: 480px) {
   .burbuja {
-    max-width: 85%; // En celular dejamos que la burbuja use más espacio de la pantalla
+    max-width: 85%;
   }
 }

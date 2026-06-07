@@ -1,57 +1,78 @@
 <div class="agenda-doctor-container">
 
-  <header class="cabecera-agenda">
+  <!-- CABECERA CON FECHA -->
+  <div class="cabecera-agenda">
     <div class="info-doctor">
-      <h2>🩺 Agenda Diaria</h2>
-      <p class="nombre-doc" *ngIf="doctorNombre">{{ doctorNombre }}</p>
+      <h2>Agenda Diaria</h2>
+      <p class="nombre-doc" *ngIf="doctorNombre">
+        <i class="fas fa-stethoscope"></i> {{ doctorNombre }}
+      </p>
     </div>
     
     <div class="filtro-fecha">
-      <label>Día a consultar:</label>
-      <input type="date" [(ngModel)]="fechaSeleccionada" (change)="buscarDisponibilidad()">
+      <label for="fecha-doctor">Dia a consultar</label>
+      <div class="input-fecha-wrap">
+        <i class="far fa-calendar-alt"></i>
+        <input id="fecha-doctor" type="date" [(ngModel)]="fechaSeleccionada" (change)="buscarDisponibilidad()">
+      </div>
     </div>
-  </header>
-
-  <div *ngIf="!doctorIdActual && !cargando" class="estado-vacio">
-    <p>👈 Selecciona un especialista de la lista para ver su agenda.</p>
   </div>
 
-  <div *ngIf="cargando" class="estado-vacio">
+  <!-- SIN DOCTOR SELECCIONADO -->
+  <div *ngIf="!doctorIdActual && !cargando" class="estado-placeholder">
+    <div class="icono-placeholder"><i class="fas fa-hand-pointer"></i></div>
+    <p>Selecciona un especialista de la lista para ver su agenda.</p>
+  </div>
+
+  <!-- CARGANDO -->
+  <div *ngIf="cargando" class="estado-placeholder">
     <div class="spinner"></div>
     <p>Calculando disponibilidad...</p>
   </div>
 
-  <div *ngIf="!cargando && doctorIdActual && bloques.length === 0" class="estado-vacio inactivo">
-    <p>🏖️ {{ mensajeBackend || 'No hay horarios configurados para este día.' }}</p>
+  <!-- SIN HORARIO -->
+  <div *ngIf="!cargando && doctorIdActual && bloques.length === 0" class="estado-placeholder sin-horario">
+    <div class="icono-placeholder"><i class="fas fa-calendar-check"></i></div>
+    <p>{{ mensajeBackend || 'No hay horarios configurados para este dia.' }}</p>
   </div>
 
+  <!-- TIMELINE DE BLOQUES -->
   <div *ngIf="!cargando && bloques.length > 0" class="timeline">
     
-    <div *ngFor="let bloque of bloques" 
+    <div *ngFor="let bloque of bloques; let i = index" 
          class="bloque-turno" 
-         [ngClass]="{'disponible': bloque.estado === 'disponible', 'ocupado': bloque.estado === 'ocupado'}">
+         [ngClass]="{'disponible': bloque.estado === 'disponible', 'ocupado': bloque.estado === 'ocupado'}"
+         [style.animation-delay]="(i * 50) + 'ms'">
       
+      <div class="indicador-estado">
+        <span class="punto" [ngClass]="bloque.estado"></span>
+      </div>
+
       <div class="hora-col">
-        <span class="hora">{{ bloque.inicio }}</span>
-        <span class="hasta">a</span>
-        <span class="hora">{{ bloque.fin }}</span>
+        <span class="hora-inicio">{{ bloque.inicio }}</span>
+        <span class="hora-separador">a</span>
+        <span class="hora-fin">{{ bloque.fin }}</span>
       </div>
 
       <div class="info-col">
         
         <ng-container *ngIf="bloque.estado === 'disponible'">
-          <h4>✨ Espacio Disponible</h4>
-          <button class="btn-agendar" (click)="seleccionarBloque(bloque)">
-            + Agendar Cita
-          </button>
+          <div class="info-disponible">
+            <h4><i class="fas fa-check-circle"></i> Espacio Disponible</h4>
+            <button class="btn-agendar" (click)="seleccionarBloque(bloque)">
+              <i class="fas fa-plus"></i> Agendar Cita
+            </button>
+          </div>
         </ng-container>
 
         <ng-container *ngIf="bloque.estado === 'ocupado'">
-          <h4>{{ bloque.titulo }}</h4>
-          <p class="detalles-cita">{{ bloque.detalles }}</p>
-          <button class="btn-reagendar" (click)="abrirReagendarCita(bloque)">
-            🔄 Reagendar
-          </button>
+          <div class="info-ocupado">
+            <h4>{{ bloque.titulo }}</h4>
+            <p class="detalles-cita" *ngIf="bloque.detalles">{{ bloque.detalles }}</p>
+            <button class="btn-reagendar" (click)="abrirReagendarCita(bloque)">
+              <i class="fas fa-calendar-day"></i> Reagendar
+            </button>
+          </div>
         </ng-container>
 
       </div>
@@ -59,6 +80,7 @@
 
   </div>
 
+  <!-- MODALES -->
   <app-agendar-cita 
     *ngIf="mostrarModalAgendar" 
     [datosPreconfigurados]="datosParaModal"

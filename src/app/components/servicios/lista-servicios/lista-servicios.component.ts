@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ServiciosService } from 'src/app/services/servicios.service';
-import { CategoriasService } from 'src/app/services/categorias.service';
 import { SwalService } from 'src/app/services/swal.service';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '../../modal/modal.component';
@@ -10,55 +9,36 @@ import { FormServicioComponent } from "../form-servicio/form-servicio.component"
 @Component({
   selector: 'app-lista-servicios',
   standalone: true,
-  imports: [CommonModule, FormsModule, ModalComponent, FormsModule, FormServicioComponent],
+  imports: [CommonModule, FormsModule, ModalComponent, FormServicioComponent],
   templateUrl: './lista-servicios.component.html',
   styleUrls: ['./lista-servicios.component.scss']
 })
 export class ListaServiciosComponent implements OnInit {
   servicios: any[] = [];
   serviciosFiltrados: any[] = [];
-  categoriasDisponibles: any[] = [];
 
   isModalVisible: boolean = false;
   esEdicion: boolean = false;
   servicioSeleccionado: any = null;
 
-  // Variables para filtros
-  filtroEstado: string = 'todos'; // 'activos', 'inactivos', 'todos'
-  filtroCategoria: string = '';
+  filtroEstado: string = 'todos';
   buscarTexto: string = '';
 
-  // Estadísticas
   totalServicios: number = 0;
   serviciosActivos: number = 0;
   serviciosInactivos: number = 0;
 
   constructor(
     private serviciosService: ServiciosService,
-    private categoriasService: CategoriasService,
     private swalService: SwalService
   ) { }
 
   ngOnInit(): void {
-    this.cargarCategorias();
     this.cargarServicios();
   }
 
-  cargarCategorias(): void {
-    this.categoriasService.obtenerCategorias(true).subscribe({
-      next: (response: any) => {
-        if (response.success) {
-          this.categoriasDisponibles = response.data;
-        }
-      },
-      error: (error) => {
-        console.error('Error al cargar categorías:', error);
-      }
-    });
-  }
-
   cargarServicios(): void {
-    this.serviciosService.obtenerServicios(undefined, 'true', 'true').subscribe({
+    this.serviciosService.obtenerServicios('true', 'true').subscribe({
       next: (response: any) => {
         if (response.success) {
           this.servicios = response.data;
@@ -68,7 +48,7 @@ export class ListaServiciosComponent implements OnInit {
           this.swalService.error('Error al cargar servicios', response.message);
         }
       },
-      error: (error) => {
+      error: () => {
         this.swalService.error('Error', 'No se pudo cargar la lista de servicios.');
       }
     });
@@ -83,39 +63,22 @@ export class ListaServiciosComponent implements OnInit {
   aplicarFiltros(): void {
     let filtrados = [...this.servicios];
 
-    // Filtrar por estado
     if (this.filtroEstado === 'activos') {
       filtrados = filtrados.filter(s => s.activo === true);
     } else if (this.filtroEstado === 'inactivos') {
       filtrados = filtrados.filter(s => s.activo === false);
     }
 
-    // Filtrar por categoría
-    if (this.filtroCategoria) {
-      filtrados = filtrados.filter(s => s.categoria?._id === this.filtroCategoria);
-    }
-
-    // Filtrar por texto de búsqueda
     if (this.buscarTexto.trim() !== '') {
       const texto = this.buscarTexto.toLowerCase();
       filtrados = filtrados.filter(s =>
         s.nombre.toLowerCase().includes(texto) ||
-        (s.descripcionCorta && s.descripcionCorta.toLowerCase().includes(texto)) ||
-        (s.categoria?.nombre && s.categoria.nombre.toLowerCase().includes(texto))
+        (s.descripcionCorta && s.descripcionCorta.toLowerCase().includes(texto))
       );
     }
 
-    // Ordenar por categoría, orden y nombre
     filtrados.sort((a, b) => {
-      // Primero por categoría
-      const catA = a.categoria?.nombre || '';
-      const catB = b.categoria?.nombre || '';
-      if (catA !== catB) return catA.localeCompare(catB);
-
-      // Luego por orden
       if (a.orden !== b.orden) return a.orden - b.orden;
-
-      // Finalmente por nombre
       return a.nombre.localeCompare(b.nombre);
     });
 
@@ -126,17 +89,12 @@ export class ListaServiciosComponent implements OnInit {
     this.aplicarFiltros();
   }
 
-  onFiltroCategoriaChange(): void {
-    this.aplicarFiltros();
-  }
-
   onBuscarChange(): void {
     this.aplicarFiltros();
   }
 
   limpiarFiltros(): void {
     this.filtroEstado = 'todos';
-    this.filtroCategoria = '';
     this.buscarTexto = '';
     this.aplicarFiltros();
   }
@@ -153,7 +111,7 @@ export class ListaServiciosComponent implements OnInit {
 
   editarServicio(servicio: any): void {
     if (!servicio._id) {
-      this.swalService.error('Error', 'El servicio seleccionado no tiene ID válido.');
+      this.swalService.error('Error', 'El servicio seleccionado no tiene ID valido.');
       return;
     }
 
@@ -165,12 +123,12 @@ export class ListaServiciosComponent implements OnInit {
       costoPaquete: servicio.costoPaquete,
       tieneSesiones: servicio.tieneSesiones || false,
       sesiones: servicio.sesiones || { numero: 1, descripcion: '' },
-      categoria: servicio.categoria?._id || servicio.categoria,
       descripcionCorta: servicio.descripcionCorta || '',
       beneficios: servicio.beneficios || [],
       activo: servicio.activo !== undefined ? servicio.activo : true,
       orden: servicio.orden || 0,
-      faqs: servicio.faqs || []
+      faqs: servicio.faqs || [],
+      preciosPorSucursal: servicio.preciosPorSucursal || []
     };
 
     this.esEdicion = true;
@@ -187,12 +145,12 @@ export class ListaServiciosComponent implements OnInit {
         costoPaquete: servicio.costoPaquete,
         tieneSesiones: servicio.tieneSesiones,
         sesiones: servicio.sesiones,
-        categoria: servicio.categoria,
         descripcionCorta: servicio.descripcionCorta,
         beneficios: servicio.beneficios,
         activo: servicio.activo,
         orden: servicio.orden,
-        faqs: servicio.faqs
+        faqs: servicio.faqs,
+        preciosPorSucursal: servicio.preciosPorSucursal
       };
 
       this.serviciosService.actualizarServicio(servicioId, datosParaActualizar).subscribe({
@@ -205,8 +163,7 @@ export class ListaServiciosComponent implements OnInit {
             this.swalService.error('Error', response.message);
           }
         },
-        error: (error) => {
-          console.error('Error en actualización:', error);
+        error: () => {
           this.swalService.error('Error', 'No se pudo actualizar el servicio.');
         }
       });
@@ -218,12 +175,12 @@ export class ListaServiciosComponent implements OnInit {
         costoPaquete: servicio.costoPaquete,
         tieneSesiones: servicio.tieneSesiones,
         sesiones: servicio.sesiones,
-        categoria: servicio.categoria,
         descripcionCorta: servicio.descripcionCorta,
         beneficios: servicio.beneficios,
         activo: servicio.activo,
         orden: servicio.orden,
-        faqs: servicio.faqs
+        faqs: servicio.faqs,
+        preciosPorSucursal: servicio.preciosPorSucursal
       };
 
       this.serviciosService.crearServicio(datosParaCrear).subscribe({
@@ -236,8 +193,7 @@ export class ListaServiciosComponent implements OnInit {
             this.swalService.error('Error', response.message);
           }
         },
-        error: (error) => {
-          console.error('Error en creación:', error);
+        error: () => {
           this.swalService.error('Error', 'No se pudo crear el servicio.');
         }
       });
@@ -246,9 +202,9 @@ export class ListaServiciosComponent implements OnInit {
 
   desactivarServicio(id: string, nombre: string): void {
     this.swalService.confirm(
-      '¿Desactivar servicio?',
-      `El servicio "${nombre}" quedará inactivo y no se mostrará en la página. Podrás reactivarlo después.`,
-      'Sí, desactivar',
+      'Desactivar servicio?',
+      `El servicio "${nombre}" quedara inactivo y no se mostrara en la pagina. Podras reactivarlo despues.`,
+      'Si, desactivar',
       'Cancelar'
     ).then((confirmed) => {
       if (confirmed) {
@@ -261,8 +217,7 @@ export class ListaServiciosComponent implements OnInit {
               this.swalService.error('Error', response.message);
             }
           },
-          error: (error) => {
-            console.error('Error al desactivar:', error);
+          error: () => {
             this.swalService.error('Error', 'No se pudo desactivar el servicio.');
           }
         });
@@ -273,8 +228,8 @@ export class ListaServiciosComponent implements OnInit {
   inicializarServicios(): void {
     this.swalService.confirm(
       'Importar Servicios Iniciales',
-      '¿Deseas importar los servicios por defecto? Esto agregará servicios de ejemplo para todas las categorías disponibles.',
-      'Sí, importar',
+      'Deseas importar los servicios por defecto de Clinica del Pie?',
+      'Si, importar',
       'Cancelar'
     ).then((confirmed) => {
       if (confirmed) {
@@ -287,7 +242,7 @@ export class ListaServiciosComponent implements OnInit {
               this.swalService.error('Error', response.message);
             }
           },
-          error: (error) => {
+          error: () => {
             this.swalService.error('Error', 'No se pudieron importar los servicios iniciales.');
           }
         });
@@ -296,7 +251,7 @@ export class ListaServiciosComponent implements OnInit {
   }
 
   reactivarServicio(id: string): void {
-    this.swalService.confirm('Reactivar', '¿Deseas reactivar este servicio?').then((confirmed) => {
+    this.swalService.confirm('Reactivar', 'Deseas reactivar este servicio?').then((confirmed) => {
       if (confirmed) {
         const datos = { activo: true };
         this.serviciosService.actualizarServicio(id, datos).subscribe({
@@ -308,7 +263,7 @@ export class ListaServiciosComponent implements OnInit {
               this.swalService.error('Error', response.message);
             }
           },
-          error: (error) => {
+          error: () => {
             this.swalService.error('Error', 'No se pudo reactivar el servicio.');
           }
         });
@@ -318,9 +273,9 @@ export class ListaServiciosComponent implements OnInit {
 
   eliminarPermanentemente(id: string, nombre: string): void {
     this.swalService.confirm(
-      '¿Eliminar permanentemente?',
-      `Esta acción eliminará para siempre el servicio "${nombre}". No podrás recuperarlo.`,
-      'Sí, eliminar definitivamente',
+      'Eliminar permanentemente?',
+      `Esta accion eliminara para siempre el servicio "${nombre}". No podras recuperarlo.`,
+      'Si, eliminar definitivamente',
       'Cancelar'
     ).then((confirmed) => {
       if (confirmed) {
@@ -333,12 +288,21 @@ export class ListaServiciosComponent implements OnInit {
               this.swalService.error('Error', response.message);
             }
           },
-          error: (error) => {
-            console.error('Error al eliminar permanentemente:', error);
+          error: () => {
             this.swalService.error('Error', 'No se pudo eliminar el servicio.');
           }
         });
       }
     });
+  }
+
+  // Obtener nombres de sucursales para mostrar en la tabla
+  getSucursalesPrecios(servicio: any): string {
+    if (!servicio.preciosPorSucursal || servicio.preciosPorSucursal.length === 0) {
+      return 'Precio base';
+    }
+    return servicio.preciosPorSucursal
+      .map((p: any) => `${p.sucursal?.nombre || 'N/A'}: $${p.costo}`)
+      .join(' | ');
   }
 }

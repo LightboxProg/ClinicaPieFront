@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CalendarioService } from 'src/app/services/calendario.service';
 import { ServiciosService } from 'src/app/services/servicios.service';
-import { PromocionService, Promocion } from 'src/app/services/promocion.service';
 import { PacientesService } from 'src/app/services/pacientes.service';
 import { ServicioContratadoService } from 'src/app/services/servicio-contratado.service';
 
@@ -25,7 +24,6 @@ export class AgendarCitaComponent implements OnInit {
   cargando = false;
 
   servicios: any[] = [];
-  promociones: Promocion[] = [];
   serviciosContratadosPaciente: any[] = [];
 
   itemsList: any[] = [];
@@ -43,13 +41,11 @@ export class AgendarCitaComponent implements OnInit {
   horaMinimaPermitida: string = '';
   horaMaximaPermitida: string = '';
   doctoresDisponibles: any[] = [];
-  promocionesDisponibles: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private calendarioService: CalendarioService,
     private serviciosService: ServiciosService,
-    private promocionService: PromocionService,
     private pacientesService: PacientesService,
     private servicioContratadoService: ServicioContratadoService,
     private cdr: ChangeDetectorRef
@@ -64,7 +60,6 @@ export class AgendarCitaComponent implements OnInit {
       fechaCita: ['', Validators.required],
       horaInicio: ['', Validators.required],
       observaciones: [''],
-      promocionId: [''],
       pago: [0, [Validators.min(0)]]
     });
   }
@@ -92,25 +87,6 @@ export class AgendarCitaComponent implements OnInit {
       this.citaForm.get('itemId')?.setValue('');
       this.actualizarItemsListPorTipo();
     });
-
-    this.citaForm.get('itemId')?.valueChanges.subscribe(itemId => {
-      this.citaForm.patchValue({ promocionId: '' });
-      this.promocionesDisponibles = [];
-      if (itemId && this.citaForm.get('itemTipo')?.value === 'srv') {
-        this.cargarPromocionesParaServicio(itemId);
-      }
-    });
-  }
-
-
-  cargarPromocionesParaServicio(servicioId: string): void {
-    this.promocionService.obtenerPromocionesParaServicio(servicioId, undefined)
-      .subscribe({
-        next: (res: any) => {
-          this.promocionesDisponibles = res.data || [];
-        },
-        error: (err) => console.error('Error al cargar promociones', err)
-      });
   }
 
   // Obtiene la lista de servicios y promociones disponibles desde el backend
@@ -324,8 +300,7 @@ export class AgendarCitaComponent implements OnInit {
       fechaCita: formValues.fechaCita,
       horaInicio: formValues.horaInicio,
       observaciones: formValues.observaciones,
-      pago: formValues.pago,
-      promocionId: formValues.promocionId || null
+      pago: formValues.pago
     };
 
     this.calendarioService.agendarCita(payload).subscribe({

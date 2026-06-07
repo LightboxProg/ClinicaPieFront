@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// 🌟 Importamos los dos componentes que ya creamos
+// Importamos los componentes de citas
 import { CalendarioCompletoComponent } from 'src/app/components/citas/calendario-completo/calendario-completo.component';
 import { CalendarioDoctorComponent } from 'src/app/components/citas/calendario-doctor/calendario-doctor.component';
 import { AgendaSucursalesComponent } from 'src/app/components/citas/agenda-sucursales/agenda-sucursales.component';
@@ -21,7 +21,6 @@ export class CalendarioPageComponent implements OnInit {
   doctorIdSeleccionado: string = '';
   sucursalIdSeleccionada: string = '';
 
-  // 🌟 Ahora iniciamos el arreglo vacío
   doctores: any[] = [];
   sucursales: any[] = [];
 
@@ -35,21 +34,29 @@ export class CalendarioPageComponent implements OnInit {
 
   //  Función que trae los datos reales de Node.js
   cargarDoctores(): void {
+    console.log('[CalendarioPage] Solicitando doctores activos...');
     this.calendarioService.getDoctoresActivos().subscribe({
       next: (data) => {
-        this.doctores = data;
+        console.log('[CalendarioPage] Doctores recibidos:', data);
+        this.doctores = data || [];
       },
       error: (err) => {
-        console.error('No se pudieron cargar los doctores', err);
+        console.error('[CalendarioPage] Error al cargar doctores:', err);
+        this.doctores = [];
       }
     });
   }
-cargarSucursales(): void {
+  cargarSucursales(): void {
+    console.log('[CalendarioPage] Solicitando sucursales...');
     this.sucursalesService.obtenerSucursales().subscribe({
       next: (res) => {
-        this.sucursales = res.data || res;
+        console.log('[CalendarioPage] Sucursales recibidas:', res);
+        this.sucursales = res.data || res || [];
       },
-      error: (err) => console.error('Error al cargar sucursales', err)
+      error: (err) => {
+        console.error('[CalendarioPage] Error al cargar sucursales:', err);
+        this.sucursales = [];
+      }
     });
   }
 

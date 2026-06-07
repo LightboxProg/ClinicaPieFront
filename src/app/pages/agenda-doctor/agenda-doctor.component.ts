@@ -23,6 +23,7 @@ interface Horario {
   eventos: EventoAgenda[];
   esCitaExistente: boolean;
   esPrimerBloqueEvento?: boolean;
+  esUltimoBloqueEvento?: boolean;
   textoMostrar?: string;
   colorEvento?: string;
 }
@@ -296,11 +297,17 @@ export class AgendaDoctorComponent implements OnInit {
 
             if (i === 0) {
               horario.esPrimerBloqueEvento = true;
+              const horaRango = `${slot.hora_inicio} - ${slot.hora_fin}`;
+              const desc = slot.descripcion || 'Cita';
               horario.textoMostrar = this.esVistaGeneral
-                ? `Dr. ${slot.doctor || ''}`
-                : (slot.descripcion || 'Cita');
+                ? `${horaRango}: ${desc} (Dr. ${slot.doctor || ''})`
+                : `${horaRango}: ${desc}`;
             } else {
               horario.textoMostrar = '';
+            }
+
+            if (i === blocks - 1) {
+              horario.esUltimoBloqueEvento = true;
             }
           }
         }

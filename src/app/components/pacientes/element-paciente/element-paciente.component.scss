@@ -1,50 +1,44 @@
-// Variables optimizadas
-$primary-color: #ffb400 ;
-$secondary-color: #00a699;
-$border-radius: 12px;
+@use 'src/design-system' as *;
 
 .list-element {
   display: flex;
-  margin: 12px 16px;
-  border-radius: $border-radius;
+  margin: 10px 16px;
+  border-radius: $border-radius-base;
   background: white;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border: 2px solid #d0d0d0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba($color-border, 0.6);
   position: relative;
   overflow: hidden;
-  animation: slideIn 0.4s ease-out;
+  transition: all $transition-base;
+  animation: slideIn 0.3s ease-out;
   
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 3px;
     height: 100%;
-    background: linear-gradient(to bottom, $primary-color, $secondary-color);
+    background: linear-gradient(to bottom, $color-primary, $color-accent);
   }
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-    border-color: #b0b0b0;
-  }
-  
-  &:nth-child(even) {
-    background: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    border-color: rgba($color-primary, 0.3);
   }
 }
 
 .list-info {
   flex: 1;
-  padding: 16px;
+  padding: 1.25rem;
   cursor: pointer;
 }
 
 .paciente-card {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
+  align-items: center;
+  gap: 1.25rem;
 }
 
 .paciente-avatar {
@@ -52,11 +46,12 @@ $border-radius: 12px;
   flex-shrink: 0;
   
   img {
-    width: 64px;
-    height: 64px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #e8ecef;
+    border: 2px solid rgba($color-border, 0.8);
+    background-color: $color-surface-secondary;
   }
 }
 
@@ -64,66 +59,59 @@ $border-radius: 12px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 p {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   line-height: 1.4;
-  color: #333;
+  color: $color-text-secondary;
   
   strong {
     font-weight: 600;
-    font-family: 'Montserrat', sans-serif;
-    color: #001;
+    color: $color-text-primary;
   }
 }
 
 .list-options {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 16px;
-  background: #f8f9fa;
-  border-left: 1px solid #e8ecef;
-  min-width: 120px;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.01);
+  border-left: 1px solid rgba($color-border, 0.5);
+  min-width: 140px;
 }
 
 button {
-  padding: 8px 12px;
-  border: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
   border-radius: 8px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
   font-size: 0.8rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   transition: all 0.2s ease;
   
   &:hover {
     transform: translateY(-1px);
   }
   
-  &:first-child {
-    background: $secondary-color;
-    color: white;
-    
-    &:hover {
-      background: darken($secondary-color, 10%);
-    }
-  }
-  
   &.Lista-negra {
-    background: #dc3545;
-    color: white;
+    background: rgba($color-error, 0.08);
+    border-color: rgba($color-error, 0.15);
+    color: $color-error;
     
     &:hover {
-      background: darken(#dc3545, 10%);
+      background: $color-error;
+      color: white;
+      box-shadow: 0 4px 10px rgba($color-error, 0.25);
     }
     
     svg {
@@ -135,95 +123,36 @@ button {
 }
 
 .finado {
-  background: #2d3748 !important;
-  color: white !important;
+  background: #f3f4f6 !important;
+  opacity: 0.7;
   
-  * {
-    color: white !important;
+  p, strong {
+    color: #9ca3af !important;
   }
   
   .paciente-avatar img {
-    border-color: rgba(255, 255, 255, 0.3);
-    filter: grayscale(0.3);
+    border-color: #d1d5db;
+    filter: grayscale(1);
   }
 }
 
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(-10px);
+    transform: translateY(5px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
-/* Responsive optimizado */
-@media screen and (max-width: 920px) {
-  .list-element {
-    margin: 10px 12px;
-  }
-  
-  .paciente-card {
-    gap: 12px;
-  }
-  
-  .paciente-avatar img {
-    width: 56px;
-    height: 56px;
-  }
-  
-  .list-options {
-    min-width: 100px;
-    padding: 12px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .list-element {
-    flex-direction: column;
-    margin: 8px;
-  }
-  
-  .list-options {
-    width: 100%;
-    flex-direction: row;
-    border-left: none;
-    border-top: 1px solid #e8ecef;
-    padding: 12px;
-    gap: 6px;
-  }
-  
-  button {
-    flex: 1;
-    padding: 10px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .paciente-card {
-    flex-direction: column;
-    text-align: center;
-    gap: 8px;
-  }
-  
-  .paciente-avatar img {
-    width: 48px;
-    height: 48px;
-  }
-  
-  p {
-    font-size: 0.85rem;
-  }
-}
-
-/* Modal optimizado */
+/* Modal Rediseñado */
 .blacklist-form.clean-theme {
   background: white;
-  border-radius: 12px;
+  border-radius: $border-radius-xl;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: $shadow-xl;
   max-width: 450px;
   margin: 0 auto;
 
@@ -231,58 +160,65 @@ button {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: #ffebee;
-    padding: 20px;
-    border-bottom: 1px solid #f44336;
+    background: rgba($color-error, 0.06);
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba($color-error, 0.15);
     
     .icon-alert {
-      color: #d32f2f;
-      font-size: 2rem;
+      color: $color-error;
+      font-size: 2.2rem;
     }
     
     h2 {
       margin: 0 0 4px 0;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #b71c1c;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: $color-error;
     }
     
     p {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      color: #5f5f5f;
+      font-size: 0.85rem;
+      color: $color-text-secondary;
     }
   }
 
   .form-body {
-    padding: 20px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     
     .form-group {
-      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
       
       label {
         display: block;
-        margin-bottom: 4px;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 500;
-        font-size: 0.9rem;
-        color: #333;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: $color-text-primary;
       }
       
       input, textarea, select {
         width: 100%;
-        padding: 10px 12px;
+        padding: 0.75rem 1rem;
         font-family: 'Inter', sans-serif;
-        font-size: 0.95rem;
-        border: 2px solid #ddd;
-        border-radius: 6px;
+        font-size: 0.9rem;
+        border: 1px solid rgba($color-border, 0.8);
+        border-radius: 8px;
         background: white;
+        color: $color-text-primary;
+        transition: all 0.2s ease;
         
         &:focus {
           outline: none;
-          border-color: $primary-color;
+          border-color: $color-primary;
+          box-shadow: 0 0 0 3px rgba($color-primary, 0.12);
         }
       }
       
@@ -296,44 +232,43 @@ button {
   .form-footer {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
-    padding: 16px 20px;
-    border-top: 1px solid #e8ecef;
-    background: #f8f9fa;
+    gap: 10px;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid rgba($color-border, 0.5);
+    background: $color-surface-secondary;
     
     .btn-primary, .btn-secondary {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Inter', sans-serif;
       font-size: 0.9rem;
-      font-weight: 500;
-      padding: 10px 16px;
-      border-radius: 6px;
+      font-weight: 600;
+      padding: 0.625rem 1.25rem;
+      border-radius: 8px;
       cursor: pointer;
-      border: 2px solid transparent;
-      transition: background-color 0.2s ease;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
     }
     
     .btn-primary {
-      background: #dc3545;
+      background: $color-error;
       color: white;
-      border-color: rgba(220, 53, 69, 0.5);
       
       &:hover {
-        background: darken(#dc3545, 10%);
-        border-color: #dc3545;
+        background: darken($color-error, 6%);
+        box-shadow: 0 4px 12px rgba($color-error, 0.25);
       }
     }
     
     .btn-secondary {
-      background: #6c757d;
-      color: white;
-      border-color: rgba(108, 117, 125, 0.5);
+      background: white;
+      border-color: rgba($color-border, 0.8);
+      color: $color-text-secondary;
       
       &:hover {
-        background: darken(#6c757d, 10%);
-        border-color: #6c757d;
+        background: $color-surface-secondary;
+        color: $color-text-primary;
       }
     }
   }
@@ -347,28 +282,28 @@ button {
   line-height: 1;
 }
 
-/* Responsive del modal */
-@media screen and (max-width: 600px) {
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .list-element {
+    flex-direction: column;
+    margin: 8px;
+  }
+  
+  .list-options {
+    width: 100%;
+    flex-direction: row;
+    border-left: none;
+    border-top: 1px solid rgba($color-border, 0.5);
+    padding: 12px;
+    gap: 6px;
+  }
+  
+  button {
+    flex: 1;
+    padding: 10px;
+  }
+  
   .blacklist-form.clean-theme {
-    margin: 0 12px;
-    
-    .modal-banner {
-      padding: 16px;
-      gap: 8px;
-      
-      h2 {
-        font-size: 1.1rem;
-      }
-      
-      p {
-        font-size: 0.85rem;
-      }
-    }
-    
-    .form-body {
-      padding: 16px;
-    }
-    
     .form-footer {
       flex-direction: column;
       gap: 8px;

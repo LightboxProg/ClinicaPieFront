@@ -1,68 +1,102 @@
 <div class="contenedor-calendario">
-  
-  <header class="cabecera">
-    <h2>Agenda General de Especialistas</h2>
-    
+
+  <!-- BARRA DE FILTROS -->
+  <div class="barra-filtros">
+    <div class="filtros-izq">
+      <h2>Agenda General</h2>
+      <span class="badge-total" *ngIf="!cargandoEventos">
+        {{ eventos.length }} {{ eventos.length === 1 ? 'evento' : 'eventos' }}
+      </span>
+    </div>
+
     <div class="filtros-fecha">
-      <div class="campo-fecha">
-        <label>Desde:</label>
-        <input type="date" [(ngModel)]="fechaInicio" (change)="cargarTodosLosEventos()">
+      <div class="grupo-fecha">
+        <label for="fecha-desde">Desde</label>
+        <input id="fecha-desde" type="date" [(ngModel)]="fechaInicio" (change)="cargarTodosLosEventos()">
       </div>
-      <span class="separador">-</span>
-      <div class="campo-fecha">
-        <label>Hasta:</label>
-        <input type="date" [(ngModel)]="fechaFin" (change)="cargarTodosLosEventos()">
+      <span class="separador-fecha">
+        <i class="fas fa-arrow-right"></i>
+      </span>
+      <div class="grupo-fecha">
+        <label for="fecha-hasta">Hasta</label>
+        <input id="fecha-hasta" type="date" [(ngModel)]="fechaFin" (change)="cargarTodosLosEventos()">
       </div>
-      <button (click)="cargarTodosLosEventos()" class="btn-recargar">
-        Recargar
+      <button class="btn-recargar" (click)="cargarTodosLosEventos()" title="Recargar eventos">
+        <i class="fas fa-sync-alt"></i>
       </button>
     </div>
-  </header>
-
-  <div *ngIf="cargandoEventos" class="estado-mensaje cargando">
-    <div class="spinner"></div>
-    <p>Conectando con Google Calendar...</p>
   </div>
 
-  <div *ngIf="!cargandoEventos && eventos.length === 0" class="estado-mensaje vacio">
-    <p>No hay eventos programados en este rango de fechas.</p>
+  <!-- ESTADO: CARGANDO -->
+  <div *ngIf="cargandoEventos" class="estado-central">
+    <div class="spinner-grande"></div>
+    <h3>Consultando calendarios...</h3>
+    <p>Conectando con Google Calendar para obtener las citas.</p>
   </div>
 
+  <!-- ESTADO: SIN EVENTOS -->
+  <div *ngIf="!cargandoEventos && eventos.length === 0" class="estado-central vacio">
+    <div class="icono-estado">
+      <i class="fas fa-calendar-times"></i>
+    </div>
+    <h3>Sin eventos programados</h3>
+    <p>No se encontraron citas en el rango seleccionado.<br>Verifica las fechas o agenda una nueva cita desde la pestana de Sucursales.</p>
+  </div>
+
+  <!-- LISTADO DE EVENTOS -->
   <div *ngIf="!cargandoEventos && eventos.length > 0" class="grid-eventos">
     
-    <div *ngFor="let evento of eventos" class="tarjeta-evento">
+    <div *ngFor="let evento of eventos; let i = index"
+         class="tarjeta-evento"
+         [style.animation-delay]="(i * 40) + 'ms'">
       
-      <div class="barra-color" [ngClass]="{'paciente': evento.colorId === '2', 'lead': evento.colorId === '5'}"></div>
+      <div class="barra-lateral"
+           [ngClass]="{
+             'paciente': evento.colorId === '2',
+             'lead': evento.colorId === '5',
+             'general': !evento.colorId || (evento.colorId !== '2' && evento.colorId !== '5')
+           }">
+      </div>
       
-      <div class="contenido-evento">
-        <h3 class="titulo">{{ evento.summary || 'Cita Programada' }}</h3>
+      <div class="cuerpo-evento">
+        <div class="fila-superior">
+          <h3 class="titulo-evento">{{ evento.summary || 'Cita Programada' }}</h3>
+          <span class="chip-doctor" *ngIf="evento.doctorNombre">
+            <i class="fas fa-user-md"></i> {{ evento.doctorNombre }}
+          </span>
+        </div>
         
-        <div class="detalles">
-          <p class="fecha">
-            <strong>Inicio:</strong> {{ evento.start?.dateTime | date:'medium' }}
-          </p>
-          <p class="fecha">
-            <strong>Fin:</strong> {{ evento.end?.dateTime | date:'shortTime' }}
-          </p>
+        <div class="fila-horario">
+          <div class="bloque-hora">
+            <i class="far fa-clock"></i>
+            <span>{{ evento.start?.dateTime | date:'short' }}</span>
+          </div>
+          <span class="divisor-hora">-</span>
+          <div class="bloque-hora">
+            <span>{{ evento.end?.dateTime | date:'shortTime' }}</span>
+          </div>
         </div>
 
-        <div class="descripcion" *ngIf="evento.description">
-          <p>{{ evento.description }}</p>
+        <p class="descripcion-evento" *ngIf="evento.description">
+          {{ evento.description }}
+        </p>
+
+        <div class="fila-acciones">
+          <button class="btn-accion" (click)="abrirReagendar(evento)">
+            <i class="fas fa-calendar-day"></i> Reagendar
+          </button>
         </div>
-
-        <button class="btn-reagendar-global" (click)="abrirReagendar(evento)">
-          Reagendar
-        </button>
-
       </div>
     </div>
 
-    <app-regendar-citas
-      *ngIf="mostrarModalReagendar"
-      [citaOriginal]="citaParaReagendar"
-      (cerrarModal)="mostrarModalReagendar = false"
-      (citaReagendada)="cargarTodosLosEventos()">
-    </app-regendar-citas>
-    
   </div>
+
+  <!-- MODAL REAGENDAR -->
+  <app-regendar-citas
+    *ngIf="mostrarModalReagendar"
+    [citaOriginal]="citaParaReagendar"
+    (cerrarModal)="mostrarModalReagendar = false"
+    (citaReagendada)="cargarTodosLosEventos()">
+  </app-regendar-citas>
+    
 </div>

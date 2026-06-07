@@ -25,9 +25,12 @@ export class CalendarioCompletoComponent implements OnInit {
   mostrarModalReagendar: boolean = false;
   citaParaReagendar: any = null;
 
-  constructor(private calendarioService: CalendarioService) {}
+  constructor(private calendarioService: CalendarioService) {
+    console.log('[CalendarioCompleto] Constructor ejecutado.');
+  }
 
   ngOnInit(): void {
+    console.log('[CalendarioCompleto] ngOnInit inicializado.');
     // 1. Configuramos por defecto la fecha de HOY
     const hoy = new Date();
     this.fechaInicio = this.formatearFecha(hoy);
@@ -36,6 +39,8 @@ export class CalendarioCompletoComponent implements OnInit {
     const fin = new Date();
     fin.setDate(fin.getDate() + 7); 
     this.fechaFin = this.formatearFecha(fin);
+
+    console.log('[CalendarioCompleto] Fechas por defecto:', this.fechaInicio, 'a', this.fechaFin);
 
     // 3. Cargamos los eventos con esas fechas iniciales
     this.cargarTodosLosEventos();
@@ -50,20 +55,25 @@ export class CalendarioCompletoComponent implements OnInit {
   }
 
   cargarTodosLosEventos(): void {
+    console.log('[CalendarioCompleto] cargando todos los eventos...');
     this.cargandoEventos = true;
 
     // Convertimos a formato ISO de inicio de día y fin de día para Google
     const timeMinISO = this.fechaInicio ? `${this.fechaInicio}T00:00:00-06:00` : undefined;
     const timeMaxISO = this.fechaFin ? `${this.fechaFin}T23:59:59-06:00` : undefined;
 
+    console.log('[CalendarioCompleto] Invocando servicio con parámetros ISO:', timeMinISO, timeMaxISO);
+
     // Mandamos las fechas al servicio
     this.calendarioService.getAllUsersEvents(timeMinISO, timeMaxISO).subscribe({
       next: (respuesta: any) => {
+        console.log('[CalendarioCompleto] Respuesta recibida de eventos:', respuesta);
         this.eventos = respuesta.data || []; 
         this.cargandoEventos = false;
+        console.log('[CalendarioCompleto] Carga de eventos finalizada. Cantidad:', this.eventos.length);
       },
       error: (error: any) => {
-        console.error('Error al traer los eventos:', error);
+        console.error('[CalendarioCompleto] Error al traer los eventos:', error);
         this.cargandoEventos = false;
       }
     });

@@ -192,9 +192,6 @@
             <button class="btn-new-service" (click)="abrirModalContratarServicio()" *ngIf="!paciente?.finado && (esAdmin || esRecepcionista)">
               <i class="fas fa-plus"></i> Contratar Servicio
             </button>
-            <button class="btn-new-promotion" (click)="abrirModalContratarPromocion()" *ngIf="!paciente?.finado && (esAdmin || esRecepcionista)">
-              <i class="fas fa-tags"></i> Contratar Promo
-            </button>
             <button class="btn-delete-all" (click)="eliminarTodosServiciosContratados()"
               *ngIf="serviciosContratados.length > 0 && !paciente?.finado && (esAdmin || esRecepcionista)"
               [disabled]="serviciosContratados.length === 0">
@@ -326,60 +323,7 @@
         </ng-template>
       </div>
 
-      <div class="modal-overlay" *ngIf="mostrarModalPromocion" (click)="mostrarModalPromocion = false">
-        <div class="modal-content modal-large" (click)="$event.stopPropagation()">
-          <div class="modal-header">
-            <h3>Contratar Promoción</h3>
-            <button class="modal-close" (click)="mostrarModalPromocion = false">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
 
-          <div class="modal-body">
-            <div *ngIf="promocionesDisponibles.length === 0" class="empty-state">
-              <i class="fas fa-tags"></i>
-              <p>No hay promociones disponibles en este momento</p>
-            </div>
-
-            <div class="promociones-grid" *ngIf="promocionesDisponibles.length > 0">
-              <div class="promocion-card" *ngFor="let promocion of promocionesDisponibles">
-                <div class="promocion-header">
-                  <h4>{{ promocion.nombre }}</h4>
-                  <span class="promocion-descuento">
-                    {{ promocion.tipoDescuento === 'porcentaje' ? promocion.valorDescuento + '%' : '$' +
-                    promocion.valorDescuento }}
-                  </span>
-                </div>
-                <p class="promocion-descripcion">{{ promocion.descripcion }}</p>
-
-                <div class="servicios-incluidos">
-                  <h5>Servicios incluidos:</h5>
-                  <ul>
-                    <li *ngFor="let item of promocion.servicios">
-                      <strong>{{ item.servicio?.nombre || 'Servicio' }}</strong> – {{ item.sesionesIncluidas }} sesiones
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="alert alert-info">
-                  <i class="fas fa-info-circle"></i> Al contratar esta promoción, los servicios tendrán una fecha de
-                  expiración de 4 meses a partir de hoy.
-                </div>
-
-                <div class="promocion-footer">
-                  <button class="btn-contratar" (click)="contratarPromocion(promocion)">
-                    <i class="fas fa-cart-plus"></i> Contratar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button class="btn-cancel" (click)="mostrarModalPromocion = false">Cerrar</button>
-          </div>
-        </div>
-      </div>
 
 
       <div class="modal-overlay" *ngIf="mostrarModalServicio" (click)="mostrarModalServicio = false">

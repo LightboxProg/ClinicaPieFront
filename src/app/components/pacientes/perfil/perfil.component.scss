@@ -1,51 +1,56 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
+@use 'src/design-system' as *;
 
-// Variables de color optimizadas
-$primary-color: #ffb400 ;
-$secondary-color: #00a699;
-$accent-color: #ffb400;
-$dark-color: #2d2d2d;
-$light-color: #f8f9fa;
-$gray-100: #f8f9fa;
-$gray-200: #e9ecef;
-$gray-300: #dee2e6;
-$gray-400: #ced4da;
+// Variables de color mapeadas al sistema de diseño
+$primary-color: $color-primary;
+$secondary-color: $color-secondary;
+$accent-color: $color-accent;
+$dark-color: $color-text-primary;
+$light-color: $color-background;
+$gray-100: $color-surface-secondary;
+$gray-200: $color-border;
+$gray-300: $color-border-dark;
+$gray-400: $color-disabled;
 $gray-500: #adb5bd;
-$gray-600: #6c757d;
-$gray-700: #495057;
+$gray-600: $color-text-light;
+$gray-700: $color-text-secondary;
 $gray-800: #343a40;
 $gray-900: #212529;
 
-$success-color: #28a745;
-$warning-color: #ffc107;
-$danger-color: #dc3545;
-$info-color: #17a2b8;
+$success-color: $color-success;
+$warning-color: $color-warning;
+$danger-color: $color-error;
+$info-color: $color-info;
 
-$text-dark: #333333;
-$text-med: #6c757d;
-$text-light: #ffffff;
+$text-dark: $color-text-primary;
+$text-med: $color-text-secondary;
+$text-light: $color-surface;
 
-$border-radius: 12px;
-$box-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-$box-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
-$box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+$border-radius: $border-radius-lg;
+$box-shadow-sm: $shadow-sm;
+$box-shadow-md: $shadow-base;
+$box-shadow-lg: $shadow-lg;
 
-$transition-fast: 0.15s ease;
-$transition-base: 0.25s ease;
-$transition-slow: 0.35s ease;
+$transition-fast: $transition-fast;
+$transition-base: $transition-base;
+$transition-slow: $transition-slow;
 
 // Mixins
 @mixin card-base {
-  background: white;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: $border-radius;
-  border: 1px solid $gray-200;
-  box-shadow: $box-shadow-sm;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
   transition:
     transform $transition-fast,
-    box-shadow $transition-fast;
+    box-shadow $transition-fast,
+    border-color $transition-fast;
 
   &:hover {
-    box-shadow: $box-shadow-md;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    border-color: rgba($primary-color, 0.25);
   }
 }
 
@@ -102,14 +107,14 @@ $transition-slow: 0.35s ease;
 
 body {
   font-family: "Montserrat", sans-serif;
-  background: #f5f7fa;
+  background: #F9FAFB;
   color: $text-dark;
   line-height: 1.6;
 }
 
 .patient-profile {
   min-height: 100vh;
-  background: #f5f7fa;
+  background: #F9FAFB;
 }
 
 // Header mejorado
@@ -127,7 +132,7 @@ body {
     left: 0;
     right: 0;
     height: 50px;
-    background: linear-gradient(to bottom, transparent, #f5f7fa);
+    background: linear-gradient(to bottom, transparent, #F9FAFB);
   }
 }
 

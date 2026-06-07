@@ -53,7 +53,9 @@
 
   <!-- Sin resultados de filtro -->
   <div class="empty-state" *ngIf="!cargando && sucursalesFiltradas.length === 0 && sucursales.length > 0">
-    <i class="fas fa-search"></i>
+    <div class="icon-wrapper">
+      <i class="fas fa-search"></i>
+    </div>
     <h3>Sin resultados</h3>
     <p>No hay sucursales que coincidan con tu búsqueda.</p>
     <button (click)="limpiarFiltros()">Limpiar filtros</button>
@@ -61,8 +63,11 @@
 
   <!-- Sin sucursales en absoluto -->
   <div class="empty-state" *ngIf="!cargando && sucursales.length === 0">
-    <i class="fas fa-store-slash"></i>
+    <div class="icon-wrapper">
+      <i class="fas fa-store-slash"></i>
+    </div>
     <h3>No hay sucursales registradas</h3>
+    <p>Comienza agregando tu primera sucursal para administrar las ubicaciones de Clinica del pie.</p>
     <button routerLink="/sucursales-formulario">Registrar la primera</button>
   </div>
 

@@ -93,6 +93,8 @@
             *ngFor="let horario of dia.horarios"
             class="slot"
             [class.cita]="horario.esCitaExistente"
+            [class.primer-bloque]="horario.esPrimerBloqueEvento"
+            [class.ultimo-bloque]="horario.esUltimoBloqueEvento"
             [style.border-left-color]="horario.esCitaExistente ? horario.colorEvento : 'transparent'"
             [style.background-color]="horario.esCitaExistente ? (horario.colorEvento + '22') : ''"
             (click)="verDetalles(horario)"

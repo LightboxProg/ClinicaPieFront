@@ -7,14 +7,11 @@ import { PacientesComponent } from './pages/pacientes/pacientes.component';
 import { authGuard } from './guards/auth.guard';
 import { PacientesListadosComponent } from './pages/pacientes-listados/pacientes-listados.component';
 import { PacienteRegistroComponent } from './components/paciente-registro/paciente-registro.component';
-import { ListaCategoriasComponent } from './components/categorias/lista-categorias/lista-categorias.component';
 import { ListaServiciosComponent } from './components/servicios/lista-servicios/lista-servicios.component';
 import { FormularioSucursalesComponent } from './components/sucursales/formulario-sucursales/formulario-sucursales.component';
 import { RoleRedirectComponent } from './components/role-redirect/role-redirect.component';
 import { AgendaDoctorComponent } from './pages/agenda-doctor/agenda-doctor.component';
 import { ListaSucursalesComponent } from './components/sucursales/lista-sucursales/lista-sucursales.component';
-import { ListaPromocionesComponent } from './components/promociones/lista-promociones/lista-promociones.component';
-import { FormularioPromocionComponent } from './components/promociones/formulario-promocion/formulario-promocion.component';
 import { MensajesMasivosComponent } from './components/mensaje/mensajes-masivos/mensajes-masivos.component';
 import { ChatsComponent } from './components/mensaje/chats/chats.component';
 import { CalendarioPageComponent } from './pages/calendario-page/calendario-page.component';
@@ -66,32 +63,8 @@ export const routes: Routes = [
 
   // Rutas para Administrador y Recepcionista
   {
-    path: "categorias",
-    component: ListaCategoriasComponent,
-    canActivate: [authGuard],
-    data: { roles: ['Administrador', 'Recepcionista'] }
-  },
-  {
     path: "servicios",
     component: ListaServiciosComponent,
-    canActivate: [authGuard],
-    data: { roles: ['Administrador', 'Recepcionista'] }
-  },
-  {
-    path: "promociones",
-    component: ListaPromocionesComponent,
-    canActivate: [authGuard],
-    data: { roles: ['Administrador', 'Recepcionista'] }
-  },
-  {
-    path: "promocion-form",
-    component: FormularioPromocionComponent,
-    canActivate: [authGuard],
-    data: { roles: ['Administrador', 'Recepcionista'] }
-  },
-  {
-    path: "promocion-form/:id",
-    component: FormularioPromocionComponent,
     canActivate: [authGuard],
     data: { roles: ['Administrador', 'Recepcionista'] }
   },

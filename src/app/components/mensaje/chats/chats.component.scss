@@ -1,10 +1,13 @@
-// Variables
-$primary-color: #ff5a5f;
-$dark-color: #2d2d2d;
-$text-med: #666666;
-$border-color: #f0f0f0;
-$bg-main: #f5f7fa;
-$transition: all 0.3s ease;
+@use 'src/design-system' as ds;
+
+// Variables adaptadas al Design System de ClinicaPie
+$primary-color: ds.$color-primary;     // Amarillo principal
+$secondary-color: ds.$color-secondary; // Teal secundario
+$dark-color: ds.$color-text-primary;
+$text-med: ds.$color-text-secondary;
+$border-color: ds.$color-border-light;
+$bg-main: ds.$color-background;
+$transition: ds.$transition-fast;
 
 // Animación de entrada
 .fade-in-up {
@@ -16,17 +19,19 @@ $transition: all 0.3s ease;
   to { opacity: 1; transform: translateY(0); }
 }
 
-.shadow-sm { box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.shadow-sm { 
+  box-shadow: ds.$shadow-base; 
+}
 
 // Contenedor principal del Chat
 .chat-wrapper {
   display: flex;
   height: calc(100vh - 120px); // Ajusta según tu header principal
-  background: white;
-  border-radius: 12px;
+  background: ds.$color-surface;
+  border-radius: ds.$border-radius-lg;
   overflow: hidden;
-  border: 1px solid #e5e5e5;
-  margin: 1rem;
+  border: 1px solid ds.$color-border;
+  margin: ds.$spacing-base;
 }
 
 // ==========================================
@@ -37,24 +42,24 @@ $transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   border-right: 1px solid $border-color;
-  background: white;
+  background: ds.$color-surface;
   flex-shrink: 0;
 
   .sidebar-tabs {
     display: flex;
-    background: #fafafa;
+    background: ds.$color-surface-secondary;
     border-bottom: 1px solid $border-color;
 
     .tab-btn {
       flex: 1;
-      padding: 1rem;
+      padding: 1.1rem;
       border: none;
       background: transparent;
       color: $text-med;
-      font-weight: 600;
-      font-size: 0.9rem;
+      font-weight: ds.$font-weight-semibold;
+      font-size: ds.$font-size-sm;
       cursor: pointer;
-      border-bottom: 2px solid transparent;
+      border-bottom: 3px solid transparent;
       transition: $transition;
       display: flex;
       justify-content: center;
@@ -62,23 +67,26 @@ $transition: all 0.3s ease;
       gap: 8px;
 
       .badge-count {
-        background: #e0e0e0;
+        background: ds.$color-border-dark;
         color: $text-med;
-        font-size: 0.7rem;
+        font-size: ds.$font-size-xs;
         padding: 2px 8px;
-        border-radius: 10px;
+        border-radius: ds.$border-radius-full;
+        font-weight: ds.$font-weight-bold;
       }
 
-      &:hover { background: #f0f0f0; }
+      &:hover { 
+        background: rgba(ds.$color-primary, 0.04); 
+      }
 
       &.active {
-        color: $primary-color;
-        border-bottom-color: $primary-color;
-        background: white;
+        color: $secondary-color; // Cambiado a teal para una sensación más médica y fresca
+        border-bottom-color: $secondary-color;
+        background: ds.$color-surface;
         
         .badge-count {
-          background: rgba($primary-color, 0.1);
-          color: $primary-color;
+          background: rgba($secondary-color, 0.1);
+          color: $secondary-color;
         }
       }
     }
@@ -110,23 +118,35 @@ $transition: all 0.3s ease;
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #adb5bd;
+  color: ds.$color-text-light;
   text-align: center;
-  padding: 2rem;
+  padding: ds.$spacing-xl;
 
   .empty-circle {
     width: 100px; height: 100px;
-    background: white;
-    border-radius: 50%;
+    background: ds.$color-surface;
+    border-radius: ds.$border-radius-full;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    margin-bottom: 1.5rem;
+    box-shadow: ds.$shadow-base;
+    margin-bottom: ds.$spacing-lg;
     
-    i { font-size: 3rem; color: #ced4da; }
+    i { 
+      font-size: 3rem; 
+      color: ds.$color-border-dark; 
+    }
   }
 
-  h3 { color: $text-med; font-size: 1.5rem; margin-bottom: 0.5rem; }
-  p { font-size: 0.95rem; max-width: 300px; }
+  h3 { 
+    color: $dark-color; 
+    font-size: ds.$font-size-xl; 
+    margin-bottom: ds.$spacing-xs; 
+    font-weight: ds.$font-weight-semibold;
+  }
+  p { 
+    font-size: ds.$font-size-sm; 
+    max-width: 300px; 
+    color: $text-med;
+  }
 }
 
 // Cabecera superior (Nombre del paciente)
@@ -134,32 +154,54 @@ $transition: all 0.3s ease;
   display: flex;
   align-items: center;
   padding: 1rem 1.5rem;
-  background: white;
+  background: ds.$color-surface;
   border-bottom: 1px solid $border-color;
   gap: 15px;
+  box-shadow: ds.$shadow-sm;
+  z-index: 5;
 
   .back-btn {
-    background: transparent; border: none;
-    font-size: 1.2rem; color: $text-med;
-    cursor: pointer; padding: 5px;
+    background: transparent; 
+    border: none;
+    font-size: 1.2rem; 
+    color: $text-med;
+    cursor: pointer; 
+    padding: 5px;
     margin-right: 5px;
+    transition: $transition;
+    
+    &:hover {
+      color: $secondary-color;
+    }
   }
 
   .profile-avatar {
     width: 40px; height: 40px;
-    background: rgba($primary-color, 0.1);
-    color: $primary-color;
-    border-radius: 50%;
+    background: rgba($secondary-color, 0.1);
+    color: $secondary-color;
+    border-radius: ds.$border-radius-full;
     display: flex; align-items: center; justify-content: center;
     font-size: 1.1rem;
+    font-weight: ds.$font-weight-bold;
   }
 
   .profile-info {
     display: flex;
     flex-direction: column;
 
-    .profile-name { margin: 0; font-size: 1.1rem; color: $dark-color; font-weight: 600; }
-    .profile-phone { font-size: 0.8rem; color: #999; display: flex; align-items: center; gap: 5px; }
+    .profile-name { 
+      margin: 0; 
+      font-size: ds.$font-size-base; 
+      color: $dark-color; 
+      font-weight: ds.$font-weight-bold; 
+    }
+    .profile-phone { 
+      font-size: ds.$font-size-xs; 
+      color: ds.$color-text-light; 
+      display: flex; 
+      align-items: center; 
+      gap: 5px; 
+    }
   }
 }
 
@@ -167,11 +209,22 @@ $transition: all 0.3s ease;
 .messages-container {
   flex: 1;
   overflow-y: auto;
-  // Aquí puedes poner un patrón de fondo sutil de WhatsApp si lo deseas
+  position: relative;
+  
+  // Patrón de fondo sutil (opcional para dar vibra premium de chat)
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.04;
+    background-image: radial-gradient(#00a699 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+  }
 }
 
 .input-container {
-  background: white;
+  background: ds.$color-surface;
   border-top: 1px solid $border-color;
   padding: 1rem;
 }
