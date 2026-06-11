@@ -9,7 +9,12 @@
         <div class="avatar-status" [class.finado]="paciente?.finado"></div>
       </div>
       <div class="patient-basic-info">
-        <h1 class="patient-name" *ngIf="!editando">{{paciente.nombre}} {{paciente.apeP}} {{paciente.apeM}}</h1>
+        <div class="name-container">
+          <h1 class="patient-name" *ngIf="!editando">{{paciente.nombre}} {{paciente.apeP}} {{paciente.apeM}}</h1>
+          <button class="btn-header-chat" *ngIf="!editando && !paciente?.finado" (click)="abrirChat(paciente)" title="Enviar mensaje">
+            <i class="fab fa-whatsapp"></i> Chat
+          </button>
+        </div>
         <div class="patient-meta">
           <span class="meta-item">{{calcularEdad(paciente?.fechaNac)}} años</span>
           <span class="meta-item">{{paciente?.genero}}</span>
@@ -45,9 +50,10 @@
           <div class="info-item">
             <label>Contacto</label>
             <div *ngIf="!editando" class="contact-info">
-              <div class="contact-item">
-                <i class="fas fa-phone"></i>
+              <div class="contact-item whatsapp-action" (click)="abrirChat(paciente)" title="Abrir chat en CRM">
+                <i class="fab fa-whatsapp"></i>
                 <span>{{paciente.telefonoWhatsapp}}</span>
+                <i class="fas fa-comment-dots chat-shortcut"></i>
               </div>
               <div class="contact-item">
                 <i class="fas fa-envelope"></i>
@@ -301,6 +307,12 @@
               </div>
 
               <div class="servicio-actions" *ngIf="servicio.estado === 'activo' && !paciente?.finado && (esAdmin || esRecepcionista)">
+                <button class="btn-use-session" (click)="usarSesion(servicio)" [disabled]="servicio.sesionesRestantes <= 0">
+                  <i class="fas fa-check-circle"></i> Usar Sesión
+                </button>
+                <button class="btn-add-sessions" (click)="abrirModalAgregarSesiones(servicio)">
+                  <i class="fas fa-plus-circle"></i> Agregar Sesión
+                </button>
                 <button class="btn-edit-service" (click)="abrirModalEditarServicio(servicio)">
                   <i class="fas fa-edit"></i> Editar
                 </button>

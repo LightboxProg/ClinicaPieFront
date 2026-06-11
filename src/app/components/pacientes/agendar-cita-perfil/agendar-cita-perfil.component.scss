@@ -1,3 +1,26 @@
+@use 'src/design-system' as *;
+
+// Variables de color locales mapeadas al sistema de diseño
+$primary-color: $color-primary;
+$secondary-color: $color-secondary;
+$accent-color: $color-accent;
+$dark-color: $color-text-primary;
+$light-color: $color-background;
+$gray-100: $color-surface-secondary;
+$gray-200: $color-border;
+$gray-300: $color-border-dark;
+$gray-400: $color-disabled;
+$gray-600: $color-text-light;
+$gray-700: $color-text-secondary;
+
+$success-color: $color-success;
+$warning-color: $color-warning;
+$danger-color: $color-error;
+$info-color: $color-info;
+
+$transition-base: $transition-base;
+$transition-fast: $transition-fast;
+
 /* Fondo oscuro con desenfoque para aislar el modal */
 .modal-overlay {
     position: fixed;
@@ -5,26 +28,27 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.7);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1050;
-    animation: fadeIn 0.2s ease-in-out;
+    animation: fadeIn 0.25s ease-out;
 }
 
 /* Caja principal del modal */
 .modal-content {
-    background: #ffffff;
+    background: $color-surface;
     width: 100%;
-    max-width: 550px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    max-width: 580px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     transform: translateY(0);
-    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: flex;
     flex-direction: column;
     max-height: 90vh;
@@ -35,44 +59,67 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 24px;
-    border-bottom: 1px solid #e2e8f0;
-    background-color: #f8fafc;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    background-color: $gray-100;
 
     .header-text {
         h3 {
             margin: 0;
-            font-size: 1.25rem;
-            color: #1e293b;
-            font-weight: 600;
+            font-size: 1.2rem;
+            color: $dark-color;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
         }
     }
 
     .btn-close {
-        background: transparent;
+        background: rgba(0, 0, 0, 0.04);
         border: none;
-        font-size: 1.5rem;
-        color: #64748b;
+        font-size: 1.35rem;
+        color: $gray-700;
         cursor: pointer;
-        transition: color 0.2s;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all $transition-fast;
 
         &:hover {
-            color: #ef4444;
+            background: rgba($danger-color, 0.1);
+            color: $danger-color;
+            transform: scale(1.05) rotate(90deg);
         }
     }
 }
 
 /* Cuerpo del modal con scroll interno si es necesario */
 .modal-body {
-    padding: 24px;
+    padding: 1.5rem;
     overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.25);
+    }
 }
 
 /* Disposición en cuadrícula para inputs */
 .grid-form {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 1.25rem;
 
     .campo {
         display: flex;
@@ -83,86 +130,101 @@
         }
 
         label {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #475569;
-            margin-bottom: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: $dark-color;
+            margin-bottom: 0.5rem;
         }
 
         input,
         select,
         textarea {
             width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            color: #334155;
-            background-color: #ffffff;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: $dark-color;
+            background-color: rgba(0, 0, 0, 0.02);
+            transition: all $transition-base;
             box-sizing: border-box;
 
             &:focus {
                 outline: none;
-                border-color: #3b82f6;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                background-color: white;
+                border-color: $secondary-color;
+                box-shadow: 0 0 0 4px rgba($secondary-color, 0.1);
             }
 
             &:disabled {
-                background-color: #f1f5f9;
-                color: #94a3b8;
+                background-color: $gray-100;
+                color: $gray-400;
                 cursor: not-allowed;
+                border-color: rgba(0, 0, 0, 0.04);
             }
         }
 
         textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 90px;
         }
     }
 }
 
 /* Pie del modal */
 .modal-footer {
-    padding: 16px 24px;
-    border-top: 1px solid #e2e8f0;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
-    background-color: #f8fafc;
+    gap: 0.75rem;
+    background-color: $gray-100;
 
     button {
-        padding: 10px 18px;
-        border-radius: 6px;
-        font-weight: 500;
-        font-size: 0.95rem;
+        padding: 0.75rem 1.25rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all $transition-base;
         border: none;
 
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         &.btn-cancelar {
-            background-color: #e2e8f0;
-            color: #475569;
+            background-color: $gray-200;
+            color: $gray-700;
 
             &:hover {
-                background-color: #cbd5e1;
+                background-color: $gray-300;
+                transform: translateY(-2px);
+            }
+
+            &:active {
+                transform: translateY(0);
             }
         }
 
         &.btn-guardar {
-            background-color: #3b82f6;
+            background: linear-gradient(135deg, $secondary-color 0%, $success-color 100%);
             color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 12px rgba($secondary-color, 0.25);
 
             &:hover:not(:disabled) {
-                background-color: #2563eb;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba($secondary-color, 0.35);
             }
 
-            &:disabled {
-                background-color: #93c5fd;
-                cursor: not-allowed;
+            &:active:not(:disabled) {
+                transform: translateY(0);
             }
         }
     }
@@ -181,53 +243,58 @@
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px) scale(0.95);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
 /* Estilos para alertas y visualización de disponibilidad */
 .alerta-info, .alerta-error {
-    padding: 12px 16px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    margin-top: 8px;
-    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .alerta-info {
-    background-color: #e0f2fe;
-    color: #0369a1;
-    border: 1px solid #bae6fd;
+    background-color: rgba($info-color, 0.1);
+    color: darken($info-color, 15%);
+    border: 1px solid rgba($info-color, 0.2);
 }
 
 .alerta-error {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    border: 1px solid #fecaca;
+    background-color: rgba($danger-color, 0.1);
+    color: darken($danger-color, 15%);
+    border: 1px solid rgba($danger-color, 0.2);
 }
 
 .contenedor-bloques {
-    background-color: #f8fafc;
-    border: 1px dashed #cbd5e1;
-    padding: 14px;
-    border-radius: 8px;
-    margin-top: 8px;
+    background-color: rgba($success-color, 0.02);
+    border: 1.5px dashed rgba($success-color, 0.3);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-top: 0.5rem;
 
     .texto-exito {
-        color: #10b981;
-        font-weight: 600;
+        color: $success-color;
+        font-weight: 700;
         display: block;
-        margin-bottom: 8px;
+        margin-bottom: 0.75rem;
+        font-size: 0.9rem;
     }
 
     .texto-ayuda {
-        color: #64748b;
-        margin-top: 10px;
+        color: $gray-700;
+        margin-top: 0.75rem;
         display: block;
+        font-size: 0.8rem;
         font-style: italic;
     }
 }
@@ -235,16 +302,24 @@
 .badges-horarios {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 0.5rem;
 
     .badge-libre {
-        background-color: #10b981;
-        color: #ffffff;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+        background-color: rgba($success-color, 0.1);
+        color: $success-color;
+        border: 1px solid rgba($success-color, 0.2);
+        padding: 0.35rem 0.85rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        box-shadow: none;
+        transition: all $transition-fast;
+
+        &:hover {
+            background-color: $success-color;
+            color: white;
+            transform: scale(1.05);
+        }
     }
 }
 

@@ -36,50 +36,41 @@ $transition-slow: $transition-slow;
 
 // Mixins
 @mixin card-base {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: $border-radius;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
-  transition:
-    transform $transition-fast,
-    box-shadow $transition-fast,
-    border-color $transition-fast;
+  background: $color-surface;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.01);
+  transition: transform $transition-base, box-shadow $transition-base, border-color $transition-base;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    border-color: rgba($primary-color, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+    border-color: rgba($primary-color, 0.3);
   }
 }
 
 @mixin gradient-primary {
-  background: linear-gradient(135deg, $primary-color 0%, #ff7e5f 100%);
+  background: linear-gradient(135deg, $primary-color 0%, $accent-color 100%);
 }
 
 @mixin gradient-success {
-  background: linear-gradient(135deg, $secondary-color 0%, #00ccb4 100%);
+  background: linear-gradient(135deg, $secondary-color 0%, $success-color 100%);
 }
 
 @mixin gradient-danger {
-  background: linear-gradient(135deg, $danger-color 0%, #ff6b6b 100%);
+  background: linear-gradient(135deg, $danger-color 0%, $accent-color 100%);
 }
 
 @mixin gradient-info {
-  background: linear-gradient(
-    135deg,
-    $info-color 0%,
-    lighten($info-color, 10%) 100%
-  );
+  background: linear-gradient(135deg, $info-color 0%, lighten($info-color, 15%) 100%);
 }
 
 @mixin btn-base {
   padding: 0.625rem 1.25rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   font-family: "Montserrat", sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all $transition-base;
   display: inline-flex;
@@ -95,6 +86,11 @@ $transition-slow: $transition-slow;
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
   }
 }
 
@@ -117,22 +113,23 @@ body {
   background: #F9FAFB;
 }
 
-// Header mejorado
+// Header mejorado con degradado de malla (mesh gradient)
 .profile-header {
   position: relative;
-  @include gradient-primary;
-  padding: 1.5rem 1rem 4rem;
-  color: $text-light;
+  background-color: $primary-color;
+  background-image: radial-gradient(at 10% 20%, rgba($primary-color, 0.95) 0px, transparent 55%),
+                    radial-gradient(at 90% 10%, rgba($accent-color, 0.95) 0px, transparent 55%),
+                    radial-gradient(at 50% 80%, rgba($secondary-color, 0.8) 0px, transparent 60%);
+  background-size: 120% 120%;
+  padding: 3rem 2rem 5.5rem;
+  color: white;
   overflow: hidden;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 
   &::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
-    background: linear-gradient(to bottom, transparent, #F9FAFB);
+    display: none;
   }
 }
 
@@ -144,8 +141,8 @@ body {
   bottom: 0;
   background: linear-gradient(
     135deg,
-    rgba(0, 0, 0, 0.1) 0%,
-    rgba(0, 0, 0, 0.05) 100%
+    rgba(0, 0, 0, 0.08) 0%,
+    rgba(0, 0, 0, 0.03) 100%
   );
 }
 
@@ -154,10 +151,17 @@ body {
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
   flex-wrap: wrap;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
 }
 
 .patient-avatar {
@@ -165,24 +169,31 @@ body {
   flex-shrink: 0;
 
   .profile-img {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 4px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: transform $transition-base;
+  }
+
+  &:hover {
+    .profile-img {
+      transform: scale(1.05);
+    }
   }
 
   .avatar-status {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
-    width: 18px;
-    height: 18px;
+    bottom: 6px;
+    right: 6px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: $success-color;
-    border: 2px solid white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 3px solid white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 
     &.finado {
       background: $danger-color;
@@ -193,13 +204,58 @@ body {
 .patient-basic-info {
   flex: 1;
   min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .name-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
 
   .patient-name {
-    font-size: 1.75rem;
-    font-weight: 600;
-    margin: 0 0 0.5rem 0;
+    font-size: 1.85rem;
+    font-weight: 700;
+    margin: 0;
     line-height: 1.2;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: none;
+    color: white;
+  }
+
+  .btn-header-chat {
+    background: rgba(37, 211, 102, 0.2);
+    border: 1px solid rgba(37, 211, 102, 0.4);
+    color: white;
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all $transition-base;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    i {
+      color: #25D366;
+      font-size: 0.95rem;
+    }
+
+    &:hover {
+      background: #25D366;
+      border-color: #25D366;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+
+      i {
+        color: white;
+      }
+    }
   }
 }
 
@@ -209,17 +265,24 @@ body {
   flex-wrap: wrap;
 
   .meta-item {
-    background: rgba(255, 255, 255, 0.25);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
-    padding: 0.4rem 0.8rem;
-    border-radius: 16px;
-    font-size: 0.85rem;
-    font-weight: 500;
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0.35rem 0.85rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
 
-    &.status-badge.finado {
-      background: rgba(255, 71, 87, 0.3);
+    &.status-badge {
+      background: rgba($success-color, 0.25);
+      border-color: rgba($success-color, 0.4);
+      
+      &.finado {
+        background: rgba($danger-color, 0.25);
+        border-color: rgba($danger-color, 0.4);
+      }
     }
   }
 }
@@ -227,10 +290,10 @@ body {
 // Layout principal mejorado
 .profile-content {
   display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 1.5rem;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 1.75rem;
   max-width: 1200px;
-  margin: -3rem auto 2rem;
+  margin: -3.5rem auto 2rem;
   padding: 0 1rem;
   position: relative;
 
@@ -297,19 +360,27 @@ body {
   align-items: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid $gray-200;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 
   h3 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: $dark-color;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.625rem;
 
     i {
       color: $primary-color;
+      background: rgba($primary-color, 0.08);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
     }
   }
 }
@@ -320,12 +391,15 @@ body {
   height: 36px;
   padding: 0;
   border-radius: 50%;
-  background: $primary-color;
-  color: white;
+  background: rgba($primary-color, 0.1);
+  color: $primary-color;
+  border: 1px solid rgba($primary-color, 0.2);
 
   &:hover:not(:disabled) {
-    background: darken($primary-color, 10%);
+    background: $primary-color;
+    color: white;
     transform: rotate(15deg) scale(1.1);
+    box-shadow: 0 4px 10px rgba($primary-color, 0.2);
   }
 }
 
@@ -347,32 +421,63 @@ body {
   .info-value {
     color: $gray-700;
     line-height: 1.5;
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 0, 0, 0.01);
+    border-radius: 8px;
   }
 }
 
 .contact-info {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 
   .contact-item {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.5rem;
-    border-radius: 6px;
+    padding: 0.625rem 0.875rem;
+    border-radius: 10px;
     background: $gray-100;
-    transition: background-color $transition-fast;
-
-    &:hover {
-      background: $gray-200;
-    }
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    transition: all $transition-base;
 
     i {
       color: $primary-color;
       width: 16px;
       text-align: center;
+      font-size: 1rem;
+    }
+
+    &.whatsapp-action {
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all $transition-base !important;
+
+      i.fa-whatsapp {
+        color: #25D366;
+        font-size: 1.15rem;
+      }
+
+      .chat-shortcut {
+        margin-left: auto;
+        font-size: 0.85rem;
+        color: $primary-color;
+        opacity: 0;
+        transform: translateX(-5px);
+        transition: all $transition-base;
+      }
+
+      &:hover {
+        background: rgba($primary-color, 0.05);
+        border-color: rgba($primary-color, 0.15);
+        transform: translateX(4px);
+
+        .chat-shortcut {
+          opacity: 0.7;
+          transform: translateX(0);
+        }
+      }
     }
   }
 }
@@ -651,20 +756,23 @@ textarea {
 
 .medical-textarea {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid $gray-300;
-  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  background: $gray-100;
   font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
+  color: $dark-color;
   resize: vertical;
-  min-height: 80px;
+  min-height: 90px;
   margin-bottom: 0.75rem;
-  transition: all $transition-fast;
+  transition: all $transition-base;
 
   &:focus {
     outline: none;
+    background: white;
     border-color: $primary-color;
-    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
   }
 }
 
@@ -1043,6 +1151,20 @@ textarea {
     max-height: 400px;
     overflow-y: auto;
 
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.25);
+    }
+
     @media (max-width: 768px) {
       max-height: 300px;
     }
@@ -1311,7 +1433,7 @@ textarea {
   padding: 0.75rem 1.5rem;
 
   &:hover {
-    box-shadow: 0 6px 12px rgba(255, 90, 95, 0.2);
+    box-shadow: 0 6px 12px rgba(255, 90, 95, 0.3);
   }
 }
 
@@ -1322,14 +1444,14 @@ textarea {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
   padding: 1rem;
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   animation: fadeIn $transition-base;
 }
 
@@ -1355,34 +1477,50 @@ textarea {
 
 .modal-content {
   background: white;
-  border-radius: $border-radius;
+  border-radius: 16px;
   width: 100%;
   max-width: 500px;
   max-height: 85vh;
   overflow-y: auto;
-  box-shadow: $box-shadow-lg;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   animation: slideUp $transition-base;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25);
+  }
 
   .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 1.5rem 1rem;
-    border-bottom: 1px solid $gray-200;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    background-color: $gray-100;
 
     h3 {
       margin: 0;
-      font-size: 1.3rem;
-      font-weight: 600;
+      font-size: 1.25rem;
+      font-weight: 700;
       color: $dark-color;
     }
   }
 
   .modal-close {
-    background: none;
+    background: rgba(0, 0, 0, 0.04);
     border: none;
     font-size: 1.2rem;
-    color: $gray-600;
+    color: $gray-700;
     cursor: pointer;
     width: 32px;
     height: 32px;
@@ -1393,9 +1531,9 @@ textarea {
     transition: all $transition-fast;
 
     &:hover {
-      background: $gray-200;
+      background: rgba($danger-color, 0.1);
       color: $danger-color;
-      transform: rotate(90deg);
+      transform: scale(1.05) rotate(90deg);
     }
   }
 
@@ -1404,11 +1542,12 @@ textarea {
   }
 
   .modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid $gray-200;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
+    background-color: $gray-100;
   }
 }
 
@@ -1420,7 +1559,7 @@ textarea {
     margin-bottom: 0.5rem;
     font-weight: 600;
     color: $dark-color;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -1428,17 +1567,20 @@ textarea {
 .form-input,
 .form-textarea {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid $gray-300;
-  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
   font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
-  transition: all $transition-fast;
+  color: $dark-color;
+  background-color: rgba(0, 0, 0, 0.02);
+  transition: all $transition-base;
 
   &:focus {
     outline: none;
+    background-color: white;
     border-color: $primary-color;
-    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
   }
 }
 
@@ -1451,9 +1593,15 @@ textarea {
   @include btn-base;
   @include gradient-primary;
   color: white;
+  box-shadow: 0 4px 12px rgba($primary-color, 0.25);
 
   &:hover:not(:disabled) {
-    box-shadow: 0 6px 12px rgba(255, 90, 95, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba($primary-color, 0.35);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
   }
 }
 
