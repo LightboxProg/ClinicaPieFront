@@ -26,9 +26,12 @@ export class CalendarService {
   }
 
   //horarios disponibles anuales para agendar y bloquear citas
-  getCuposDisponiblesAnuales() {
-    return this.http.get<any[]>(`${this.apiUrl}/citasDisponibles`);
+  getCuposDisponiblesAnuales(sucursalId?: string) {
+    let params = new HttpParams();
+    if (sucursalId) params = params.set('sucursalId', sucursalId);
+    return this.http.get<any[]>(`${this.apiUrl}/citasDisponibles`, { params });
   }
+
 
   //agenda anual detallada
   agendaAnualDetallada(inicio: string, fin: string): Observable<any> {
